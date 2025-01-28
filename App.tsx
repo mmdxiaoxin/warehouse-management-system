@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import AddCargoScreen from './screens/AddCargoScreen';
+import EditCargoScreen from './screens/EditCargoScreen';
 import HomeScreen from './screens/HomeScreen';
 import InventoryScreen from './screens/InventoryScreen';
 import OutboundScreen from './screens/OutboundScreen';
@@ -53,6 +54,7 @@ const AppNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen name="AddCargo" component={AddCargoScreen} />
+      <Stack.Screen name="EditCargo" component={EditCargoScreen} />
     </Stack.Navigator>
   );
 };

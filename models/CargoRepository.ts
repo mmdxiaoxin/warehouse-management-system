@@ -8,14 +8,8 @@ export type CargoData = {
   quantity: number;
   unit: string;
   description?: string;
-  weight?: number;
-  volume?: number;
-  origin?: string;
-  destination?: string;
-  shippingDate?: Date;
-  estimatedArrival?: Date;
-  status?: string;
-  trackingNumber?: string;
+  ctime?: Date;
+  utime?: Date;
 };
 
 class CargoRepository {
@@ -45,7 +39,13 @@ class CargoRepository {
       const quantity = cargoData.quantity || 0;
 
       realm.write(() => {
-        realm.create('Cargo', {...cargoData, cargoId, quantity});
+        realm.create('Cargo', {
+          ...cargoData,
+          cargoId,
+          quantity,
+          ctime: new Date(),
+          utime: new Date(),
+        });
       });
       console.log('Cargo added!');
     } catch (error) {
@@ -64,50 +64,49 @@ class CargoRepository {
     }
   }
 
-  // 根据状态获取 Cargo
-  async getCargoByStatus(status: string) {
+  // 通过 cargoId 获取单个 Cargo
+  async getCargoById(cargoId: string): Promise<CargoData | null> {
     const realm = await this.getRealm();
     try {
-      return Array.from(
-        realm.objects('Cargo').filtered('status == $0', status),
-      );
+      const cargo = realm.objectForPrimaryKey('Cargo', cargoId) as CargoData;
+      if (cargo) {
+        return {
+          name: cargo.name,
+          category: cargo.category,
+          quantity: cargo.quantity,
+          unit: cargo.unit,
+          description: cargo.description,
+          ctime: cargo.ctime,
+          utime: cargo.utime,
+        };
+      } else {
+        console.log('Cargo not found');
+        return null;
+      }
     } catch (error) {
-      console.error(`Failed to fetch cargos with status "${status}":`, error);
-      return [];
+      console.error('Failed to fetch cargo by id:', error);
+      return null;
     }
   }
 
-  // 更新 Cargo 状态
-  async updateCargoStatus(cargoId: string, newStatus: string) {
+  // 更新 Cargo
+  async updateCargo(cargoId: string, cargoData: CargoData) {
     const realm = await this.getRealm();
     try {
       realm.write(() => {
         const cargo = realm.objectForPrimaryKey('Cargo', cargoId);
         if (cargo) {
-          cargo.status = newStatus;
+          cargo.name = cargoData.name;
+          cargo.category = cargoData.category;
+          cargo.quantity = cargoData.quantity;
+          cargo.unit = cargoData.unit;
+          cargo.description = cargoData.description;
+          cargo.utime = new Date();
         }
       });
-      console.log('Cargo status updated!');
+      console.log('Cargo updated!');
     } catch (error) {
-      console.error('Failed to update cargo status:', error);
-    }
-  }
-
-  // 批量更新 Cargo 状态
-  async updateMultipleCargoStatus(status: string, newStatus: string) {
-    const realm = await this.getRealm();
-    try {
-      realm.write(() => {
-        const cargos = realm.objects('Cargo').filtered('status == $0', status);
-        cargos.forEach(cargo => {
-          cargo.status = newStatus;
-        });
-      });
-      console.log(
-        `Updated status of cargos with status "${status}" to "${newStatus}"`,
-      );
-    } catch (error) {
-      console.error('Failed to update multiple cargos status:', error);
+      console.error('Failed to update cargo:', error);
     }
   }
 

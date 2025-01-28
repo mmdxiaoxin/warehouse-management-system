@@ -10,14 +10,8 @@ export class Cargo extends Realm.Object {
       quantity: 'int',
       unit: 'string',
       description: 'string?',
-      weight: 'float?',
-      volume: 'float?',
-      origin: 'string?',
-      destination: 'string?',
-      shippingDate: 'date?',
-      estimatedArrival: 'date?',
-      status: 'string?',
-      trackingNumber: 'string?',
+      ctime: 'date',
+      utime: 'date',
     },
   };
 }

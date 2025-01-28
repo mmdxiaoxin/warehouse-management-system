@@ -5,43 +5,33 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 // 定义 props 类型
 interface CargoItemProps {
   item: any;
-  handleUpdateStatus: (cargoId: string, newStatus: string) => void;
+  handleEditCargo: (cargoId: string) => void;
   handleDeleteCargo: (cargoId: string) => void;
 }
 
 const CargoItem: React.FC<CargoItemProps> = ({
   item,
-  handleUpdateStatus,
+  handleEditCargo,
   handleDeleteCargo,
 }) => (
   <View style={styles.card}>
     <View style={styles.cardHeader}>
       <Text style={styles.cardTitle}>{item.name}</Text>
-      <Text style={styles.cardStatus}>{item.status}</Text>
+      <Text style={styles.cardCategory}>{item.category}</Text>
     </View>
 
     <View style={styles.cardBody}>
-      <Text style={styles.cardText}>Origin: {item.origin}</Text>
-      <Text style={styles.cardText}>Destination: {item.destination}</Text>
       <Text style={styles.cardText}>
-        Shipping Date:{' '}
-        {item.shippingDate instanceof Date
-          ? item.shippingDate.toLocaleDateString()
-          : 'Invalid Date'}
+        剩余库存: {`${item.quantity} ${item.unit}`}
       </Text>
-      <Text style={styles.cardText}>
-        Estimated Arrival:{' '}
-        {item.estimatedArrival instanceof Date
-          ? item.estimatedArrival.toLocaleDateString()
-          : 'Invalid Date'}
-      </Text>
+      <Text style={styles.cardText}>货物描述: {item.description}</Text>
     </View>
 
     <View style={styles.cardFooter}>
       <TouchableOpacity
         style={styles.buttonShipped}
-        onPress={() => handleUpdateStatus(item.cargoId, 'Shipped')}>
-        <Text style={styles.buttonText}>Mark as Shipped</Text>
+        onPress={() => handleEditCargo(item.cargoId)}>
+        <Text style={styles.buttonText}>编辑货物</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -76,7 +66,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  cardStatus: {
+  cardCategory: {
     fontSize: 16,
     fontWeight: '500',
     color: '#4CAF50',

@@ -3,7 +3,13 @@ import {View, Text, Button, SectionList, Alert, StyleSheet} from 'react-native';
 import {cargoRepository} from '../models/CargoRepository';
 import RNFS from 'react-native-fs';
 import CargoItem from '../components/CargoItem';
-import {useFocusEffect} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  NavigationProp,
+} from '@react-navigation/native';
+import {RootStackParamList} from '../routes';
+import Divider from '../components/Divider';
 
 // 随机生成字符串的函数
 const generateRandomString = (length: number) => {
@@ -28,6 +34,7 @@ const getRandomCount = () => Math.floor(Math.random() * 101);
 
 export default function InventoryScreen() {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物列表
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -97,16 +104,10 @@ export default function InventoryScreen() {
     ]);
   };
 
-  // 处理货物状态更新
-  const handleUpdateStatus = async (cargoId: string, newStatus: string) => {
+  // 处理货物信息更新
+  const handleEditCargo = async (cargoId: string) => {
     try {
-      await cargoRepository.updateCargoStatus(cargoId, newStatus);
-      setCargoList(prevCargoList =>
-        prevCargoList.map(cargo =>
-          cargo.cargoId === cargoId ? {...cargo, status: newStatus} : cargo,
-        ),
-      );
-      console.log('货物状态已更新！');
+      navigation.navigate('EditCargo', {cargoId});
     } catch (error) {
       console.error('更新货物状态时出错：', error);
     }
@@ -121,14 +122,8 @@ export default function InventoryScreen() {
         category: getRandomCategory(), // 随机选择一个类别
         quantity: getRandomCount(), // 随机生成数量
         unit: '个',
-        weight: 25.5,
-        volume: 0.08,
-        origin: '北京',
-        destination: '洛杉矶',
-        shippingDate: new Date('2025-01-25'),
-        estimatedArrival: new Date('2025-02-05'),
-        status: '待处理',
-        trackingNumber: 'TN987654321',
+        ctime: new Date('2025-01-25'),
+        utime: new Date('2025-02-05'),
       };
 
       await cargoRepository.createCargo(newCargo); // 创建货物
@@ -160,12 +155,15 @@ export default function InventoryScreen() {
         renderItem={({item}) => (
           <CargoItem
             item={item}
-            handleUpdateStatus={handleUpdateStatus}
+            handleEditCargo={handleEditCargo}
             handleDeleteCargo={handleDeleteCargo}
           />
         )}
         renderSectionHeader={({section: {title}}) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
+          <>
+            <Text style={styles.sectionHeader}>{title}</Text>
+            <Divider />
+          </>
         )}
       />
     </View>
