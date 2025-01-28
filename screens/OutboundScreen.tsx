@@ -51,7 +51,7 @@ export default function OutboundScreen({navigation}: any) {
     Alert.alert(
       '成功',
       `${selectedCargo} 出库数量： ${quantity} 剩余库存: ${
-        cargoToRemove.count - parseInt(quantity)
+        cargoToRemove.quantity - parseInt(quantity)
       }`,
     );
 

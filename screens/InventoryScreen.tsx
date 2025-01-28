@@ -42,13 +42,13 @@ export default function InventoryScreen() {
         try {
           // 删除数据库文件
           await RNFS.unlink(realmPath);
-          console.log('Realm database file deleted successfully!');
+          console.log('Realm 数据库文件已删除！');
         } catch (error) {
-          console.error('Error deleting Realm database:', error);
+          console.error('删除 Realm 数据库时出错：', error);
         }
       };
 
-      // deleteRealmDatabase(); // 用来删除数据库文件进行测试
+      // deleteRealmDatabase(); // 用来删除数据库文件进行测试，防止数据库修改后导致的应用闪退
       loadCargoData();
     }, []),
   );
@@ -75,30 +75,26 @@ export default function InventoryScreen() {
 
   // 处理货物删除操作
   const handleDeleteCargo = (cargoId: string) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this cargo?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
+    Alert.alert('确认删除', '您确定要删除这个货物吗？', [
+      {
+        text: '取消',
+        style: 'cancel',
+      },
+      {
+        text: '确定',
+        onPress: async () => {
+          try {
+            await cargoRepository.deleteCargo(cargoId);
+            setCargoList(prevCargoList =>
+              prevCargoList.filter(cargo => cargo.cargoId !== cargoId),
+            ); // 更新列表
+            console.log('货物已删除！');
+          } catch (error) {
+            console.error('删除货物时出错：', error);
+          }
         },
-        {
-          text: 'OK',
-          onPress: async () => {
-            try {
-              await cargoRepository.deleteCargo(cargoId);
-              setCargoList(prevCargoList =>
-                prevCargoList.filter(cargo => cargo.cargoId !== cargoId),
-              ); // 更新列表
-              console.log('Cargo deleted!');
-            } catch (error) {
-              console.error('Error deleting cargo:', error);
-            }
-          },
-        },
-      ],
-    );
+      },
+    ]);
   };
 
   // 处理货物状态更新
@@ -110,9 +106,9 @@ export default function InventoryScreen() {
           cargo.cargoId === cargoId ? {...cargo, status: newStatus} : cargo,
         ),
       );
-      console.log('Cargo status updated!');
+      console.log('货物状态已更新！');
     } catch (error) {
-      console.error('Error updating cargo status:', error);
+      console.error('更新货物状态时出错：', error);
     }
   };
 
@@ -121,16 +117,17 @@ export default function InventoryScreen() {
     try {
       const newCargo = {
         name: generateRandomString(8), // 随机生成名称
-        description: 'Randomly generated cargo item',
+        description: '随机生成的货物项目',
         category: getRandomCategory(), // 随机选择一个类别
-        count: getRandomCount(), // 随机生成数量
+        quantity: getRandomCount(), // 随机生成数量
+        unit: '个',
         weight: 25.5,
         volume: 0.08,
-        origin: 'Beijing',
-        destination: 'Los Angeles',
+        origin: '北京',
+        destination: '洛杉矶',
         shippingDate: new Date('2025-01-25'),
         estimatedArrival: new Date('2025-02-05'),
-        status: 'Pending',
+        status: '待处理',
         trackingNumber: 'TN987654321',
       };
 
@@ -145,7 +142,7 @@ export default function InventoryScreen() {
         })),
       );
     } catch (error) {
-      console.error('Error creating cargo:', error);
+      console.error('创建货物时出错：', error);
     }
   };
 
@@ -153,8 +150,8 @@ export default function InventoryScreen() {
 
   return (
     <View style={{flex: 1, padding: 20}}>
-      <Text style={{fontSize: 24, marginBottom: 20}}>Cargo Management</Text>
-      <Button title="Create Cargo" onPress={handleCreateCargo} />
+      <Text style={{fontSize: 24, marginBottom: 20}}>库存管理</Text>
+      <Button title="添加一项随机货物" onPress={handleCreateCargo} />
 
       {/* 使用 SectionList 展示分组的货物 */}
       <SectionList

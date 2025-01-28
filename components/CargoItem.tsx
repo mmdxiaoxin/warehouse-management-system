@@ -47,7 +47,7 @@ const CargoItem: React.FC<CargoItemProps> = ({
       <TouchableOpacity
         style={styles.buttonDelete}
         onPress={() => handleDeleteCargo(item.cargoId)}>
-        <Text style={styles.buttonText}>Delete Cargo</Text>
+        <Text style={styles.buttonText}>删除货物</Text>
       </TouchableOpacity>
     </View>
   </View>

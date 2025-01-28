@@ -43,7 +43,7 @@ export default function StoreScreen({navigation}: any) {
     Alert.alert(
       '成功',
       `${selectedCargo}入库数量数量: ${quantity}, 入库后的数量为: ${
-        parseInt(quantity) + parseInt(cargo.count)
+        parseInt(quantity) + parseInt(cargo.quantity)
       }`,
     );
   };
