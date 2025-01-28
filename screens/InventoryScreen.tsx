@@ -5,6 +5,27 @@ import RNFS from 'react-native-fs';
 import CargoItem from '../components/CargoItem';
 import {useFocusEffect} from '@react-navigation/native';
 
+// 随机生成字符串的函数
+const generateRandomString = (length: number) => {
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
+// 随机选择一个类别
+const getRandomCategory = () => {
+  const categories = ['木门', '木地板', '辅料'];
+  return categories[Math.floor(Math.random() * categories.length)];
+};
+
+// 随机生成数量
+const getRandomCount = () => Math.floor(Math.random() * 101);
+
 export default function InventoryScreen() {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物列表
 
@@ -99,9 +120,10 @@ export default function InventoryScreen() {
   const handleCreateCargo = async () => {
     try {
       const newCargo = {
-        name: 'Furniture',
-        description: 'Chairs and tables',
-        category: '木门',
+        name: generateRandomString(8), // 随机生成名称
+        description: 'Randomly generated cargo item',
+        category: getRandomCategory(), // 随机选择一个类别
+        count: getRandomCount(), // 随机生成数量
         weight: 25.5,
         volume: 0.08,
         origin: 'Beijing',

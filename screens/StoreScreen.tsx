@@ -38,7 +38,14 @@ export default function StoreScreen({navigation}: any) {
       Alert.alert('Error', 'Please select a cargo and specify quantity');
       return;
     }
-    Alert.alert('成功', `添加数量 ${quantity} 的 ${selectedCargo} 到库存`);
+    const cargo = cargoList.find(c => c.name === selectedCargo);
+    // TODO: 更新货物数量
+    Alert.alert(
+      '成功',
+      `${selectedCargo}入库数量数量: ${quantity}, 入库后的数量为: ${
+        parseInt(quantity) + parseInt(cargo.count)
+      }`,
+    );
   };
 
   return (
