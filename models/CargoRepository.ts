@@ -1,5 +1,6 @@
 import Realm from 'realm';
 import {Cargo} from './CargoModel';
+import uuid from 'react-native-uuid'; // 引入 react-native-uuid
 
 class CargoRepository {
   private realm: Realm | null = null;
@@ -7,17 +8,21 @@ class CargoRepository {
   // 打开 Realm 数据库
   private async getRealm() {
     if (!this.realm) {
-      this.realm = await Realm.open({
-        path: 'cargo.realm',
-        schema: [Cargo],
-      });
+      try {
+        this.realm = await Realm.open({
+          path: 'cargo.realm',
+          schema: [Cargo],
+        });
+      } catch (error) {
+        console.error('Failed to open Realm:', error);
+        throw error;
+      }
     }
     return this.realm;
   }
 
   // 创建 Cargo
   async createCargo(cargoData: {
-    cargoId: number;
     name: string;
     description?: string;
     weight: number;
@@ -31,8 +36,10 @@ class CargoRepository {
   }) {
     const realm = await this.getRealm();
     try {
+      const cargoId = uuid.v4().toString(); // 使用 react-native-uuid 生成 UUID 作为主键
+
       realm.write(() => {
-        realm.create('Cargo', cargoData);
+        realm.create('Cargo', {...cargoData, cargoId});
       });
       console.log('Cargo added!');
     } catch (error) {
@@ -44,7 +51,7 @@ class CargoRepository {
   async getAllCargo() {
     const realm = await this.getRealm();
     try {
-      return realm.objects('Cargo');
+      return Array.from(realm.objects('Cargo'));
     } catch (error) {
       console.error('Failed to fetch cargos:', error);
       return [];
@@ -55,7 +62,9 @@ class CargoRepository {
   async getCargoByStatus(status: string) {
     const realm = await this.getRealm();
     try {
-      return realm.objects('Cargo').filtered('status == $0', status);
+      return Array.from(
+        realm.objects('Cargo').filtered('status == $0', status),
+      );
     } catch (error) {
       console.error(`Failed to fetch cargos with status "${status}":`, error);
       return [];
@@ -63,7 +72,7 @@ class CargoRepository {
   }
 
   // 更新 Cargo 状态
-  async updateCargoStatus(cargoId: number, newStatus: string) {
+  async updateCargoStatus(cargoId: string, newStatus: string) {
     const realm = await this.getRealm();
     try {
       realm.write(() => {
@@ -97,7 +106,7 @@ class CargoRepository {
   }
 
   // 删除 Cargo
-  async deleteCargo(cargoId: number) {
+  async deleteCargo(cargoId: string) {
     const realm = await this.getRealm();
     try {
       realm.write(() => {

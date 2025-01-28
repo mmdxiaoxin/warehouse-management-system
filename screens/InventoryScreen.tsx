@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {cargoRepository} from '../models/CargoRepository'; // 引入仓库类
+import {cargoRepository} from '../models/CargoRepository';
+import RNFS from 'react-native-fs';
 
 export default function InventoryScreen() {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物列表
@@ -19,11 +20,22 @@ export default function InventoryScreen() {
       setCargoList(cargos as any[]);
     };
 
+    const deleteRealmDatabase = async () => {
+      const realmPath = `${RNFS.DocumentDirectoryPath}/cargo.realm`; // 默认路径
+      try {
+        // 删除数据库文件
+        await RNFS.unlink(realmPath);
+        console.log('Realm database file deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting Realm database:', error);
+      }
+    };
+    deleteRealmDatabase();
     loadCargoData();
   }, []);
 
   // 处理货物删除操作
-  const handleDeleteCargo = (cargoId: number) => {
+  const handleDeleteCargo = (cargoId: string) => {
     Alert.alert(
       'Confirm Delete',
       'Are you sure you want to delete this cargo?',
@@ -35,11 +47,16 @@ export default function InventoryScreen() {
         {
           text: 'OK',
           onPress: async () => {
-            await cargoRepository.deleteCargo(cargoId);
-            setCargoList(prevCargoList =>
-              prevCargoList.filter(cargo => cargo.cargoId !== cargoId),
-            ); // 更新列表
-            console.log('Cargo deleted!');
+            try {
+              await cargoRepository.deleteCargo(cargoId);
+              setCargoList(
+                prevCargoList =>
+                  prevCargoList.filter(cargo => cargo.cargoId !== cargoId), // 更新列表
+              );
+              console.log('Cargo deleted!');
+            } catch (error) {
+              console.error('Error deleting cargo:', error);
+            }
           },
         },
       ],
@@ -47,37 +64,49 @@ export default function InventoryScreen() {
   };
 
   // 处理货物状态更新
-  const handleUpdateStatus = async (cargoId: number, newStatus: string) => {
-    await cargoRepository.updateCargoStatus(cargoId, newStatus);
-    setCargoList(prevCargoList =>
-      prevCargoList.map(cargo =>
-        cargo.cargoId === cargoId ? {...cargo, status: newStatus} : cargo,
-      ),
-    );
-    console.log('Cargo status updated!');
+  const handleUpdateStatus = async (cargoId: string, newStatus: string) => {
+    try {
+      await cargoRepository.updateCargoStatus(cargoId, newStatus);
+      setCargoList(prevCargoList =>
+        prevCargoList.map(cargo =>
+          cargo.cargoId === cargoId ? {...cargo, status: newStatus} : cargo,
+        ),
+      );
+      console.log('Cargo status updated!');
+    } catch (error) {
+      console.error('Error updating cargo status:', error);
+    }
   };
 
   // 处理创建货物
   const handleCreateCargo = async () => {
-    const newCargo = {
-      cargoId: 2,
-      name: 'Furniture',
-      description: 'Chairs and tables',
-      weight: 25.5,
-      volume: 0.08,
-      origin: 'Beijing',
-      destination: 'Los Angeles',
-      shippingDate: new Date('2025-01-25'),
-      estimatedArrival: new Date('2025-02-05'),
-      status: 'Pending',
-      trackingNumber: 'TN987654321',
-    };
+    try {
+      const newCargo = {
+        name: 'Furniture',
+        description: 'Chairs and tables',
+        weight: 25.5,
+        volume: 0.08,
+        origin: 'Beijing',
+        destination: 'Los Angeles',
+        shippingDate: new Date('2025-01-25'),
+        estimatedArrival: new Date('2025-02-05'),
+        status: 'Pending',
+        trackingNumber: 'TN987654321',
+      };
 
-    await cargoRepository.createCargo(newCargo); // 创建货物
+      await cargoRepository.createCargo(newCargo); // 创建货物
 
-    // 重新获取并更新货物列表
-    const cargos = await cargoRepository.getAllCargo();
-    setCargoList(cargos as any[]);
+      // 重新获取并更新货物列表
+      const cargos = await cargoRepository.getAllCargo();
+      setCargoList(
+        cargos.map(cargo => ({
+          ...cargo,
+          cargoId: String(cargo.cargoId), // 确保 cargoId 是字符串类型
+        })),
+      );
+    } catch (error) {
+      console.error('Error creating cargo:', error);
+    }
   };
 
   // 渲染货物项
@@ -89,9 +118,17 @@ export default function InventoryScreen() {
       <Text>
         Origin: {item.origin} - Destination: {item.destination}
       </Text>
-      <Text>Shipping Date: {item.shippingDate.toLocaleDateString()}</Text>
       <Text>
-        Estimated Arrival: {item.estimatedArrival.toLocaleDateString()}
+        Shipping Date:{' '}
+        {item.shippingDate instanceof Date
+          ? item.shippingDate.toLocaleDateString()
+          : 'Invalid Date'}
+      </Text>
+      <Text>
+        Estimated Arrival:{' '}
+        {item.estimatedArrival instanceof Date
+          ? item.estimatedArrival.toLocaleDateString()
+          : 'Invalid Date'}
       </Text>
       <TouchableOpacity
         style={{marginTop: 10, backgroundColor: '#4CAF50', padding: 10}}
@@ -113,7 +150,7 @@ export default function InventoryScreen() {
       <FlatList
         data={cargoList}
         renderItem={renderCargoItem} // 渲染货物项
-        keyExtractor={item => item.cargoId.toString()} // 唯一标识符
+        keyExtractor={item => String(item.cargoId)} // 确保 cargoId 是字符串类型
       />
     </View>
   );

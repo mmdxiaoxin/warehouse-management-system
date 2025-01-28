@@ -1,13 +1,12 @@
 import Realm from 'realm';
-
 export class Cargo extends Realm.Object {
   static schema = {
     name: 'Cargo',
     primaryKey: 'cargoId',
     properties: {
-      cargoId: 'int',
+      cargoId: 'string',
       name: 'string',
-      description: 'string?',
+      description: 'string?', // 可选字段
       weight: 'float',
       volume: 'float?',
       origin: 'string',
@@ -15,7 +14,7 @@ export class Cargo extends Realm.Object {
       shippingDate: 'date',
       estimatedArrival: 'date',
       status: 'string',
-      trackingNumber: 'string?',
+      trackingNumber: 'string?', // 可选字段
     },
   };
 }
