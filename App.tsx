@@ -4,6 +4,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import HomeScreen from './screens/HomeScreen';
+import InventoryScreen from './screens/InventoryScreen';
+import OutboundScreen from './screens/OutboundScreen';
+import StoreScreen from './screens/StoreScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -14,12 +17,16 @@ const HomeTabs = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
-          let iconName: 'home' | 'number';
+          let iconName: 'home' | 'export' | 'import' | 'database' = 'home';
 
           if (route.name === '主页') {
             iconName = 'home';
-          } else {
-            iconName = 'number';
+          } else if (route.name === '入库') {
+            iconName = 'import';
+          } else if (route.name === '出库') {
+            iconName = 'export';
+          } else if (route.name === '库存') {
+            iconName = 'database';
           }
 
           return <AntDesignIcon name={iconName} size={size} color={color} />;
@@ -28,7 +35,9 @@ const HomeTabs = () => {
         tabBarInactiveTintColor: 'gray',
       })}>
       <Tab.Screen name="主页" component={HomeScreen} />
-      <Tab.Screen name="仓库" component={HomeScreen} />
+      <Tab.Screen name="入库" component={StoreScreen} />
+      <Tab.Screen name="出库" component={OutboundScreen} />
+      <Tab.Screen name="库存" component={InventoryScreen} />
     </Tab.Navigator>
   );
 };
