@@ -177,9 +177,19 @@ export default function InventoryScreen() {
 
 const styles = StyleSheet.create({
   sectionHeader: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    backgroundColor: '#f1f1f1',
-    padding: 10,
+    color: '#FFFFFF',
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginVertical: 8,
+    textAlign: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
 });
