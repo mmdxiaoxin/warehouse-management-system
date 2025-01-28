@@ -24,6 +24,7 @@ class CargoRepository {
   // 创建 Cargo
   async createCargo(cargoData: {
     name: string;
+    category: string;
     description?: string;
     weight: number;
     volume?: number;
