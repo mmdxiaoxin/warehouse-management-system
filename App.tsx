@@ -7,6 +7,7 @@ import HomeScreen from './screens/HomeScreen';
 import InventoryScreen from './screens/InventoryScreen';
 import OutboundScreen from './screens/OutboundScreen';
 import StoreScreen from './screens/StoreScreen';
+import AddCargoScreen from './screens/AddCargoScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,6 +52,7 @@ const AppNavigator = () => {
         component={HomeTabs}
         options={{headerShown: false}}
       />
+      <Stack.Screen name="AddCargo" component={AddCargoScreen} />
     </Stack.Navigator>
   );
 };
