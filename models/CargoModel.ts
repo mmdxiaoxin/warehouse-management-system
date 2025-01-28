@@ -6,6 +6,7 @@ export class Cargo extends Realm.Object {
     properties: {
       cargoId: 'string',
       name: 'string',
+      category: 'string',
       description: 'string?', // 可选字段
       weight: 'float',
       volume: 'float?',

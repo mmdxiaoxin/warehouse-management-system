@@ -1,14 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Button,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, Text, Button, FlatList, Alert} from 'react-native';
 import {cargoRepository} from '../models/CargoRepository';
 import RNFS from 'react-native-fs';
+import CargoItem from '../components/CargoItem';
 
 export default function InventoryScreen() {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物列表
@@ -30,7 +24,8 @@ export default function InventoryScreen() {
         console.error('Error deleting Realm database:', error);
       }
     };
-    deleteRealmDatabase();
+
+    // deleteRealmDatabase(); // 用来删除数据库文件进行测试
     loadCargoData();
   }, []);
 
@@ -49,10 +44,9 @@ export default function InventoryScreen() {
           onPress: async () => {
             try {
               await cargoRepository.deleteCargo(cargoId);
-              setCargoList(
-                prevCargoList =>
-                  prevCargoList.filter(cargo => cargo.cargoId !== cargoId), // 更新列表
-              );
+              setCargoList(prevCargoList =>
+                prevCargoList.filter(cargo => cargo.cargoId !== cargoId),
+              ); // 更新列表
               console.log('Cargo deleted!');
             } catch (error) {
               console.error('Error deleting cargo:', error);
@@ -84,6 +78,7 @@ export default function InventoryScreen() {
       const newCargo = {
         name: 'Furniture',
         description: 'Chairs and tables',
+        category: '木门',
         weight: 25.5,
         volume: 0.08,
         origin: 'Beijing',
@@ -109,47 +104,19 @@ export default function InventoryScreen() {
     }
   };
 
-  // 渲染货物项
-  const renderCargoItem = ({item}: {item: any}) => (
-    <View
-      style={{padding: 10, borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
-      <Text>Name: {item.name}</Text>
-      <Text>Status: {item.status}</Text>
-      <Text>
-        Origin: {item.origin} - Destination: {item.destination}
-      </Text>
-      <Text>
-        Shipping Date:{' '}
-        {item.shippingDate instanceof Date
-          ? item.shippingDate.toLocaleDateString()
-          : 'Invalid Date'}
-      </Text>
-      <Text>
-        Estimated Arrival:{' '}
-        {item.estimatedArrival instanceof Date
-          ? item.estimatedArrival.toLocaleDateString()
-          : 'Invalid Date'}
-      </Text>
-      <TouchableOpacity
-        style={{marginTop: 10, backgroundColor: '#4CAF50', padding: 10}}
-        onPress={() => handleUpdateStatus(item.cargoId, 'Shipped')}>
-        <Text style={{color: '#fff'}}>Mark as Shipped</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{marginTop: 10, backgroundColor: '#f44336', padding: 10}}
-        onPress={() => handleDeleteCargo(item.cargoId)}>
-        <Text style={{color: '#fff'}}>Delete Cargo</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
   return (
-    <View style={{padding: 20}}>
+    <View style={{flex: 1, padding: 20}}>
       <Text style={{fontSize: 24, marginBottom: 20}}>Cargo Management</Text>
       <Button title="Create Cargo" onPress={handleCreateCargo} />
       <FlatList
         data={cargoList}
-        renderItem={renderCargoItem} // 渲染货物项
+        renderItem={({item}) => (
+          <CargoItem
+            item={item}
+            handleUpdateStatus={handleUpdateStatus}
+            handleDeleteCargo={handleDeleteCargo}
+          />
+        )}
         keyExtractor={item => String(item.cargoId)} // 确保 cargoId 是字符串类型
       />
     </View>
