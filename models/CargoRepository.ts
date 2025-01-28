@@ -2,6 +2,21 @@ import Realm from 'realm';
 import {Cargo} from './CargoModel';
 import uuid from 'react-native-uuid'; // 引入 react-native-uuid
 
+export type CargoData = {
+  name: string;
+  category: string;
+  count?: number;
+  description?: string;
+  weight?: number;
+  volume?: number;
+  origin?: string;
+  destination?: string;
+  shippingDate?: Date;
+  estimatedArrival?: Date;
+  status?: string;
+  trackingNumber?: string;
+};
+
 class CargoRepository {
   private realm: Realm | null = null;
 
@@ -22,25 +37,14 @@ class CargoRepository {
   }
 
   // 创建 Cargo
-  async createCargo(cargoData: {
-    name: string;
-    category: string;
-    description?: string;
-    weight: number;
-    volume?: number;
-    origin: string;
-    destination: string;
-    shippingDate: Date;
-    estimatedArrival: Date;
-    status: string;
-    trackingNumber?: string;
-  }) {
+  async createCargo(cargoData: CargoData) {
     const realm = await this.getRealm();
     try {
       const cargoId = uuid.v4().toString(); // 使用 react-native-uuid 生成 UUID 作为主键
+      const count = cargoData.count || 0;
 
       realm.write(() => {
-        realm.create('Cargo', {...cargoData, cargoId});
+        realm.create('Cargo', {...cargoData, cargoId, count});
       });
       console.log('Cargo added!');
     } catch (error) {

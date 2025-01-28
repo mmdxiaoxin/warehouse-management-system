@@ -3,11 +3,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
+import AddCargoScreen from './screens/AddCargoScreen';
 import HomeScreen from './screens/HomeScreen';
 import InventoryScreen from './screens/InventoryScreen';
 import OutboundScreen from './screens/OutboundScreen';
 import StoreScreen from './screens/StoreScreen';
-import AddCargoScreen from './screens/AddCargoScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
