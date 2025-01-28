@@ -19,8 +19,10 @@
     "@react-navigation/stack": "^7.1.1",
     "react": "18.3.1",
     "react-native": "0.77.0",
+    "react-native-fs": "^2.20.0",
     "react-native-safe-area-context": "^5.1.0",
     "react-native-screens": "^4.5.0",
+    "react-native-uuid": "^2.0.3",
     "realm": "^12.14.0"
   },
   "devDependencies": {
