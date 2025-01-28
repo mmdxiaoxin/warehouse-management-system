@@ -1,33 +1,56 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button, FlatList, Alert} from 'react-native';
+import {View, Text, Button, SectionList, Alert, StyleSheet} from 'react-native';
 import {cargoRepository} from '../models/CargoRepository';
 import RNFS from 'react-native-fs';
 import CargoItem from '../components/CargoItem';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function InventoryScreen() {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物列表
 
-  useEffect(() => {
-    // 获取所有货物
-    const loadCargoData = async () => {
-      const cargos = await cargoRepository.getAllCargo();
-      setCargoList(cargos as any[]);
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      // 获取所有货物
+      const loadCargoData = async () => {
+        const cargos = await cargoRepository.getAllCargo();
+        setCargoList(cargos as any[]);
+      };
 
-    const deleteRealmDatabase = async () => {
-      const realmPath = `${RNFS.DocumentDirectoryPath}/cargo.realm`; // 默认路径
-      try {
-        // 删除数据库文件
-        await RNFS.unlink(realmPath);
-        console.log('Realm database file deleted successfully!');
-      } catch (error) {
-        console.error('Error deleting Realm database:', error);
-      }
-    };
+      const deleteRealmDatabase = async () => {
+        const realmPath = `${RNFS.DocumentDirectoryPath}/cargo.realm`; // 默认路径
+        try {
+          // 删除数据库文件
+          await RNFS.unlink(realmPath);
+          console.log('Realm database file deleted successfully!');
+        } catch (error) {
+          console.error('Error deleting Realm database:', error);
+        }
+      };
 
-    // deleteRealmDatabase(); // 用来删除数据库文件进行测试
-    loadCargoData();
-  }, []);
+      // deleteRealmDatabase(); // 用来删除数据库文件进行测试
+      loadCargoData();
+    }, []),
+  );
+
+  // 按照类别进行分组
+  const groupByCategory = (cargoList: any[]) => {
+    const grouped: {title: string; data: any[]}[] = [];
+    const categories = Array.from(
+      new Set(cargoList.map(cargo => cargo.category)),
+    );
+
+    categories.forEach(category => {
+      const filteredCargo = cargoList.filter(
+        cargo => cargo.category === category,
+      );
+      grouped.push({
+        title: category,
+        data: filteredCargo,
+      });
+    });
+
+    return grouped;
+  };
 
   // 处理货物删除操作
   const handleDeleteCargo = (cargoId: string) => {
@@ -104,12 +127,17 @@ export default function InventoryScreen() {
     }
   };
 
+  const groupedCargo = groupByCategory(cargoList);
+
   return (
     <View style={{flex: 1, padding: 20}}>
       <Text style={{fontSize: 24, marginBottom: 20}}>Cargo Management</Text>
       <Button title="Create Cargo" onPress={handleCreateCargo} />
-      <FlatList
-        data={cargoList}
+
+      {/* 使用 SectionList 展示分组的货物 */}
+      <SectionList
+        sections={groupedCargo}
+        keyExtractor={(item, index) => String(item.cargoId) + index} // 使用 cargoId 和 index 作为 key
         renderItem={({item}) => (
           <CargoItem
             item={item}
@@ -117,8 +145,19 @@ export default function InventoryScreen() {
             handleDeleteCargo={handleDeleteCargo}
           />
         )}
-        keyExtractor={item => String(item.cargoId)} // 确保 cargoId 是字符串类型
+        renderSectionHeader={({section: {title}}) => (
+          <Text style={styles.sectionHeader}>{title}</Text>
+        )}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    backgroundColor: '#f1f1f1',
+    padding: 10,
+  },
+});

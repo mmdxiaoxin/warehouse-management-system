@@ -32,6 +32,7 @@ export default function StoreScreen({navigation}: any) {
       fetchCargoList();
     }, []),
   );
+
   const handleAddToStore = () => {
     if (!selectedCargo || !quantity) {
       Alert.alert('Error', 'Please select a cargo and specify quantity');
