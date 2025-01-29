@@ -12,9 +12,9 @@ import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {colorStyle} from '../styles';
+import {colorStyle, fontStyle} from '../styles';
 
-export default function StoreScreen({navigation}: any) {
+export default function AddModelScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // 当前选择的货物索引
@@ -55,11 +55,15 @@ export default function StoreScreen({navigation}: any) {
       models: JSON.stringify(spec),
     });
 
+    navigation.goBack();
+
     Alert.alert(`已成功入库货物: ${selectedCargo}`);
   };
 
   return (
     <ScrollView style={styles.container}>
+      <Text style={styles.title}>添加新型号</Text>
+
       {/* 选择货物类别 */}
       <SectionInput label="货物类别">
         <RNPickerSelect
@@ -81,7 +85,6 @@ export default function StoreScreen({navigation}: any) {
           placeholder={{label: '请选择货物', value: ''}}
           value={selectedCargo}
           onValueChange={(value, index) => {
-            console.log('select:', value, index);
             setSelectedCargo(value);
             setSelectedIndex(index);
           }}
@@ -100,23 +103,14 @@ export default function StoreScreen({navigation}: any) {
 
       {/* 入库按钮 */}
       <TouchableOpacity style={styles.confirmButton} onPress={handleAddToStore}>
-        <Text style={styles.addButtonText}>确认入库</Text>
+        <Text style={styles.confirmButtonText}>型号添加</Text>
       </TouchableOpacity>
 
-      <Divider />
-
-      {/* 添加新货物按钮 */}
+      {/* 取消按钮 */}
       <TouchableOpacity
-        style={styles.addCargoButton}
-        onPress={() => navigation.navigate('AddCargo')}>
-        <Text style={styles.addButtonText}>添加新货物</Text>
-      </TouchableOpacity>
-
-      {/* 添加新货物按钮 */}
-      <TouchableOpacity
-        style={styles.addModelButton}
-        onPress={() => navigation.navigate('AddModel')}>
-        <Text style={styles.addButtonText}>添加新型号</Text>
+        style={styles.cancelButton}
+        onPress={() => navigation.goBack()}>
+        <Text style={styles.confirmButtonText}>取消添加</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -126,6 +120,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
+  },
+  title: {
+    ...fontStyle.heading1,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   label: {
     fontSize: 18,
@@ -144,19 +143,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 5,
   },
-  addCargoButton: {
-    backgroundColor: colorStyle.success,
+  cancelButton: {
+    backgroundColor: colorStyle.danger,
     padding: 10,
-    marginVertical: 10,
     borderRadius: 5,
+    marginBottom: 40,
   },
-  addModelButton: {
-    backgroundColor: colorStyle.warning,
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
-  },
-  addButtonText: {
+  confirmButtonText: {
     color: '#fff',
     textAlign: 'center',
     fontSize: 16,

@@ -7,6 +7,7 @@ import React from 'react';
 import {Cargo} from './models/Cargo';
 import {CargoItem} from './models/CargoItem';
 import AddCargoScreen from './screens/AddCargoScreen';
+import AddModelScreen from './screens/AddModelScreen';
 import EditCargoScreen from './screens/EditCargoScreen';
 import HomeScreen from './screens/HomeScreen';
 import InventoryScreen from './screens/InventoryScreen';
@@ -64,6 +65,11 @@ const AppNavigator = () => {
       <Stack.Screen
         name="EditCargo"
         component={EditCargoScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddModel"
+        component={AddModelScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
