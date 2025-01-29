@@ -126,10 +126,11 @@ export default function InventoryScreen() {
   // 处理创建货物
   const handleCreateCargo = async () => {
     try {
+      const category = getRandomCategory(); // 随机选择一个类别
       const newCargo = {
-        name: generateRandomString(8), // 随机生成名称
+        name: category + generateRandomString(8), // 随机生成名称
         description: '随机生成的货物项目',
-        category: getRandomCategory(), // 随机选择一个类别
+        category,
         unit: '个',
       };
 
