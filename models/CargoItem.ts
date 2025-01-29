@@ -3,6 +3,7 @@ import Realm, {BSON} from 'realm';
 export class CargoItem extends Realm.Object {
   _id!: BSON.ObjectId;
   models!: string;
+  quantity!: number;
   ctime!: Date;
 
   static schema: Realm.ObjectSchema = {
@@ -16,6 +17,7 @@ export class CargoItem extends Realm.Object {
         property: 'items', // 反向关系字段名
       },
       models: 'string',
+      quantity: 'int',
       ctime: 'date',
     },
   };
