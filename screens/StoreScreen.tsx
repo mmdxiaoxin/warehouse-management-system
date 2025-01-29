@@ -1,17 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
-import {useCargoItem} from '../hooks/useCargoItem';
 import {colorStyle} from '../styles';
 
 export default function StoreScreen({navigation}: any) {
@@ -19,11 +11,15 @@ export default function StoreScreen({navigation}: any) {
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // 当前选择的货物索引
   const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
-  const [spec, setSpec] = useState<CargoSpec>([]); // 货物规格
 
   // 使用 Realm 查询所有货物数据
   const {cargoList} = useCargo();
-  const {createCargoItem} = useCargoItem();
+  const currentCargo = useMemo(() => {
+    if (selectedIndex > 0) {
+      return cargoList[selectedIndex - 1];
+    }
+    return null;
+  }, [selectedIndex, cargoList]);
 
   // 根据货物类别筛选货物
   const filterCargoByCategory = useCallback(() => {
@@ -39,86 +35,88 @@ export default function StoreScreen({navigation}: any) {
     filterCargoByCategory(); // 组件挂载时默认筛选
   }, [cargoCategory, cargoList]);
 
-  // 入库逻辑
-  const handleAddToStore = () => {
-    if (selectedIndex === 0 || !filteredCargoList[selectedIndex - 1]) {
-      Alert.alert('请选择货物');
-      return;
-    }
-
-    // 获取选中货物的 _id
-    const selectedCargoId = filteredCargoList[selectedIndex - 1]._id;
-
-    // 增加库存逻辑（例如增加数量）
-    createCargoItem(selectedCargoId, {
-      quantity: 1,
-      models: JSON.stringify(spec),
-    });
-
-    Alert.alert(`已成功入库货物: ${selectedCargo}`);
-  };
-
   return (
-    <ScrollView style={styles.container}>
-      {/* 选择货物类别 */}
-      <SectionInput label="货物类别">
-        <RNPickerSelect
-          placeholder={{label: '请选择种类(可不选)', value: ''}}
-          value={cargoCategory}
-          onValueChange={setCargoCategory}
-          items={[
-            {label: '木门', value: '木门'},
-            {label: '木地板', value: '木地板'},
-            {label: '辅料', value: '辅料'},
-          ]}
-          style={pickerSelectStyles}
-        />
-      </SectionInput>
+    <FlatList
+      style={styles.container}
+      data={filteredCargoList}
+      keyExtractor={item => item._id.toString()}
+      ListHeaderComponent={
+        <>
+          {/* 选择货物类别 */}
+          <SectionInput label="货物类别">
+            <RNPickerSelect
+              placeholder={{label: '请选择种类(可不选)', value: ''}}
+              value={cargoCategory}
+              onValueChange={setCargoCategory}
+              items={[
+                {label: '木门', value: '木门'},
+                {label: '木地板', value: '木地板'},
+                {label: '辅料', value: '辅料'},
+              ]}
+              style={pickerSelectStyles}
+            />
+          </SectionInput>
 
-      {/* 选择货物 */}
-      <SectionInput label="货物选择">
-        <RNPickerSelect
-          placeholder={{label: '请选择货物', value: ''}}
-          value={selectedCargo}
-          onValueChange={(value, index) => {
-            console.log('select:', value, index);
-            setSelectedCargo(value);
-            setSelectedIndex(index);
-          }}
-          items={filteredCargoList.map(cargo => ({
-            label: cargo.name,
-            value: cargo.name,
-          }))}
-          style={pickerSelectStyles}
-        />
-      </SectionInput>
+          {/* 选择货物 */}
+          <SectionInput label="货物选择">
+            <RNPickerSelect
+              placeholder={{label: '请选择货物', value: ''}}
+              value={selectedCargo}
+              onValueChange={(value, index) => {
+                console.log('select:', value, index);
+                setSelectedCargo(value);
+                setSelectedIndex(index);
+              }}
+              items={filteredCargoList.map(cargo => ({
+                label: cargo.name,
+                value: cargo.name,
+              }))}
+              style={pickerSelectStyles}
+            />
+          </SectionInput>
 
-      <Divider />
+          <Divider />
 
-      {/* 货物规格输入 */}
-      <CargoSpecInput onChange={setSpec} />
+          {/* 当前选中货物的 items 内容展示 */}
+          {currentCargo && currentCargo.items.length > 0 ? (
+            <View style={styles.itemsContainer}>
+              <Text style={styles.itemsTitle}>当前选中货物的型号:</Text>
+              <FlatList
+                data={currentCargo.items}
+                keyExtractor={item => item._id.toString()}
+                renderItem={({item}) => (
+                  <View style={styles.itemCard}>
+                    <Text style={styles.itemName}>{item.models}</Text>
+                    <Text style={styles.itemQuantity}>
+                      数量: {item.quantity}
+                    </Text>
+                  </View>
+                )}
+              />
+            </View>
+          ) : (
+            <Text style={styles.noItemsText}>当前货物没有型号信息</Text>
+          )}
 
-      {/* 入库按钮 */}
-      <TouchableOpacity style={styles.confirmButton} onPress={handleAddToStore}>
-        <Text style={styles.addButtonText}>确认入库</Text>
-      </TouchableOpacity>
+          <Divider />
 
-      <Divider />
+          {/* 添加新货物按钮 */}
+          <TouchableOpacity
+            style={styles.addCargoButton}
+            onPress={() => navigation.navigate('AddCargo')}>
+            <Text style={styles.buttonText}>添加新货物</Text>
+          </TouchableOpacity>
 
-      {/* 添加新货物按钮 */}
-      <TouchableOpacity
-        style={styles.addCargoButton}
-        onPress={() => navigation.navigate('AddCargo')}>
-        <Text style={styles.addButtonText}>添加新货物</Text>
-      </TouchableOpacity>
-
-      {/* 添加新货物按钮 */}
-      <TouchableOpacity
-        style={styles.addModelButton}
-        onPress={() => navigation.navigate('AddModel')}>
-        <Text style={styles.addButtonText}>添加新型号</Text>
-      </TouchableOpacity>
-    </ScrollView>
+          {/* 添加新型号按钮 */}
+          <TouchableOpacity
+            style={styles.addModelButton}
+            onPress={() => navigation.navigate('AddModel')}>
+            <Text style={styles.buttonText}>添加新型号</Text>
+          </TouchableOpacity>
+        </>
+      }
+      renderItem={({item}) => null} // FlatList 不需要渲染每个货物项
+    />
   );
 }
 
@@ -155,11 +153,40 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
+    marginBottom: 40,
   },
-  addButtonText: {
+  buttonText: {
     color: '#fff',
     textAlign: 'center',
     fontSize: 16,
+  },
+  itemsContainer: {
+    marginVertical: 20,
+  },
+  itemsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  itemCard: {
+    padding: 15,
+    marginBottom: 10,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  itemQuantity: {
+    fontSize: 14,
+    color: '#666',
+  },
+  noItemsText: {
+    fontSize: 16,
+    color: '#888',
   },
 });
 
