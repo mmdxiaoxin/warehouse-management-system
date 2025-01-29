@@ -6,7 +6,7 @@ export class Cargo extends Realm.Object {
   name!: string;
   category!: string;
   unit!: string;
-  items?: Realm.List<CargoItem>;
+  items!: Realm.List<CargoItem>;
   description?: string;
   ctime?: Date;
   utime?: Date;

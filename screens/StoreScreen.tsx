@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   ScrollView,
@@ -7,22 +7,23 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import CargoSpecInput from '../components/CargoSpecInput';
+import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
-import {useRealm, useQuery} from '@realm/react'; // 引入 Realm hooks
-import {Cargo} from '../models/Cargo'; // 导入 Cargo 模型
+import {useCargo} from '../hooks/useCargo';
+import {useCargoItem} from '../hooks/useCargoItem';
 import {colorStyle} from '../styles';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
+  const [selectedIndex, setSelectedIndex] = useState<number>(0); // 当前选择的货物索引
   const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
-
-  const realm = useRealm();
+  const [spec, setSpec] = useState<CargoSpec>([]); // 货物规格
 
   // 使用 Realm 查询所有货物数据
-  const cargoList = useQuery(Cargo);
+  const {cargoList} = useCargo();
+  const {createCargoItem} = useCargoItem();
 
   // 根据货物类别筛选货物
   const filterCargoByCategory = useCallback(() => {
@@ -40,24 +41,19 @@ export default function StoreScreen({navigation}: any) {
 
   // 入库逻辑
   const handleAddToStore = () => {
-    if (!selectedCargo) {
+    if (selectedIndex === 0 || !filteredCargoList[selectedIndex - 1]) {
       Alert.alert('请选择货物');
       return;
     }
 
-    const cargoToAdd = cargoList.filtered(`name == "${selectedCargo}"`)[0];
-    if (!cargoToAdd) {
-      Alert.alert('货物不存在');
-      return;
-    }
+    // 获取选中货物的 _id
+    const selectedCargoId = filteredCargoList[selectedIndex - 1]._id;
 
     // 增加库存逻辑（例如增加数量）
-    realm.write(() => {
-      cargoToAdd.utime = new Date(); // 更新入库时间
-    });
+    createCargoItem(selectedCargoId, {
+      models: JSON.stringify(spec),
+    } as any);
 
-    console.log('已选择货物:', selectedCargo);
-    console.log('货物规格:', cargoCategory);
     Alert.alert(`已成功入库货物: ${selectedCargo}`);
   };
 
@@ -85,7 +81,11 @@ export default function StoreScreen({navigation}: any) {
         <RNPickerSelect
           placeholder={{label: '请选择货物', value: ''}}
           value={selectedCargo}
-          onValueChange={setSelectedCargo}
+          onValueChange={(value, index) => {
+            console.log('select:', value, index);
+            setSelectedCargo(value);
+            setSelectedIndex(index);
+          }}
           items={filteredCargoList.map(cargo => ({
             label: cargo.name,
             value: cargo.name,
@@ -97,7 +97,7 @@ export default function StoreScreen({navigation}: any) {
       <Divider />
 
       {/* 货物规格输入 */}
-      <CargoSpecInput onChange={() => {}} />
+      <CargoSpecInput onChange={setSpec} />
 
       {/* 入库按钮 */}
       <TouchableOpacity style={styles.confirmButton} onPress={handleAddToStore}>

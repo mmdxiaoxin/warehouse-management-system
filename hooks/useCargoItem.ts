@@ -1,7 +1,7 @@
-import {useRealm, useQuery} from '@realm/react';
-import {CargoItem} from '../models/CargoItem';
-import {Cargo} from '../models/Cargo';
+import {useQuery, useRealm} from '@realm/react';
 import {BSON} from 'realm';
+import {Cargo} from '../models/Cargo';
+import {CargoItem} from '../models/CargoItem';
 
 export const useCargoItem = () => {
   const realm = useRealm();
@@ -27,16 +27,9 @@ export const useCargoItem = () => {
         ...cargoItemData,
         ctime: new Date(),
       });
-      console.log('Created new CargoItem:', newCargoItem);
 
-      // 确保 items 数组已初始化，若未初始化则创建空数组
-      if (!cargo.items) {
-        cargo.items = new Realm.List<CargoItem>();
-      }
-
-      // 将新创建的 CargoItem 添加到 Cargo 的 items 数组中
+      // 将新创建的 CargoItem 直接关联到 Cargo 的 items 列表
       cargo.items.push(newCargoItem);
-      console.log('Updated Cargo with new CargoItem:', cargo);
     });
   };
 

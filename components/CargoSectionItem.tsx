@@ -1,9 +1,10 @@
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
-import React, {useEffect, useState} from 'react';
+import {useObject} from '@realm/react'; // 引入 Realm hooks
+import React, {useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useRealm} from '@realm/react'; // 引入 Realm hooks
-import {colorStyle, fontStyle} from '../styles';
 import {BSON} from 'realm';
+import {Cargo} from '../models/Cargo';
+import {colorStyle, fontStyle} from '../styles';
 
 interface CargoItemProps {
   item: any;
@@ -16,19 +17,17 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
   handleEditCargo,
   handleDeleteCargo,
 }) => {
-  const [quantity, setQuantity] = useState(0);
+  const currentItem = useObject<Cargo>(Cargo, item._id);
+
+  const quantity = useMemo(() => {
+    if (!currentItem || !currentItem.items) {
+      return 0;
+    }
+    console.log(currentItem);
+    return currentItem.items.length;
+  }, [currentItem]);
+
   const [isExpanded, setIsExpanded] = useState(false);
-  const realm = useRealm();
-
-  // 获取库存数量
-  const fetchQuantity = async () => {
-    const result = item.cargo.items.filtered(`_id == ${item._id}`);
-    setQuantity(result.length); // 这里假设每个货物有一个`CargoItem`
-  };
-
-  useEffect(() => {
-    fetchQuantity();
-  }, []);
 
   // 切换展开/收起状态
   const toggleExpand = () => {

@@ -17,7 +17,7 @@ interface CargoSpecItem {
   value: string;
 }
 
-type CargoSpec = CargoSpecItem[];
+export type CargoSpec = CargoSpecItem[];
 
 interface CargoSpecInputProps {
   onChange: (specs: CargoSpec) => void;
