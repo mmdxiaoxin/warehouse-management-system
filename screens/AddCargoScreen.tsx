@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import {cargoRepository} from '../models/CargoRepository';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
+import {cargoRepository} from '../models/CargoRepository';
+import {colorStyle, fontStyle} from '../styles';
 
 export default function AddCargoScreen({navigation}: any) {
   const [newCargoName, setNewCargoName] = useState('');
@@ -71,13 +72,17 @@ export default function AddCargoScreen({navigation}: any) {
 
       {/* 按钮 */}
       <View style={styles.buttonContainer}>
-        <Button title="确认添加" onPress={handleAddCargo} color="#4CAF50" />
+        <Button
+          title="确认添加"
+          onPress={handleAddCargo}
+          color={colorStyle.success}
+        />
       </View>
       <View style={styles.buttonContainer}>
         <Button
           title="取消"
           onPress={() => navigation.goBack()}
-          color="#f44336"
+          color={colorStyle.danger}
         />
       </View>
     </View>
@@ -90,10 +95,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    ...fontStyle.heading1,
     marginBottom: 20,
-    color: '#333',
     textAlign: 'center',
   },
   buttonContainer: {

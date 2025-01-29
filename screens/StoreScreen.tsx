@@ -6,6 +6,7 @@ import CargoSpecInput from '../components/CargoSpecInput';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {cargoRepository} from '../models/CargoRepository';
+import {colorStyle} from '../styles';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储所有货物
@@ -124,13 +125,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   confirmButton: {
-    backgroundColor: '#208eff',
+    backgroundColor: colorStyle.primary,
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
   },
   addButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: colorStyle.success,
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,

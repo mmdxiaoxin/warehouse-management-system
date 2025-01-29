@@ -53,8 +53,16 @@ const AppNavigator = () => {
         component={HomeTabs}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="AddCargo" component={AddCargoScreen} />
-      <Stack.Screen name="EditCargo" component={EditCargoScreen} />
+      <Stack.Screen
+        name="AddCargo"
+        component={AddCargoScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditCargo"
+        component={EditCargoScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
