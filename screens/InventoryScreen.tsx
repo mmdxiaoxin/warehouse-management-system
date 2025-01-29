@@ -44,39 +44,33 @@ export default function InventoryScreen() {
   // 使用 Realm 查询所有的货物数据
   const {cargoList, createCargo, deleteCargo} = useCargo();
 
-  // 根据查询过滤货物列表
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-  };
-
-  // 按照类别进行分组
-  const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
-    const grouped: {title: string; data: any[]}[] = [];
-    const categories = Array.from(
-      new Set(cargoList.map(cargo => cargo.category)),
-    );
-
-    categories.forEach(category => {
-      const filteredCargo = cargoList.filter(
-        cargo => cargo.category === category,
-      );
-      grouped.push({
-        title: category,
-        data: filteredCargo,
-      });
-    });
-
-    return grouped;
-  };
-
   useEffect(() => {
+    // 按照类别进行分组
+    const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
+      const grouped: {title: string; data: any[]}[] = [];
+      const categories = Array.from(
+        new Set(cargoList.map(cargo => cargo.category)),
+      );
+
+      categories.forEach(category => {
+        const filteredCargo = cargoList.filter(
+          cargo => cargo.category === category,
+        );
+        grouped.push({
+          title: category,
+          data: filteredCargo,
+        });
+      });
+
+      return grouped;
+    };
     if (cargoList && cargoList.length > 0) {
       const grouped = groupByCategory(
         cargoList.filtered('name CONTAINS $0', searchQuery),
       );
       setGroupedCargo(grouped);
     }
-  }, [cargoList, searchQuery]);
+  }, [searchQuery]);
 
   // 处理货物删除操作
   const handleDeleteCargo = (cargoId: BSON.ObjectId) => {
@@ -102,7 +96,7 @@ export default function InventoryScreen() {
   // 处理货物信息更新
   const handleEditCargo = (cargoId: BSON.ObjectId) => {
     try {
-      navigation.navigate('EditCargo', {cargoId: cargoId.toHexString()});
+      navigation.navigate('EditCargo', {cargoId});
     } catch (error) {
       console.error('导航到编辑页面时出错：', error);
       Alert.alert('导航错误', '无法导航到编辑页面，请稍后再试。');
@@ -136,13 +130,13 @@ export default function InventoryScreen() {
         style={styles.searchInput}
         placeholder="搜索货物名称"
         value={searchQuery}
-        onChangeText={handleSearchChange}
+        onChangeText={setSearchQuery}
       />
 
       {/* 使用 SectionList 展示分组的货物 */}
       <SectionList
         sections={groupedCargo}
-        keyExtractor={(item, index) => String(item._id) + index}
+        keyExtractor={item => String(item._id)}
         renderItem={({item}) => (
           <CargoSectionItem
             item={item}
