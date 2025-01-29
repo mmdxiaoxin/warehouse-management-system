@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
+    marginBottom: 40,
   },
   addButtonText: {
     color: '#fff',
