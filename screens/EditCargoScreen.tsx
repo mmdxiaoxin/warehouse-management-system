@@ -12,7 +12,7 @@ export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
   const navigation = useNavigation();
 
-  const cargoId = new BSON.ObjectId(route.params?.cargoId); // 获取传递的 cargoId
+  const cargoId = route.params?.cargoId;
 
   const {cargoList, updateCargo} = useCargo();
 
@@ -54,12 +54,14 @@ export default function EditCargoScreen() {
       }
 
       // 更新货物信息
-      updateCargo(cargoId, {
-        name: newCargoName,
-        category: newCargoCategory,
-        unit: newCargoUnit,
-        description: newCargoDescription,
-      });
+      if (cargoId) {
+        updateCargo(cargoId, {
+          name: newCargoName,
+          category: newCargoCategory,
+          unit: newCargoUnit,
+          description: newCargoDescription,
+        });
+      }
 
       Alert.alert('货物更新成功');
       navigation.goBack(); // 返回上一页
