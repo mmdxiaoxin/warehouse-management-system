@@ -1,7 +1,6 @@
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
 import React, {useEffect, useState} from 'react';
 import {
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -94,34 +93,31 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
 
   return (
     <View style={styles.itemCard}>
-      <View style={styles.header}>
-        {/* 编辑和删除按钮 */}
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => onEdit(item._id)}>
-          <Text style={styles.buttonText}>编辑</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.actionButton, styles.deleteButton]}
-          onPress={() => onDelete(item._id)}>
-          <Text style={styles.buttonText}>删除</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* 结构化展示 parsed data */}
-      <ScrollView style={styles.detailsContainer}>
-        {modelsParsed.map((model, index) => (
-          <View key={index} style={styles.modelItem}>
-            <Text style={styles.modelKey}>{model.key}:</Text>
-            <Text style={styles.modelValue}>{model.value}</Text>
+      {/* 规格表格展示 */}
+      {modelsParsed.length > 0 && (
+        <View style={styles.table}>
+          {/* 表头 */}
+          <View style={styles.tableRow}>
+            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+              规格名称
+            </Text>
+            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+              规格值
+            </Text>
           </View>
-        ))}
-      </ScrollView>
+
+          {/* 数据行 */}
+          {modelsParsed.map((model, index) => (
+            <View key={index} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{model.key}</Text>
+              <Text style={styles.tableCell}>{model.value}</Text>
+            </View>
+          ))}
+        </View>
+      )}
 
       {/* 数量调整 */}
       <View style={styles.quantityContainer}>
-        <Text style={styles.quantityLabel}>数量:</Text>
-
         <View style={styles.quantityControls}>
           <TouchableOpacity onPress={decrementQuantity} style={styles.button}>
             <AntDesignIcon name="minus" size={20} color="white" />
@@ -140,8 +136,21 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
           </TouchableOpacity>
         </View>
 
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        <View style={styles.tools}>
+          {/* 编辑和删除按钮 */}
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => onEdit(item._id)}>
+            <Text style={styles.buttonText}>编辑</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.actionButton, styles.deleteButton]}
+            onPress={() => onDelete(item._id)}>
+            <Text style={styles.buttonText}>删除</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };
@@ -159,11 +168,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 10,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
   actionButton: {
     backgroundColor: '#4CAF50', // 绿色背景
     paddingVertical: 8,
@@ -178,23 +182,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  detailsContainer: {
+  table: {
     marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
-  modelItem: {
+  tableHeader: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#333',
+  },
+  tableRow: {
     flexDirection: 'row',
-    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
   },
-  modelKey: {
-    fontSize: 16,
+  tableHeaderCell: {
     fontWeight: 'bold',
-    color: '#555',
-    flex: 1,
-  },
-  modelValue: {
     fontSize: 16,
     color: '#333',
+    flex: 1,
+  },
+  tableCell: {
+    fontSize: 16,
+    color: '#555',
     flex: 2,
+  },
+  removeButton: {
+    backgroundColor: '#f44336',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  removeButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -209,6 +236,11 @@ const styles = StyleSheet.create({
   quantityControls: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  tools: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   quantityInput: {
     width: 50,
