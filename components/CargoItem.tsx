@@ -36,10 +36,7 @@ const CargoItemComponent: React.FC<CargoItemProps> = ({
   };
 
   const handleDelete = () => {
-    realm.write(() => {
-      realm.delete(item);
-      handleDeleteCargo(item._id); // 触发父组件的删除操作
-    });
+    handleDeleteCargo(item._id);
   };
 
   return (

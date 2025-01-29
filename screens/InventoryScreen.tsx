@@ -1,25 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  Button,
-  SectionList,
   Alert,
-  StyleSheet,
-  TextInput,
+  Button,
   SafeAreaView,
+  SectionList,
+  StyleSheet,
+  Text,
+  TextInput,
 } from 'react-native';
-import {useRealm, useQuery} from '@realm/react'; // 导入 Realm 的 hooks
-import {Cargo} from '../models/Cargo'; // 导入Cargo模型
-import CargoItem from '../components/CargoItem';
-import {
-  useFocusEffect,
-  useNavigation,
-  NavigationProp,
-} from '@react-navigation/native';
-import {RootStackParamList} from '../routes';
-import Divider from '../components/Divider';
 import {BSON} from 'realm';
+import CargoItem from '../components/CargoItem';
+import Divider from '../components/Divider';
+import {useCargo} from '../hooks/useCargo';
+import {Cargo} from '../models/Cargo'; // 导入Cargo模型
+import {RootStackParamList} from '../routes';
 
 // 随机生成字符串的函数
 const generateRandomString = (length: number) => {
@@ -45,10 +40,9 @@ export default function InventoryScreen() {
     {title: string; data: any[]}[]
   >([]);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const realm = useRealm();
 
   // 使用 Realm 查询所有的货物数据
-  const cargoList = useQuery(Cargo);
+  const {cargoList, createCargo, deleteCargo} = useCargo();
 
   // 根据查询过滤货物列表
   const handleSearchChange = (query: string) => {
@@ -77,10 +71,12 @@ export default function InventoryScreen() {
 
   useEffect(() => {
     if (cargoList && cargoList.length > 0) {
-      const grouped = groupByCategory(cargoList.filtered('TRUEPREDICATE()'));
+      const grouped = groupByCategory(
+        cargoList.filtered('name CONTAINS $0', searchQuery),
+      );
       setGroupedCargo(grouped);
     }
-  }, [cargoList]);
+  }, [cargoList, searchQuery]);
 
   // 处理货物删除操作
   const handleDeleteCargo = (cargoId: BSON.ObjectId) => {
@@ -93,13 +89,7 @@ export default function InventoryScreen() {
         text: '确定',
         onPress: async () => {
           try {
-            realm.write(() => {
-              const cargoToDelete = realm.objectForPrimaryKey(Cargo, cargoId);
-              if (cargoToDelete) {
-                realm.delete(cargoToDelete);
-                console.log('货物已删除！');
-              }
-            });
+            deleteCargo(cargoId);
           } catch (error) {
             console.error('删除货物时出错：', error);
             Alert.alert('删除失败', '删除货物时发生错误，请稍后再试。');
@@ -124,18 +114,12 @@ export default function InventoryScreen() {
     try {
       const category = getRandomCategory(); // 随机选择一个类别
       const newCargo = {
-        _id: new BSON.ObjectId(),
         name: category + generateRandomString(8), // 随机生成名称
         description: '随机生成的货物项目',
         category,
         unit: '个',
-        ctime: new Date(),
-        utime: new Date(),
       };
-
-      realm.write(() => {
-        realm.create(Cargo, newCargo);
-      });
+      createCargo(newCargo as any);
     } catch (error) {
       console.error('创建货物时出错：', error);
       Alert.alert('创建失败', '创建货物时发生错误，请稍后再试。');
@@ -158,7 +142,7 @@ export default function InventoryScreen() {
       {/* 使用 SectionList 展示分组的货物 */}
       <SectionList
         sections={groupedCargo}
-        keyExtractor={(item, index) => String(item._id) + index} // 使用 _id 和 index 作为 key
+        keyExtractor={(item, index) => String(item._id) + index}
         renderItem={({item}) => (
           <CargoItem
             item={item}

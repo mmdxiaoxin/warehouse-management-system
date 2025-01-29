@@ -5,15 +5,18 @@ import {useRoute, useNavigation, RouteProp} from '@react-navigation/native'; // 
 import {RootStackParamList} from '../routes';
 import {useRealm} from '@realm/react'; // Realm hook
 import {Cargo} from '../models/Cargo'; // 导入Cargo模型
+import {BSON} from 'realm';
+import {useCargo} from '../hooks/useCargo';
 
 export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
   const navigation = useNavigation();
-  const realm = useRealm(); // 获取Realm实例
 
-  const cargoId = route.params?.cargoId; // 获取传递的 cargoId
-  const [cargo, setCargo] = useState<any>(null);
+  const cargoId = new BSON.ObjectId(route.params?.cargoId); // 获取传递的 cargoId
 
+  const {cargoList, updateCargo} = useCargo();
+
+  const [cargo, setCargo] = useState<Cargo | null>(null);
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
@@ -23,7 +26,7 @@ export default function EditCargoScreen() {
   useEffect(() => {
     if (cargoId) {
       // 从 Realm 中查询 cargo 数据
-      const foundCargo = realm.objectForPrimaryKey(Cargo, cargoId);
+      const foundCargo = cargoList.filtered(`_id == $0`, cargoId)[0];
       if (foundCargo) {
         setCargo(foundCargo);
         setNewCargoName(foundCargo.name);
@@ -32,7 +35,7 @@ export default function EditCargoScreen() {
         setNewCargoDescription(foundCargo.description || '');
       }
     }
-  }, [cargoId, realm]);
+  }, [cargoId]);
 
   // 校验输入数据
   const handleSaveCargo = async () => {
@@ -51,12 +54,11 @@ export default function EditCargoScreen() {
       }
 
       // 更新货物信息
-      realm.write(() => {
-        cargo.name = newCargoName;
-        cargo.category = newCargoCategory;
-        cargo.unit = newCargoUnit;
-        cargo.description = newCargoDescription;
-        cargo.utime = new Date(); // 更新时间
+      updateCargo(cargoId, {
+        name: newCargoName,
+        category: newCargoCategory,
+        unit: newCargoUnit,
+        description: newCargoDescription,
       });
 
       Alert.alert('货物更新成功');
