@@ -21,13 +21,22 @@ export const useCargoItem = () => {
         return;
       }
 
-      // 创建新的 CargoItem，Realm 会自动处理反向关系
+      // 创建新的 CargoItem
       const newCargoItem = realm.create(CargoItem, {
         _id: new BSON.ObjectId(),
         ...cargoItemData,
         ctime: new Date(),
       });
       console.log('Created new CargoItem:', newCargoItem);
+
+      // 确保 items 数组已初始化，若未初始化则创建空数组
+      if (!cargo.items) {
+        cargo.items = new Realm.List<CargoItem>();
+      }
+
+      // 将新创建的 CargoItem 添加到 Cargo 的 items 数组中
+      cargo.items.push(newCargoItem);
+      console.log('Updated Cargo with new CargoItem:', cargo);
     });
   };
 
