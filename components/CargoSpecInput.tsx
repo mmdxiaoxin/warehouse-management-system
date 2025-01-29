@@ -120,6 +120,12 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
+    padding: 15,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: colorStyle.borderLight,
+    marginBottom: 15,
+    backgroundColor: colorStyle.backgroundLight,
   },
   header: {
     ...fontStyle.subheading,

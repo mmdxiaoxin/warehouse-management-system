@@ -8,6 +8,7 @@ import {
   TextInputProps,
 } from 'react-native';
 import {fontStyle} from '../styles/fontStyle';
+import {colorStyle} from '../styles';
 
 interface SectionProps extends TextInputProps {
   label: string; // 用来设置输入框的标签
@@ -48,7 +49,12 @@ const SectionInput: React.FC<SectionProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: colorStyle.borderLight,
+    padding: 15,
     marginBottom: 15,
+    backgroundColor: colorStyle.backgroundLight,
   },
   inlineContainer: {
     flexDirection: 'row', // 设置为行布局
