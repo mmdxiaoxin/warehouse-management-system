@@ -17,16 +17,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
   handleEditCargo,
   handleDeleteCargo,
 }) => {
-  const currentItem = useObject<Cargo>(Cargo, item._id);
-
-  const quantity = useMemo(() => {
-    if (!currentItem || !currentItem.items) {
-      return 0;
-    }
-    console.log(currentItem);
-    return currentItem.items.length;
-  }, [currentItem]);
-
+  const quantity = item.items.length;
   const [isExpanded, setIsExpanded] = useState(false);
 
   // 切换展开/收起状态
