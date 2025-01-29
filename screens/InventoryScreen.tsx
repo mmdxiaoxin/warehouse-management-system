@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button, SectionList, Alert, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  SectionList,
+  Alert,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
 import {cargoRepository} from '../models/CargoRepository';
 import RNFS from 'react-native-fs';
 import CargoItem from '../components/CargoItem';
@@ -29,11 +37,10 @@ const getRandomCategory = () => {
   return categories[Math.floor(Math.random() * categories.length)];
 };
 
-// 随机生成数量
-const getRandomCount = () => Math.floor(Math.random() * 101);
-
 export default function InventoryScreen() {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物列表
+  const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物列表
+  const [searchQuery, setSearchQuery] = useState(''); // 搜索框的查询
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useFocusEffect(
@@ -44,6 +51,7 @@ export default function InventoryScreen() {
         console.log('加载库存数据...');
         console.log(cargos);
         setCargoList(cargos as any[]);
+        setFilteredCargoList(cargos as any[]); // 初始化时显示所有货物
       };
 
       const deleteRealmDatabase = async () => {
@@ -140,12 +148,33 @@ export default function InventoryScreen() {
     }
   };
 
-  const groupedCargo = groupByCategory(cargoList);
+  // 根据查询过滤货物列表
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    if (query) {
+      const filtered = cargoList.filter(item =>
+        item.name.toLowerCase().includes(query.toLowerCase()),
+      );
+      setFilteredCargoList(filtered);
+    } else {
+      setFilteredCargoList(cargoList); // 如果没有输入内容，显示所有货物
+    }
+  };
+
+  const groupedCargo = groupByCategory(filteredCargoList);
 
   return (
     <View style={{flex: 1, padding: 20}}>
       <Text style={{fontSize: 24, marginBottom: 20}}>库存管理</Text>
       <Button title="添加一项随机货物" onPress={handleCreateCargo} />
+
+      {/* 筛选框 */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="搜索货物名称"
+        value={searchQuery}
+        onChangeText={handleSearchChange}
+      />
 
       {/* 使用 SectionList 展示分组的货物 */}
       <SectionList
@@ -185,5 +214,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 5,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    fontSize: 16,
   },
 });
