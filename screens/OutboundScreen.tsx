@@ -5,13 +5,13 @@ import {
   Button,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Divider from '../components/Divider';
 import {cargoRepository} from '../models/CargoRepository';
+import SectionInput from '../components/SectionInput'; // 假设 Section 组件已存在
 
 export default function OutboundScreen({navigation}: any) {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物种类
@@ -32,7 +32,9 @@ export default function OutboundScreen({navigation}: any) {
     }, []),
   );
 
-  const handleOutbound = () => {};
+  const handleOutbound = () => {
+    // 处理出库操作
+  };
 
   const handleDeleteCargo = () => {
     if (!selectedCargo) {
@@ -55,17 +57,18 @@ export default function OutboundScreen({navigation}: any) {
     <View style={styles.container}>
       <Text style={styles.title}>货物出库</Text>
 
-      <Text style={styles.label}>货物选择:</Text>
-      <RNPickerSelect
-        placeholder={{label: '请选择货物', value: ''}}
-        value={selectedCargo}
-        onValueChange={setSelectedCargo}
-        items={cargoList.map(cargo => ({
-          label: cargo.name,
-          value: cargo.name,
-        }))}
-        style={pickerSelectStyles}
-      />
+      <SectionInput label="货物选择">
+        <RNPickerSelect
+          placeholder={{label: '请选择货物', value: ''}}
+          value={selectedCargo}
+          onValueChange={setSelectedCargo}
+          items={cargoList.map(cargo => ({
+            label: cargo.name,
+            value: cargo.name,
+          }))}
+          style={pickerSelectStyles}
+        />
+      </SectionInput>
 
       {/* 确认出库按钮 */}
       <TouchableOpacity style={styles.confirmButton} onPress={handleOutbound}>
@@ -90,17 +93,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
-  },
-  label: {
-    fontSize: 18,
-    marginVertical: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 20,
-    fontSize: 16,
   },
   confirmButton: {
     backgroundColor: '#208eff', // 蓝色，表示出库

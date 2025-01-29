@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {cargoRepository} from '../models/CargoRepository';
+import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
 
 export default function AddCargoScreen({navigation}: any) {
   const [newCargoName, setNewCargoName] = useState('');
@@ -40,33 +41,30 @@ export default function AddCargoScreen({navigation}: any) {
     <View style={styles.container}>
       <Text style={styles.title}>添加新货物</Text>
 
-      {/* 货物名称 */}
-      <Text style={styles.label}>货物名称:</Text>
-      <TextInput
-        style={styles.input}
+      {/* 使用 Section 组件包装输入项 */}
+      <SectionInput
+        label="货物名称"
         placeholder="请输入新的货物名称"
         value={newCargoName}
         onChangeText={setNewCargoName}
       />
 
-      {/* 货物类别选择框 */}
-      <Text style={styles.label}>货物类别:</Text>
-      <RNPickerSelect
-        placeholder={{label: '请选择货物类别', value: ''}}
-        value={newCargoCategory}
-        onValueChange={setNewCargoCategory}
-        items={[
-          {label: '木门', value: '木门'},
-          {label: '木地板', value: '木地板'},
-          {label: '辅料', value: '辅料'},
-        ]}
-        style={pickerSelectStyles}
-      />
+      <SectionInput label="货物类别" inline>
+        <RNPickerSelect
+          placeholder={{label: '请选择货物类别', value: ''}}
+          value={newCargoCategory}
+          onValueChange={setNewCargoCategory}
+          items={[
+            {label: '木门', value: '木门'},
+            {label: '木地板', value: '木地板'},
+            {label: '辅料', value: '辅料'},
+          ]}
+          style={pickerSelectStyles}
+        />
+      </SectionInput>
 
-      {/* 货物单位 */}
-      <Text style={styles.label}>货物单位:</Text>
-      <TextInput
-        style={styles.input}
+      <SectionInput
+        label="货物单位"
         placeholder="请输入货物单位"
         value={newCargoUnit}
         onChangeText={setNewCargoUnit}
@@ -98,20 +96,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
     textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  label: {
-    fontSize: 18,
-    marginVertical: 8,
-    color: '#333',
   },
   buttonContainer: {
     marginVertical: 10,
