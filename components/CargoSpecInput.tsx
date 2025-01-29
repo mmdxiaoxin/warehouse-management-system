@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import {colorStyle, fontStyle} from '../styles';
+import Divider from './Divider';
 
 interface CargoSpecItem {
   key: string;
@@ -59,21 +60,38 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
     <View style={styles.container}>
       <Text style={styles.header}>输入货物规格</Text>
 
-      {/* 规格列表展示 */}
-      <View>
-        {specs.map((spec, index) => (
-          <View key={index} style={styles.specRow}>
-            <Text style={styles.specText}>
-              {spec.key}: {spec.value}
+      {/* 规格表格展示 */}
+      {specs.length > 0 && (
+        <View style={styles.table}>
+          {/* 表头 */}
+          <View style={styles.tableRow}>
+            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+              规格名称
             </Text>
-            <TouchableOpacity
-              onPress={() => handleRemoveSpec(spec.key)}
-              style={styles.removeButton}>
-              <Text style={styles.removeButtonText}>删除</Text>
-            </TouchableOpacity>
+            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+              规格值
+            </Text>
+            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+              操作
+            </Text>
           </View>
-        ))}
-      </View>
+
+          {/* 数据行 */}
+          {specs.map((spec, index) => (
+            <View key={index} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{spec.key}</Text>
+              <Text style={styles.tableCell}>{spec.value}</Text>
+              <TouchableOpacity
+                onPress={() => handleRemoveSpec(spec.key)}
+                style={styles.removeButton}>
+                <Text style={styles.removeButtonText}>删除</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {specs.length > 0 && <Divider />}
 
       {/* 键值对输入框 */}
       <KeyboardAvoidingView
@@ -133,16 +151,35 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  specRow: {
+
+  // 表格相关样式
+  table: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  tableRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#ccc',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
   },
-  specText: {
-    ...fontStyle.bodyMedium,
+  tableHeaderCell: {
+    fontWeight: 'bold',
+    flex: 1,
   },
+  tableCell: {
+    flex: 1,
+  },
+  tableHeader: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#333',
+  },
+
+  // 删除按钮样式
   removeButton: {
     backgroundColor: colorStyle.danger,
     paddingHorizontal: 10,
