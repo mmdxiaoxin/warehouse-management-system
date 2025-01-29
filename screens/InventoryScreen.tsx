@@ -43,17 +43,18 @@ export default function InventoryScreen() {
   const [searchQuery, setSearchQuery] = useState(''); // 搜索框的查询
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  const loadCargoData = async () => {
+    try {
+      const cargos = await cargoRepository.getAllCargo(); // 获取所有货物
+      setCargoList(cargos);
+      setFilteredCargoList(cargos); // 初始化筛选后的货物列表
+    } catch (error) {
+      console.error('获取货物数据时出错：', error);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
-      // 获取所有货物
-      const loadCargoData = async () => {
-        const cargos = await cargoRepository.getAllCargo();
-        console.log('加载库存数据...');
-        console.log(cargos);
-        setCargoList(cargos as any[]);
-        setFilteredCargoList(cargos as any[]); // 初始化时显示所有货物
-      };
-
       const deleteRealmDatabase = async () => {
         const realmPath = `${RNFS.DocumentDirectoryPath}/cargo.realm`; // 默认路径
         try {
@@ -135,15 +136,7 @@ export default function InventoryScreen() {
       };
 
       await cargoRepository.createCargo(newCargo); // 创建货物
-
-      // 重新获取并更新货物列表
-      const cargos = await cargoRepository.getAllCargo();
-      setCargoList(
-        cargos.map(cargo => ({
-          ...cargo,
-          cargoId: String(cargo.cargoId), // 确保 cargoId 是字符串类型
-        })),
-      );
+      loadCargoData();
     } catch (error) {
       console.error('创建货物时出错：', error);
     }
