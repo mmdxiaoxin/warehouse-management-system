@@ -1,32 +1,32 @@
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {cargoItemRepository} from '../models/CargoItemRepository';
+import {useRealm} from '@realm/react'; // 引入 Realm hooks
 import {colorStyle, fontStyle} from '../styles';
+import {BSON} from 'realm';
 
-// 定义 props 类型
 interface CargoItemProps {
   item: any;
-  handleEditCargo: (cargoId: string) => void;
-  handleDeleteCargo: (cargoId: string) => void;
+  handleEditCargo: (cargoId: BSON.ObjectId) => void;
+  handleDeleteCargo: (cargoId: BSON.ObjectId) => void;
 }
 
-const CargoItem: React.FC<CargoItemProps> = ({
+const CargoItemComponent: React.FC<CargoItemProps> = ({
   item,
   handleEditCargo,
   handleDeleteCargo,
 }) => {
-  const [quantity, setQuantity] = React.useState(0);
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [quantity, setQuantity] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const realm = useRealm();
+
+  // 获取库存数量
+  const fetchQuantity = async () => {
+    const result = item.cargo.items.filtered(`_id == ${item._id}`);
+    setQuantity(result.length); // 这里假设每个货物有一个`CargoItem`
+  };
 
   useEffect(() => {
-    // 获取货物的库存数量
-    const fetchQuantity = async () => {
-      const result = await cargoItemRepository.getCargoItemCountByCargoId(
-        item.cargoId,
-      );
-      setQuantity(result);
-    };
     fetchQuantity();
   }, []);
 
@@ -35,15 +35,21 @@ const CargoItem: React.FC<CargoItemProps> = ({
     setIsExpanded(prev => !prev);
   };
 
+  const handleDelete = () => {
+    realm.write(() => {
+      realm.delete(item);
+      handleDeleteCargo(item._id); // 触发父组件的删除操作
+    });
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.cardTitle}>{item.name}</Text>
-          {/* 展开/收起按钮*/}
           <TouchableOpacity style={styles.toggleButton} onPress={toggleExpand}>
             <AntDesignIcon
-              name={isExpanded ? 'caret-down' : 'caret-down'} // 根据展开状态显示不同的图标
+              name={isExpanded ? 'caret-down' : 'caret-up'}
               size={14}
             />
           </TouchableOpacity>
@@ -51,7 +57,6 @@ const CargoItem: React.FC<CargoItemProps> = ({
         <Text style={styles.cardCategory}>{item.category}</Text>
       </View>
 
-      {/* 展开时显示更多信息 */}
       {isExpanded && (
         <>
           <View style={styles.cardBody}>
@@ -73,13 +78,12 @@ const CargoItem: React.FC<CargoItemProps> = ({
           <View style={styles.cardFooter}>
             <TouchableOpacity
               style={styles.buttonEdit}
-              onPress={() => handleEditCargo(item.cargoId)}>
+              onPress={() => handleEditCargo(item._id)}>
               <Text style={styles.buttonText}>编辑货物</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.buttonDelete}
-              onPress={() => handleDeleteCargo(item.cargoId)}>
+              onPress={handleDelete}>
               <Text style={styles.buttonText}>删除货物</Text>
             </TouchableOpacity>
           </View>
@@ -93,15 +97,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     marginBottom: 15,
-    borderTopEndRadius: 0,
-    borderTopStartRadius: 0,
     borderRadius: 10,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 3, // Android
+    elevation: 3,
     padding: 15,
   },
   cardHeader: {
@@ -151,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CargoItem;
+export default CargoItemComponent;

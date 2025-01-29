@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,10 @@ import {
   Alert,
   StyleSheet,
   TextInput,
+  SafeAreaView,
 } from 'react-native';
-import {cargoRepository} from '../models/CargoRepository';
-import RNFS from 'react-native-fs';
+import {useRealm, useQuery} from '@realm/react'; // 导入 Realm 的 hooks
+import {Cargo} from '../models/Cargo'; // 导入Cargo模型
 import CargoItem from '../components/CargoItem';
 import {
   useFocusEffect,
@@ -18,6 +19,7 @@ import {
 } from '@react-navigation/native';
 import {RootStackParamList} from '../routes';
 import Divider from '../components/Divider';
+import {BSON} from 'realm';
 
 // 随机生成字符串的函数
 const generateRandomString = (length: number) => {
@@ -38,41 +40,23 @@ const getRandomCategory = () => {
 };
 
 export default function InventoryScreen() {
-  const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物列表
-  const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物列表
-  const [searchQuery, setSearchQuery] = useState(''); // 搜索框的查询
+  const [searchQuery, setSearchQuery] = useState('');
+  const [groupedCargo, setGroupedCargo] = useState<
+    {title: string; data: any[]}[]
+  >([]);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const realm = useRealm();
 
-  const loadCargoData = async () => {
-    try {
-      const cargos = await cargoRepository.getAllCargo(); // 获取所有货物
-      setCargoList(cargos);
-      setFilteredCargoList(cargos); // 初始化筛选后的货物列表
-    } catch (error) {
-      console.error('获取货物数据时出错：', error);
-    }
+  // 使用 Realm 查询所有的货物数据
+  const cargoList = useQuery(Cargo);
+
+  // 根据查询过滤货物列表
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const deleteRealmDatabase = async () => {
-        const realmPath = `${RNFS.DocumentDirectoryPath}/cargo.realm`; // 默认路径
-        try {
-          // 删除数据库文件
-          await RNFS.unlink(realmPath);
-          console.log('Realm 数据库文件已删除！');
-        } catch (error) {
-          console.error('删除 Realm 数据库时出错：', error);
-        }
-      };
-
-      // deleteRealmDatabase(); // 用来删除数据库文件进行测试，防止数据库修改后导致的应用闪退
-      loadCargoData();
-    }, []),
-  );
-
   // 按照类别进行分组
-  const groupByCategory = (cargoList: any[]) => {
+  const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
     const grouped: {title: string; data: any[]}[] = [];
     const categories = Array.from(
       new Set(cargoList.map(cargo => cargo.category)),
@@ -91,8 +75,15 @@ export default function InventoryScreen() {
     return grouped;
   };
 
+  useEffect(() => {
+    if (cargoList && cargoList.length > 0) {
+      const grouped = groupByCategory(cargoList.filtered('TRUEPREDICATE()'));
+      setGroupedCargo(grouped);
+    }
+  }, [cargoList]);
+
   // 处理货物删除操作
-  const handleDeleteCargo = (cargoId: string) => {
+  const handleDeleteCargo = (cargoId: BSON.ObjectId) => {
     Alert.alert('确认删除', '您确定要删除这个货物吗？', [
       {
         text: '取消',
@@ -102,13 +93,16 @@ export default function InventoryScreen() {
         text: '确定',
         onPress: async () => {
           try {
-            await cargoRepository.deleteCargo(cargoId);
-            setCargoList(prevCargoList =>
-              prevCargoList.filter(cargo => cargo.cargoId !== cargoId),
-            ); // 更新列表
-            console.log('货物已删除！');
+            realm.write(() => {
+              const cargoToDelete = realm.objectForPrimaryKey(Cargo, cargoId);
+              if (cargoToDelete) {
+                realm.delete(cargoToDelete);
+                console.log('货物已删除！');
+              }
+            });
           } catch (error) {
             console.error('删除货物时出错：', error);
+            Alert.alert('删除失败', '删除货物时发生错误，请稍后再试。');
           }
         },
       },
@@ -116,11 +110,12 @@ export default function InventoryScreen() {
   };
 
   // 处理货物信息更新
-  const handleEditCargo = async (cargoId: string) => {
+  const handleEditCargo = (cargoId: BSON.ObjectId) => {
     try {
-      navigation.navigate('EditCargo', {cargoId});
+      navigation.navigate('EditCargo', {cargoId: cargoId.toHexString()});
     } catch (error) {
-      console.error('更新货物状态时出错：', error);
+      console.error('导航到编辑页面时出错：', error);
+      Alert.alert('导航错误', '无法导航到编辑页面，请稍后再试。');
     }
   };
 
@@ -129,36 +124,26 @@ export default function InventoryScreen() {
     try {
       const category = getRandomCategory(); // 随机选择一个类别
       const newCargo = {
+        _id: new BSON.ObjectId(),
         name: category + generateRandomString(8), // 随机生成名称
         description: '随机生成的货物项目',
         category,
         unit: '个',
+        ctime: new Date(),
+        utime: new Date(),
       };
 
-      await cargoRepository.createCargo(newCargo); // 创建货物
-      loadCargoData();
+      realm.write(() => {
+        realm.create(Cargo, newCargo);
+      });
     } catch (error) {
       console.error('创建货物时出错：', error);
+      Alert.alert('创建失败', '创建货物时发生错误，请稍后再试。');
     }
   };
-
-  // 根据查询过滤货物列表
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-    if (query) {
-      const filtered = cargoList.filter(item =>
-        item.name.toLowerCase().includes(query.toLowerCase()),
-      );
-      setFilteredCargoList(filtered);
-    } else {
-      setFilteredCargoList(cargoList); // 如果没有输入内容，显示所有货物
-    }
-  };
-
-  const groupedCargo = groupByCategory(filteredCargoList);
 
   return (
-    <View style={{flex: 1, padding: 20}}>
+    <SafeAreaView style={{flex: 1, padding: 20}}>
       <Text style={{fontSize: 24, marginBottom: 20}}>库存管理</Text>
       <Button title="添加一项随机货物" onPress={handleCreateCargo} />
 
@@ -173,7 +158,7 @@ export default function InventoryScreen() {
       {/* 使用 SectionList 展示分组的货物 */}
       <SectionList
         sections={groupedCargo}
-        keyExtractor={(item, index) => String(item.cargoId) + index} // 使用 cargoId 和 index 作为 key
+        keyExtractor={(item, index) => String(item._id) + index} // 使用 _id 和 index 作为 key
         renderItem={({item}) => (
           <CargoItem
             item={item}
@@ -187,8 +172,11 @@ export default function InventoryScreen() {
             <Divider />
           </>
         )}
+        ListEmptyComponent={
+          <Text style={styles.emptyMessage}>没有货物数据</Text>
+        }
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -217,5 +205,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 15,
     fontSize: 16,
+  },
+  emptyMessage: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#888',
+    marginTop: 20,
   },
 });

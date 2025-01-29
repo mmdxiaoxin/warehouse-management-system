@@ -2,7 +2,10 @@ import AntDesignIcon from '@react-native-vector-icons/ant-design';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {RealmProvider} from '@realm/react';
 import React from 'react';
+import {Cargo} from './models/Cargo';
+import {CargoItem} from './models/CargoItem';
 import AddCargoScreen from './screens/AddCargoScreen';
 import EditCargoScreen from './screens/EditCargoScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -69,9 +72,11 @@ const AppNavigator = () => {
 
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <RealmProvider schema={[Cargo, CargoItem]}>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </RealmProvider>
   );
 }
 

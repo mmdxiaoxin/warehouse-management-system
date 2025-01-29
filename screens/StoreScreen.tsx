@@ -1,38 +1,36 @@
-import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import React, {useState, useCallback, useEffect} from 'react';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import CargoSpecInput from '../components/CargoSpecInput';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
-import {cargoRepository} from '../models/CargoRepository';
+import {useRealm, useQuery} from '@realm/react'; // 引入 Realm hooks
+import {Cargo} from '../models/Cargo'; // 导入 Cargo 模型
 import {colorStyle} from '../styles';
 
 export default function StoreScreen({navigation}: any) {
-  const [cargoList, setCargoList] = useState<any[]>([]); // 存储所有货物
-  const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
+  const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
 
-  // 获取所有货物列表
-  const fetchCargoList = async () => {
-    try {
-      const cargos = await cargoRepository.getAllCargo();
-      setCargoList(cargos);
-    } catch (error) {
-      console.error('Failed to fetch cargo list:', error);
-    }
-  };
+  const realm = useRealm();
+
+  // 使用 Realm 查询所有货物数据
+  const cargoList = useQuery(Cargo);
 
   // 根据货物类别筛选货物
   const filterCargoByCategory = useCallback(() => {
     if (!cargoCategory) {
-      setFilteredCargoList(cargoList); // 如果没有选择类别，显示所有货物
+      setFilteredCargoList(Array.from(cargoList)); // 如果没有选择类别，显示所有货物
     } else {
-      const filtered = cargoList.filter(
-        cargo => cargo.category === cargoCategory,
-      );
-      setFilteredCargoList(filtered); // 筛选出符合类别的货物
+      const filtered = cargoList.filtered(`category == "${cargoCategory}"`);
+      setFilteredCargoList(Array.from(filtered)); // 筛选出符合类别的货物
     }
   }, [cargoList, cargoCategory]);
 
@@ -40,22 +38,34 @@ export default function StoreScreen({navigation}: any) {
     filterCargoByCategory(); // 组件挂载时默认筛选
   }, [cargoCategory, cargoList]);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchCargoList(); // 获取货物列表
-    }, []),
-  );
-
+  // 入库逻辑
   const handleAddToStore = () => {
-    // 入库逻辑
+    if (!selectedCargo) {
+      Alert.alert('请选择货物');
+      return;
+    }
+
+    const cargoToAdd = cargoList.filtered(`name == "${selectedCargo}"`)[0];
+    if (!cargoToAdd) {
+      Alert.alert('货物不存在');
+      return;
+    }
+
+    // 增加库存逻辑（例如增加数量）
+    realm.write(() => {
+      cargoToAdd.utime = new Date(); // 更新入库时间
+    });
+
     console.log('已选择货物:', selectedCargo);
     console.log('货物规格:', cargoCategory);
+    Alert.alert(`已成功入库货物: ${selectedCargo}`);
   };
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>货物入库</Text>
 
+      {/* 选择货物类别 */}
       <SectionInput label="货物类别">
         <RNPickerSelect
           placeholder={{label: '请选择种类', value: ''}}
@@ -70,6 +80,7 @@ export default function StoreScreen({navigation}: any) {
         />
       </SectionInput>
 
+      {/* 选择货物 */}
       <SectionInput label="货物选择">
         <RNPickerSelect
           placeholder={{label: '请选择货物', value: ''}}
@@ -85,6 +96,7 @@ export default function StoreScreen({navigation}: any) {
 
       <Divider />
 
+      {/* 货物规格输入 */}
       <CargoSpecInput onChange={() => {}} />
 
       {/* 入库按钮 */}

@@ -1,17 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {cargoRepository} from '../models/CargoRepository';
-import {CargoData} from '../models/CargoRepository'; // 导入 CargoData 类型
 import RNPickerSelect from 'react-native-picker-select';
 import {useRoute, useNavigation, RouteProp} from '@react-navigation/native'; // 用于路由和导航
 import {RootStackParamList} from '../routes';
+import {useRealm} from '@realm/react'; // Realm hook
+import {Cargo} from '../models/Cargo'; // 导入Cargo模型
 
 export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
   const navigation = useNavigation();
+  const realm = useRealm(); // 获取Realm实例
 
   const cargoId = route.params?.cargoId; // 获取传递的 cargoId
-  const [cargo, setCargo] = useState<CargoData | null>(null);
+  const [cargo, setCargo] = useState<any>(null);
 
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
@@ -21,17 +22,17 @@ export default function EditCargoScreen() {
   // 获取原始 Cargo 数据
   useEffect(() => {
     if (cargoId) {
-      cargoRepository.getCargoById(cargoId).then(data => {
-        if (data) {
-          setCargo(data);
-          setNewCargoName(data.name);
-          setNewCargoCategory(data.category);
-          setNewCargoUnit(data.unit);
-          setNewCargoDescription(data.description || '');
-        }
-      });
+      // 从 Realm 中查询 cargo 数据
+      const foundCargo = realm.objectForPrimaryKey(Cargo, cargoId);
+      if (foundCargo) {
+        setCargo(foundCargo);
+        setNewCargoName(foundCargo.name);
+        setNewCargoCategory(foundCargo.category);
+        setNewCargoUnit(foundCargo.unit);
+        setNewCargoDescription(foundCargo.description || '');
+      }
     }
-  }, [cargoId]);
+  }, [cargoId, realm]);
 
   // 校验输入数据
   const handleSaveCargo = async () => {
@@ -48,14 +49,16 @@ export default function EditCargoScreen() {
       if (!cargo) {
         throw new Error('货物数据不存在');
       }
-      await cargoRepository.updateCargo(cargoId as string, {
-        name: newCargoName,
-        category: newCargoCategory,
-        unit: newCargoUnit,
-        description: newCargoDescription,
-        ctime: cargo?.ctime || new Date(), // 保持原有的创建时间
-        utime: new Date(), // 更新时间
+
+      // 更新货物信息
+      realm.write(() => {
+        cargo.name = newCargoName;
+        cargo.category = newCargoCategory;
+        cargo.unit = newCargoUnit;
+        cargo.description = newCargoDescription;
+        cargo.utime = new Date(); // 更新时间
       });
+
       Alert.alert('货物更新成功');
       navigation.goBack(); // 返回上一页
     } catch (error) {
