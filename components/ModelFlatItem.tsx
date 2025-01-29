@@ -17,6 +17,8 @@ interface ModelFlatItemProps {
     quantity: number;
   };
   onQuantityChange: (id: BSON.ObjectId, quantity: number) => void;
+  onEdit: (id: BSON.ObjectId) => void; // 新增编辑回调
+  onDelete: (id: BSON.ObjectId) => void; // 新增删除回调
 }
 
 type ModelsParsed = {
@@ -27,6 +29,8 @@ type ModelsParsed = {
 const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
   item,
   onQuantityChange,
+  onEdit,
+  onDelete,
 }) => {
   const [modelsParsed, setModelsParsed] = useState<ModelsParsed>([]);
 
@@ -73,12 +77,10 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
 
   // 修改数量
   const handleQuantityChange = (text: string) => {
-    // 校验用户输入的内容是否为有效的数字
     if (text === '') {
       setQuantity(text); // 如果是空字符串，允许为空
       setError('');
     } else if (/^(?:0|(?:-?[1-9]\d*))$/.test(text)) {
-      // 正则校验是否为数字
       const newQuantity = parseInt(text);
       if (newQuantity >= 0) {
         setQuantity(text);
@@ -86,12 +88,26 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
         onQuantityChange(item._id, newQuantity);
       }
     } else {
-      setError('请输入有效的整数'); // 如果输入的不是有效的整数，显示错误信息
+      setError('请输入有效的整数');
     }
   };
 
   return (
     <View style={styles.itemCard}>
+      <View style={styles.header}>
+        {/* 编辑和删除按钮 */}
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => onEdit(item._id)}>
+          <Text style={styles.buttonText}>编辑</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.actionButton, styles.deleteButton]}
+          onPress={() => onDelete(item._id)}>
+          <Text style={styles.buttonText}>删除</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* 结构化展示 parsed data */}
       <ScrollView style={styles.detailsContainer}>
         {modelsParsed.map((model, index) => (
@@ -132,24 +148,42 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
 
 const styles = StyleSheet.create({
   itemCard: {
-    padding: 15,
-    marginBottom: 15,
+    padding: 20,
+    marginBottom: 20,
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ddd',
-    elevation: 3,
+    elevation: 5,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  actionButton: {
+    backgroundColor: '#4CAF50', // 绿色背景
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+  },
+  deleteButton: {
+    backgroundColor: '#f44336', // 红色背景
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   detailsContainer: {
-    marginVertical: 10,
+    marginBottom: 15,
   },
   modelItem: {
     flexDirection: 'row',
-    marginBottom: 5,
-    alignItems: 'center',
+    marginBottom: 10,
   },
   modelKey: {
     fontSize: 16,
@@ -166,6 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: 15,
   },
   quantityLabel: {
     fontSize: 16,
