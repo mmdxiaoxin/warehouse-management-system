@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 interface CargoSpecItem {
@@ -57,7 +58,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
       <Text style={styles.header}>输入货物规格</Text>
 
       {/* 键值对输入框 */}
-      <View style={styles.inputRow}>
+      <KeyboardAvoidingView style={styles.inputRow}>
         <TextInput
           style={styles.input}
           placeholder="规格名称"
@@ -73,7 +74,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
         <TouchableOpacity onPress={handleAddSpec} style={styles.addButton}>
           <Text style={styles.addButtonText}>添加</Text>
         </TouchableOpacity>
-      </View>
+      </KeyboardAvoidingView>
 
       {/* 规格列表展示 */}
       <View>
@@ -96,7 +97,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingVertical: 10,
   },
   header: {
     fontSize: 18,
