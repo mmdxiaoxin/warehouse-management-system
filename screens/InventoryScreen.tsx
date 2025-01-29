@@ -70,7 +70,7 @@ export default function InventoryScreen() {
       );
       setGroupedCargo(grouped);
     }
-  }, [searchQuery]);
+  }, [cargoList, searchQuery]);
 
   // 处理货物删除操作
   const handleDeleteCargo = (cargoId: BSON.ObjectId) => {
