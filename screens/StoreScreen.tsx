@@ -13,6 +13,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import Divider from '../components/Divider';
 import {cargoRepository} from '../models/CargoRepository';
 import CargoSpecInput from '../components/CargoSpecInput';
+import SectionInput from '../components/SectionInput';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储所有货物
@@ -62,30 +63,32 @@ export default function StoreScreen({navigation}: any) {
     <View style={styles.container}>
       <Text style={styles.title}>货物入库</Text>
 
-      <Text style={styles.label}>货物种类:</Text>
-      <RNPickerSelect
-        placeholder={{label: '请选择种类', value: ''}}
-        value={cargoCategory}
-        onValueChange={setCargoCategory}
-        items={[
-          {label: '木门', value: '木门'},
-          {label: '木地板', value: '木地板'},
-          {label: '辅料', value: '辅料'},
-        ]}
-        style={pickerSelectStyles}
-      />
+      <SectionInput label="货物类别">
+        <RNPickerSelect
+          placeholder={{label: '请选择种类', value: ''}}
+          value={cargoCategory}
+          onValueChange={setCargoCategory}
+          items={[
+            {label: '木门', value: '木门'},
+            {label: '木地板', value: '木地板'},
+            {label: '辅料', value: '辅料'},
+          ]}
+          style={pickerSelectStyles}
+        />
+      </SectionInput>
 
-      <Text style={styles.label}>货物选择:</Text>
-      <RNPickerSelect
-        placeholder={{label: '请选择货物', value: ''}}
-        value={selectedCargo}
-        onValueChange={setSelectedCargo}
-        items={filteredCargoList.map(cargo => ({
-          label: cargo.name,
-          value: cargo.name,
-        }))}
-        style={pickerSelectStyles}
-      />
+      <SectionInput label="货物选择">
+        <RNPickerSelect
+          placeholder={{label: '请选择货物', value: ''}}
+          value={selectedCargo}
+          onValueChange={setSelectedCargo}
+          items={filteredCargoList.map(cargo => ({
+            label: cargo.name,
+            value: cargo.name,
+          }))}
+          style={pickerSelectStyles}
+        />
+      </SectionInput>
 
       <Divider />
 
