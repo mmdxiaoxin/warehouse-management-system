@@ -44,26 +44,28 @@ export default function InventoryScreen() {
   // 使用 Realm 查询所有的货物数据
   const {cargoList, createCargo, deleteCargo} = useCargo();
 
+  const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
+    const grouped: {title: string; data: any[]}[] = [];
+    const categories = Array.from(
+      new Set(cargoList.map(cargo => cargo.category)),
+    );
+
+    categories.forEach(category => {
+      const filteredCargo = cargoList.filter(
+        cargo => cargo.category === category,
+      );
+      grouped.push({
+        title: category,
+        data: filteredCargo,
+      });
+    });
+
+    return grouped;
+  };
+
   useEffect(() => {
     // 按照类别进行分组
-    const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
-      const grouped: {title: string; data: any[]}[] = [];
-      const categories = Array.from(
-        new Set(cargoList.map(cargo => cargo.category)),
-      );
 
-      categories.forEach(category => {
-        const filteredCargo = cargoList.filter(
-          cargo => cargo.category === category,
-        );
-        grouped.push({
-          title: category,
-          data: filteredCargo,
-        });
-      });
-
-      return grouped;
-    };
     if (cargoList && cargoList.length > 0) {
       const grouped = groupByCategory(
         cargoList.filtered('name CONTAINS $0', searchQuery),
@@ -83,7 +85,15 @@ export default function InventoryScreen() {
         text: '确定',
         onPress: async () => {
           try {
-            deleteCargo(cargoId);
+            deleteCargo(cargoId); // 删除数据
+
+            // 删除后更新列表，过滤掉已删除的对象（防止删除后重复使用导致的Realm异常闪退）
+            const updatedCargoList = cargoList.filtered(
+              'name CONTAINS $0',
+              searchQuery,
+            );
+            const grouped = groupByCategory(updatedCargoList); // 重新分组
+            setGroupedCargo(grouped); // 更新状态
           } catch (error) {
             console.error('删除货物时出错：', error);
             Alert.alert('删除失败', '删除货物时发生错误，请稍后再试。');
