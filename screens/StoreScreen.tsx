@@ -59,12 +59,10 @@ export default function StoreScreen({navigation}: any) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>货物入库</Text>
-
       {/* 选择货物类别 */}
       <SectionInput label="货物类别">
         <RNPickerSelect
-          placeholder={{label: '请选择种类', value: ''}}
+          placeholder={{label: '请选择种类(可不选)', value: ''}}
           value={cargoCategory}
           onValueChange={setCargoCategory}
           items={[
@@ -120,10 +118,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
   },
   label: {
     fontSize: 18,

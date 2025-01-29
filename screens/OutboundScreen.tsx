@@ -1,17 +1,11 @@
+import {useQuery, useRealm} from '@realm/react'; // 引入 Realm hooks
 import React, {useState} from 'react';
-import {
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput'; // 假设 Section 组件已存在
-import {useRealm, useQuery} from '@realm/react'; // 引入 Realm hooks
 import {Cargo} from '../models/Cargo'; // 导入 Cargo 模型
+import {colorStyle} from '../styles';
 
 export default function OutboundScreen({navigation}: any) {
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
@@ -73,8 +67,6 @@ export default function OutboundScreen({navigation}: any) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>货物出库</Text>
-
       {/* 货物选择 */}
       <SectionInput label="货物选择">
         <RNPickerSelect
@@ -111,18 +103,14 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
   confirmButton: {
-    backgroundColor: '#208eff', // 蓝色，表示出库
+    backgroundColor: colorStyle.buttonPrimary,
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
   },
   addButton: {
-    backgroundColor: '#FF5722', // 红色，表示删除
+    backgroundColor: colorStyle.danger,
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
