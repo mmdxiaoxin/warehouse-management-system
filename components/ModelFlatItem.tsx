@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ScrollView,
 } from 'react-native';
 import {BSON} from 'realm';
 
@@ -15,22 +16,29 @@ interface ModelFlatItemProps {
     models: string;
     quantity: number;
   };
-  onQuantityChange: (id: BSON.ObjectId, quantity: number) => void; // 传递 quantity 变化的回调
+  onQuantityChange: (id: BSON.ObjectId, quantity: number) => void;
 }
+
+type ModelsParsed = {
+  key: string;
+  value: string;
+}[];
 
 const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
   item,
   onQuantityChange,
 }) => {
-  const [quantity, setQuantity] = useState(item.quantity.toString()); // 管理输入的数量
-  const [error, setError] = useState<string>(''); // 错误信息
+  const modelsParsed: ModelsParsed = JSON.parse(item.models);
+
+  const [quantity, setQuantity] = useState(item.quantity.toString());
+  const [error, setError] = useState<string>('');
 
   // 增加数量
   const incrementQuantity = () => {
     const newQuantity = parseInt(quantity) + 1;
     setQuantity(newQuantity.toString());
-    setError(''); // 清除错误信息
-    onQuantityChange(item._id, newQuantity); // 回调通知父组件更新数量
+    setError('');
+    onQuantityChange(item._id, newQuantity);
   };
 
   // 减少数量
@@ -38,8 +46,8 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
     const newQuantity = parseInt(quantity) - 1;
     if (newQuantity >= 0) {
       setQuantity(newQuantity.toString());
-      setError(''); // 清除错误信息
-      onQuantityChange(item._id, newQuantity); // 回调通知父组件更新数量
+      setError('');
+      onQuantityChange(item._id, newQuantity);
     }
   };
 
@@ -54,8 +62,8 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
       const newQuantity = parseInt(text);
       if (newQuantity >= 0) {
         setQuantity(text);
-        setError(''); // 清除错误信息
-        onQuantityChange(item._id, newQuantity); // 回调通知父组件更新数量
+        setError('');
+        onQuantityChange(item._id, newQuantity);
       }
     } else {
       setError('请输入有效的整数'); // 如果输入的不是有效的整数，显示错误信息
@@ -64,24 +72,31 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
 
   return (
     <View style={styles.itemCard}>
-      <Text style={styles.itemName}>{item.models}</Text>
+      {/* 结构化展示 parsed data */}
+      <ScrollView style={styles.detailsContainer}>
+        {modelsParsed.map((model, index) => (
+          <View key={index} style={styles.modelItem}>
+            <Text style={styles.modelKey}>{model.key}:</Text>
+            <Text style={styles.modelValue}>{model.value}</Text>
+          </View>
+        ))}
+      </ScrollView>
 
+      {/* 数量调整 */}
       <View style={styles.quantityContainer}>
         <Text style={styles.quantityLabel}>数量:</Text>
 
-        {/* 增减按钮 */}
         <View style={styles.quantityControls}>
           <TouchableOpacity onPress={decrementQuantity} style={styles.button}>
             <AntDesignIcon name="minus" size={20} color="white" />
           </TouchableOpacity>
 
-          {/* 输入框 */}
           <TextInput
             style={[styles.quantityInput, error ? styles.inputError : {}]}
             keyboardType="numeric"
             value={quantity}
             onChangeText={handleQuantityChange}
-            maxLength={3} // 限制输入的最大长度
+            maxLength={3}
           />
 
           <TouchableOpacity onPress={incrementQuantity} style={styles.button}>
@@ -89,7 +104,6 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* 显示错误信息 */}
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
       </View>
     </View>
@@ -109,10 +123,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
   },
-  itemName: {
-    fontSize: 18,
+  detailsContainer: {
+    marginVertical: 10,
+  },
+  modelItem: {
+    flexDirection: 'row',
+    marginBottom: 5,
+    alignItems: 'center',
+  },
+  modelKey: {
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#555',
+    flex: 1,
+  },
+  modelValue: {
+    fontSize: 16,
+    color: '#333',
+    flex: 2,
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -139,7 +167,7 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   inputError: {
-    borderColor: 'red', // 错误输入时，显示红色边框
+    borderColor: 'red',
   },
   button: {
     width: 30,
