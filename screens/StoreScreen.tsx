@@ -6,6 +6,8 @@ import ModelFlatItem from '../components/ModelFlatItem'; // 引入 ModelFlatItem
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
+import {BSON} from 'realm';
+import {useCargoItem} from '../hooks/useCargoItem';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
@@ -14,7 +16,7 @@ export default function StoreScreen({navigation}: any) {
   const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
 
   // 使用 Realm 查询所有货物数据
-  const {cargoList} = useCargo();
+  const {cargoList, updateCargoItemQuantity} = useCargo();
   const currentCargo = useMemo(() => {
     if (selectedIndex > 0) {
       return cargoList[selectedIndex - 1];
@@ -35,6 +37,12 @@ export default function StoreScreen({navigation}: any) {
   useEffect(() => {
     filterCargoByCategory(); // 组件挂载时默认筛选
   }, [cargoCategory, cargoList]);
+
+  const handleQuantityChange = (id: BSON.ObjectId, newQuantity: number) => {
+    if (currentCargo) {
+      updateCargoItemQuantity(currentCargo._id, id, newQuantity);
+    }
+  };
 
   return (
     <FlatList
@@ -85,7 +93,12 @@ export default function StoreScreen({navigation}: any) {
               <FlatList
                 data={currentCargo.items}
                 keyExtractor={item => item._id.toString()}
-                renderItem={({item}) => <ModelFlatItem item={item} />}
+                renderItem={({item}) => (
+                  <ModelFlatItem
+                    item={item}
+                    onQuantityChange={handleQuantityChange}
+                  />
+                )}
               />
             </View>
           ) : (

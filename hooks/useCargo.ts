@@ -36,6 +36,27 @@ export const useCargo = () => {
     });
   };
 
+  // 更新货物中的某个 CargoItem
+  const updateCargoItemQuantity = (
+    cargoId: BSON.ObjectId,
+    itemId: BSON.ObjectId,
+    newQuantity: number,
+  ) => {
+    realm.write(() => {
+      const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
+      if (cargo) {
+        // 查找要更新的 CargoItem
+        const cargoItem = cargo.items.find(
+          item => item._id.toString() === itemId.toString(),
+        );
+        if (cargoItem) {
+          cargoItem.quantity = newQuantity; // 更新数量
+          cargo.utime = new Date(); // 更新时间
+        }
+      }
+    });
+  };
+
   // 删除 Cargo
   const deleteCargo = (cargoId: BSON.ObjectId) => {
     realm.write(() => {
@@ -51,6 +72,7 @@ export const useCargo = () => {
     cargoList,
     createCargo,
     updateCargo,
+    updateCargoItemQuantity,
     deleteCargo,
   };
 };
