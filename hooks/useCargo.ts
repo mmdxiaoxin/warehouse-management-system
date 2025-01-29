@@ -2,6 +2,11 @@ import {useRealm, useQuery} from '@realm/react';
 import {Cargo} from '../models/Cargo';
 import {BSON} from 'realm';
 
+export type CargoData = Pick<
+  Cargo,
+  'name' | 'category' | 'unit' | 'description'
+>;
+
 export const useCargo = () => {
   const realm = useRealm();
 
@@ -9,7 +14,7 @@ export const useCargo = () => {
   const cargoList = useQuery(Cargo);
 
   // 创建新的 Cargo
-  const createCargo = (cargoData: Omit<Cargo, '_id'>) => {
+  const createCargo = (cargoData: CargoData) => {
     realm.write(() => {
       const newCargo = realm.create(Cargo, {
         _id: new BSON.ObjectId(),

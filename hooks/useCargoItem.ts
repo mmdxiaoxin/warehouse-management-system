@@ -3,6 +3,8 @@ import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
 import {CargoItem} from '../models/CargoItem';
 
+export type CargoItemData = Pick<CargoItem, 'models' | 'quantity'>;
+
 export const useCargoItem = () => {
   const realm = useRealm();
 
@@ -12,7 +14,7 @@ export const useCargoItem = () => {
   // 创建新的 CargoItem
   const createCargoItem = (
     cargoId: BSON.ObjectId,
-    cargoItemData: Omit<CargoItem, '_id' | 'cargo'>,
+    cargoItemData: CargoItemData,
   ) => {
     realm.write(() => {
       const cargo = realm.objectForPrimaryKey(Cargo, cargoId); // 获取关联的 Cargo 实例

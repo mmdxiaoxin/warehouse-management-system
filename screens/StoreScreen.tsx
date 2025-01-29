@@ -51,8 +51,9 @@ export default function StoreScreen({navigation}: any) {
 
     // 增加库存逻辑（例如增加数量）
     createCargoItem(selectedCargoId, {
+      quantity: 1,
       models: JSON.stringify(spec),
-    } as any);
+    });
 
     Alert.alert(`已成功入库货物: ${selectedCargo}`);
   };

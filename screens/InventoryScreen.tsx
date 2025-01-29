@@ -123,7 +123,7 @@ export default function InventoryScreen() {
         category,
         unit: '个',
       };
-      createCargo(newCargo as any);
+      createCargo(newCargo);
     } catch (error) {
       console.error('创建货物时出错：', error);
       Alert.alert('创建失败', '创建货物时发生错误，请稍后再试。');
