@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import {BSON} from 'realm';
 import Divider from '../components/Divider';
 import ModelFlatItem from '../components/ModelFlatItem'; // 引入 ModelFlatItem
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
-import {BSON} from 'realm';
-import {useCargoItem} from '../hooks/useCargoItem';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
@@ -19,7 +18,7 @@ export default function StoreScreen({navigation}: any) {
   const {cargoList, updateCargoItemQuantity} = useCargo();
   const currentCargo = useMemo(() => {
     if (selectedIndex > 0) {
-      return cargoList[selectedIndex - 1];
+      return filteredCargoList[selectedIndex - 1];
     }
     return null;
   }, [selectedIndex, cargoList]);
