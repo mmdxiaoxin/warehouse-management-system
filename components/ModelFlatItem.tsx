@@ -1,12 +1,12 @@
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  ScrollView,
 } from 'react-native';
 import {BSON} from 'realm';
 
@@ -28,10 +28,30 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
   item,
   onQuantityChange,
 }) => {
-  const modelsParsed: ModelsParsed = JSON.parse(item.models);
+  const [modelsParsed, setModelsParsed] = useState<ModelsParsed>([]);
 
-  const [quantity, setQuantity] = useState(item.quantity.toString());
-  const [error, setError] = useState<string>('');
+  useEffect(() => {
+    // 安全解析 JSON
+    const parseModels = () => {
+      try {
+        const parsed: ModelsParsed = JSON.parse(item.models);
+        // 确保解析后的数据是一个数组
+        if (Array.isArray(parsed)) {
+          setModelsParsed(parsed);
+        } else {
+          setModelsParsed([]); // 如果不是数组，则使用默认空数组
+        }
+      } catch (error) {
+        console.error('解析 models 数据失败', error);
+        setModelsParsed([]); // 解析失败时使用空数组
+      }
+    };
+
+    parseModels();
+  }, [item.models]);
+
+  const [quantity, setQuantity] = useState(item.quantity.toString()); // 管理输入的数量
+  const [error, setError] = useState<string>(''); // 错误信息
 
   // 增加数量
   const incrementQuantity = () => {
