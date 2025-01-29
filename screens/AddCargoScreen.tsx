@@ -41,7 +41,6 @@ export default function AddCargoScreen({navigation}: any) {
     <View style={styles.container}>
       <Text style={styles.title}>添加新货物</Text>
 
-      {/* 使用 Section 组件包装输入项 */}
       <SectionInput
         label="货物名称"
         placeholder="请输入新的货物名称"
@@ -49,7 +48,7 @@ export default function AddCargoScreen({navigation}: any) {
         onChangeText={setNewCargoName}
       />
 
-      <SectionInput label="货物类别" inline>
+      <SectionInput label="货物类别">
         <RNPickerSelect
           placeholder={{label: '请选择货物类别', value: ''}}
           value={newCargoCategory}
