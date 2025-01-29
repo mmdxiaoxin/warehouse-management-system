@@ -11,7 +11,7 @@ interface CargoItemProps {
   handleDeleteCargo: (cargoId: BSON.ObjectId) => void;
 }
 
-const CargoItemComponent: React.FC<CargoItemProps> = ({
+const CargoSectionItem: React.FC<CargoItemProps> = ({
   item,
   handleEditCargo,
   handleDeleteCargo,
@@ -150,4 +150,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CargoItemComponent;
+export default CargoSectionItem;

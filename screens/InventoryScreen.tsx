@@ -10,7 +10,7 @@ import {
   TextInput,
 } from 'react-native';
 import {BSON} from 'realm';
-import CargoItem from '../components/CargoItem';
+import CargoSectionItem from '../components/CargoSectionItem';
 import Divider from '../components/Divider';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo'; // 导入Cargo模型
@@ -144,7 +144,7 @@ export default function InventoryScreen() {
         sections={groupedCargo}
         keyExtractor={(item, index) => String(item._id) + index}
         renderItem={({item}) => (
-          <CargoItem
+          <CargoSectionItem
             item={item}
             handleEditCargo={handleEditCargo}
             handleDeleteCargo={handleDeleteCargo}
