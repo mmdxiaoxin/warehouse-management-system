@@ -1,6 +1,7 @@
-// CargoItem.tsx
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {cargoItemRepository} from '../models/CargoItemRepository';
+import AntDesignIcon from '@react-native-vector-icons/ant-design';
 
 // 定义 props 类型
 interface CargoItemProps {
@@ -13,34 +14,79 @@ const CargoItem: React.FC<CargoItemProps> = ({
   item,
   handleEditCargo,
   handleDeleteCargo,
-}) => (
-  <View style={styles.card}>
-    <View style={styles.cardHeader}>
-      <Text style={styles.cardTitle}>{item.name}</Text>
-      <Text style={styles.cardCategory}>{item.category}</Text>
-    </View>
+}) => {
+  const [quantity, setQuantity] = React.useState(0);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
-    <View style={styles.cardBody}>
-      <Text style={styles.cardText}>剩余库存: {`TODO ${item.unit}`}</Text>
-      <Text style={styles.cardText}>货物描述: {item.description}</Text>
-      {/* <Text style={styles.cardText}>最近出库: {item.utime}</Text> */}
-    </View>
+  useEffect(() => {
+    // 获取货物的库存数量
+    const fetchQuantity = async () => {
+      const result = await cargoItemRepository.getCargoItemCountByCargoId(
+        item.cargoId,
+      );
+      setQuantity(result);
+    };
+    fetchQuantity();
+  }, []);
 
-    <View style={styles.cardFooter}>
-      <TouchableOpacity
-        style={styles.buttonShipped}
-        onPress={() => handleEditCargo(item.cargoId)}>
-        <Text style={styles.buttonText}>编辑货物</Text>
-      </TouchableOpacity>
+  // 切换展开/收起状态
+  const toggleExpand = () => {
+    setIsExpanded(prev => !prev);
+  };
 
-      <TouchableOpacity
-        style={styles.buttonDelete}
-        onPress={() => handleDeleteCargo(item.cargoId)}>
-        <Text style={styles.buttonText}>删除货物</Text>
-      </TouchableOpacity>
+  return (
+    <View style={styles.card}>
+      <View style={styles.cardHeader}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={styles.cardTitle}>{item.name}</Text>
+          {/* 展开/收起按钮*/}
+          <TouchableOpacity style={styles.toggleButton} onPress={toggleExpand}>
+            <AntDesignIcon
+              name={isExpanded ? 'caret-down' : 'caret-down'} // 根据展开状态显示不同的图标
+              size={14}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.cardCategory}>{item.category}</Text>
+      </View>
+
+      {/* 展开时显示更多信息 */}
+      {isExpanded && (
+        <>
+          <View style={styles.cardBody}>
+            <Text style={styles.cardText}>
+              剩余库存: {`${quantity} ${item.unit}`}
+            </Text>
+            <Text style={styles.cardText}>货物描述: {item.description}</Text>
+            <Text style={styles.cardText}>
+              创建时间:{' '}
+              {item.ctime ? new Date(item.ctime).toLocaleString() : '错误!'}
+            </Text>
+            <Text style={styles.cardText}>
+              最近出库:{' '}
+              {item.utime
+                ? new Date(item.utime).toLocaleString()
+                : '无出库记录'}
+            </Text>
+          </View>
+          <View style={styles.cardFooter}>
+            <TouchableOpacity
+              style={styles.buttonShipped}
+              onPress={() => handleEditCargo(item.cargoId)}>
+              <Text style={styles.buttonText}>编辑货物</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.buttonDelete}
+              onPress={() => handleDeleteCargo(item.cargoId)}>
+              <Text style={styles.buttonText}>删除货物</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   card: {
@@ -100,6 +146,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  toggleButton: {
+    marginStart: 10,
   },
 });
 
