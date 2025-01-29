@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Divider from '../components/Divider';
+import ModelFlatItem from '../components/ModelFlatItem'; // 引入 ModelFlatItem
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
@@ -84,14 +85,7 @@ export default function StoreScreen({navigation}: any) {
               <FlatList
                 data={currentCargo.items}
                 keyExtractor={item => item._id.toString()}
-                renderItem={({item}) => (
-                  <View style={styles.itemCard}>
-                    <Text style={styles.itemName}>{item.models}</Text>
-                    <Text style={styles.itemQuantity}>
-                      数量: {item.quantity}
-                    </Text>
-                  </View>
-                )}
+                renderItem={({item}) => <ModelFlatItem item={item} />}
               />
             </View>
           ) : (
@@ -167,22 +161,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-  },
-  itemCard: {
-    padding: 15,
-    marginBottom: 10,
-    backgroundColor: '#f8f8f8',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  itemQuantity: {
-    fontSize: 14,
-    color: '#666',
   },
   noItemsText: {
     fontSize: 16,
