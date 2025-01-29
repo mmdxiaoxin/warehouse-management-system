@@ -7,7 +7,6 @@ export class Cargo extends Realm.Object {
       cargoId: 'string',
       name: 'string',
       category: 'string',
-      quantity: 'int',
       unit: 'string',
       description: 'string?',
       ctime: 'date',

@@ -5,7 +5,6 @@ import {cargoRepository} from '../models/CargoRepository';
 
 export default function AddCargoScreen({navigation}: any) {
   const [newCargoName, setNewCargoName] = useState('');
-  const [newCargoCount, setNewCargoCount] = useState('0');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
 
@@ -14,13 +13,6 @@ export default function AddCargoScreen({navigation}: any) {
     // 校验输入字段是否为空
     if (!newCargoName.trim()) {
       Alert.alert('请输入货物名称');
-      return;
-    }
-
-    // 校验数量是否为有效的数字
-    const quantity = parseInt(newCargoCount);
-    if (isNaN(quantity) || quantity <= 0) {
-      Alert.alert('请输入有效的货物数量');
       return;
     }
 
@@ -33,7 +25,6 @@ export default function AddCargoScreen({navigation}: any) {
     try {
       await cargoRepository.createCargo({
         name: newCargoName,
-        quantity: quantity,
         category: newCargoCategory,
         unit: newCargoUnit,
       });
@@ -56,16 +47,6 @@ export default function AddCargoScreen({navigation}: any) {
         placeholder="请输入新的货物名称"
         value={newCargoName}
         onChangeText={setNewCargoName}
-      />
-
-      {/* 货物数量 */}
-      <Text style={styles.label}>货物数量:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="请输入货物数量"
-        keyboardType="numeric"
-        value={newCargoCount.toString()}
-        onChangeText={setNewCargoCount}
       />
 
       {/* 货物类别选择框 */}

@@ -16,7 +16,6 @@ import {cargoRepository} from '../models/CargoRepository';
 export default function OutboundScreen({navigation}: any) {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物种类
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
-  const [quantity, setQuantity] = useState<string>(''); // 出库数量
 
   const fetchCargoList = async () => {
     try {
@@ -33,30 +32,7 @@ export default function OutboundScreen({navigation}: any) {
     }, []),
   );
 
-  const handleOutbound = () => {
-    if (!selectedCargo || !quantity) {
-      Alert.alert('Error', 'Please select a cargo and specify quantity');
-      return;
-    }
-
-    const cargoToRemove = cargoList.find(cargo => cargo.name === selectedCargo);
-
-    if (!cargoToRemove || parseInt(quantity) > cargoToRemove.quantity) {
-      Alert.alert('Error', 'Not enough stock to remove');
-      return;
-    }
-
-    // TODO: 出库操作
-    // cargoRepository.removeCargo(cargoToRemove.id, parseInt(quantity)); // 通过ID和数量删除货物
-    Alert.alert(
-      '成功',
-      `${selectedCargo} 出库数量： ${quantity} 剩余库存: ${
-        cargoToRemove.quantity - parseInt(quantity)
-      }`,
-    );
-
-    fetchCargoList(); // 更新货物列表
-  };
+  const handleOutbound = () => {};
 
   const handleDeleteCargo = () => {
     if (!selectedCargo) {
@@ -89,15 +65,6 @@ export default function OutboundScreen({navigation}: any) {
           value: cargo.name,
         }))}
         style={pickerSelectStyles}
-      />
-
-      <Text style={styles.label}>出库数量:</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="numeric"
-        value={quantity}
-        onChangeText={setQuantity}
-        placeholder="请输入出库数量"
       />
 
       {/* 确认出库按钮 */}

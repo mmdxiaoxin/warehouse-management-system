@@ -16,7 +16,6 @@ import {cargoRepository} from '../models/CargoRepository';
 export default function StoreScreen({navigation}: any) {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储货物种类
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
-  const [quantity, setQuantity] = useState<string>(''); // 入库数量
 
   const fetchCargoList = async () => {
     try {
@@ -33,20 +32,7 @@ export default function StoreScreen({navigation}: any) {
     }, []),
   );
 
-  const handleAddToStore = () => {
-    if (!selectedCargo || !quantity) {
-      Alert.alert('Error', 'Please select a cargo and specify quantity');
-      return;
-    }
-    const cargo = cargoList.find(c => c.name === selectedCargo);
-    // TODO: 更新货物数量
-    Alert.alert(
-      '成功',
-      `${selectedCargo}入库数量数量: ${quantity}, 入库后的数量为: ${
-        parseInt(quantity) + parseInt(cargo.quantity)
-      }`,
-    );
-  };
+  const handleAddToStore = () => {};
 
   return (
     <View style={styles.container}>
@@ -62,15 +48,6 @@ export default function StoreScreen({navigation}: any) {
           value: cargo.name,
         }))}
         style={pickerSelectStyles}
-      />
-
-      <Text style={styles.label}>入库数量:</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="numeric"
-        value={quantity}
-        onChangeText={setQuantity}
-        placeholder="请输入入库数量"
       />
 
       {/* 添加新货物按钮 */}

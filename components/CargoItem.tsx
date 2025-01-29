@@ -21,10 +21,9 @@ const CargoItem: React.FC<CargoItemProps> = ({
     </View>
 
     <View style={styles.cardBody}>
-      <Text style={styles.cardText}>
-        剩余库存: {`${item.quantity} ${item.unit}`}
-      </Text>
+      <Text style={styles.cardText}>剩余库存: {`TODO ${item.unit}`}</Text>
       <Text style={styles.cardText}>货物描述: {item.description}</Text>
+      {/* <Text style={styles.cardText}>最近出库: {item.utime}</Text> */}
     </View>
 
     <View style={styles.cardFooter}>

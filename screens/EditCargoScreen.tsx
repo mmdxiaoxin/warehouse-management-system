@@ -15,7 +15,6 @@ export default function EditCargoScreen() {
 
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
-  const [newCargoQuantity, setNewCargoQuantity] = useState('0');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
   const [newCargoDescription, setNewCargoDescription] = useState('');
 
@@ -27,7 +26,6 @@ export default function EditCargoScreen() {
           setCargo(data);
           setNewCargoName(data.name);
           setNewCargoCategory(data.category);
-          setNewCargoQuantity(data.quantity.toString());
           setNewCargoUnit(data.unit);
           setNewCargoDescription(data.description || '');
         }
@@ -45,11 +43,6 @@ export default function EditCargoScreen() {
       Alert.alert('请选择货物类别');
       return;
     }
-    const quantity = parseInt(newCargoQuantity);
-    if (isNaN(quantity) || quantity <= 0) {
-      Alert.alert('请输入有效的货物数量');
-      return;
-    }
 
     try {
       if (!cargo) {
@@ -58,7 +51,6 @@ export default function EditCargoScreen() {
       await cargoRepository.updateCargo(cargoId as string, {
         name: newCargoName,
         category: newCargoCategory,
-        quantity: quantity,
         unit: newCargoUnit,
         description: newCargoDescription,
         ctime: cargo?.ctime || new Date(), // 保持原有的创建时间
@@ -100,16 +92,6 @@ export default function EditCargoScreen() {
           {label: '辅料', value: '辅料'},
         ]}
         style={pickerSelectStyles}
-      />
-
-      {/* 货物数量 */}
-      <Text style={styles.label}>货物数量:</Text>
-      <TextInput
-        style={styles.input}
-        value={newCargoQuantity}
-        onChangeText={setNewCargoQuantity}
-        placeholder="请输入货物数量"
-        keyboardType="numeric"
       />
 
       {/* 货物单位 */}

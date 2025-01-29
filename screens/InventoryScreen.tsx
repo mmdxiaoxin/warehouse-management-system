@@ -41,6 +41,8 @@ export default function InventoryScreen() {
       // 获取所有货物
       const loadCargoData = async () => {
         const cargos = await cargoRepository.getAllCargo();
+        console.log('加载库存数据...');
+        console.log(cargos);
         setCargoList(cargos as any[]);
       };
 
@@ -120,10 +122,7 @@ export default function InventoryScreen() {
         name: generateRandomString(8), // 随机生成名称
         description: '随机生成的货物项目',
         category: getRandomCategory(), // 随机选择一个类别
-        quantity: getRandomCount(), // 随机生成数量
         unit: '个',
-        ctime: new Date('2025-01-25'),
-        utime: new Date('2025-02-05'),
       };
 
       await cargoRepository.createCargo(newCargo); // 创建货物

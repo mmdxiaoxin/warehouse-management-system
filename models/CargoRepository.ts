@@ -5,7 +5,6 @@ import uuid from 'react-native-uuid'; // 引入 react-native-uuid
 export type CargoData = {
   name: string;
   category: string;
-  quantity: number;
   unit: string;
   description?: string;
   ctime?: Date;
@@ -36,13 +35,11 @@ class CargoRepository {
     const realm = await this.getRealm();
     try {
       const cargoId = uuid.v4().toString(); // 使用 react-native-uuid 生成 UUID 作为主键
-      const quantity = cargoData.quantity || 0;
 
       realm.write(() => {
         realm.create('Cargo', {
           ...cargoData,
           cargoId,
-          quantity,
           ctime: new Date(),
           utime: new Date(),
         });
@@ -73,7 +70,6 @@ class CargoRepository {
         return {
           name: cargo.name,
           category: cargo.category,
-          quantity: cargo.quantity,
           unit: cargo.unit,
           description: cargo.description,
           ctime: cargo.ctime,
@@ -98,7 +94,6 @@ class CargoRepository {
         if (cargo) {
           cargo.name = cargoData.name;
           cargo.category = cargoData.category;
-          cargo.quantity = cargoData.quantity;
           cargo.unit = cargoData.unit;
           cargo.description = cargoData.description;
           cargo.utime = new Date();
