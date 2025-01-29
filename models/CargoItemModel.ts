@@ -7,6 +7,7 @@ export class CargoItem extends Realm.Object {
       id: 'string',
       cargo: 'Cargo',
       models: 'string',
+      ctime: 'date',
     },
   };
 }

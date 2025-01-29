@@ -44,6 +44,7 @@ class CargoItemRepository {
           id,
           cargo: cargo, // 关联到 Cargo
           models: cargoItemData.models,
+          ctime: new Date(),
         });
       });
       console.log('CargoItem added!');
