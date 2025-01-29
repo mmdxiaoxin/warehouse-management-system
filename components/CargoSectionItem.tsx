@@ -36,7 +36,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
           <Text style={styles.cardTitle}>{item.name}</Text>
           <TouchableOpacity style={styles.toggleButton} onPress={toggleExpand}>
             <AntDesignIcon
-              name={isExpanded ? 'caret-down' : 'caret-up'}
+              name={isExpanded ? 'caret-down' : 'caret-right'}
               size={14}
             />
           </TouchableOpacity>
