@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {cargoItemRepository} from '../models/CargoItemRepository';
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
+import React, {useEffect} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {cargoItemRepository} from '../models/CargoItemRepository';
+import {colorStyle, fontStyle} from '../styles';
 
 // 定义 props 类型
 interface CargoItemProps {
@@ -71,7 +72,7 @@ const CargoItem: React.FC<CargoItemProps> = ({
           </View>
           <View style={styles.cardFooter}>
             <TouchableOpacity
-              style={styles.buttonShipped}
+              style={styles.buttonEdit}
               onPress={() => handleEditCargo(item.cargoId)}>
               <Text style={styles.buttonText}>编辑货物</Text>
             </TouchableOpacity>
@@ -109,9 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    ...fontStyle.subheading,
   },
   cardCategory: {
     fontSize: 16,
@@ -122,32 +121,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardText: {
-    fontSize: 14,
-    color: '#555',
+    ...fontStyle.bodySmall,
     marginBottom: 5,
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  buttonShipped: {
-    backgroundColor: '#4CAF50',
+  buttonEdit: {
+    backgroundColor: colorStyle.primary,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
     alignItems: 'center',
   },
   buttonDelete: {
-    backgroundColor: '#f44336',
+    backgroundColor: colorStyle.danger,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    ...fontStyle.buttonText,
     fontSize: 14,
-    fontWeight: 'bold',
   },
   toggleButton: {
     marginStart: 10,

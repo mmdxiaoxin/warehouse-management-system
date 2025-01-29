@@ -1,11 +1,13 @@
 import React from 'react';
 import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
   TextInputProps,
-  KeyboardAvoidingView,
 } from 'react-native';
+import {fontStyle} from '../styles/fontStyle';
 
 interface SectionProps extends TextInputProps {
   label: string; // 用来设置输入框的标签
@@ -25,6 +27,7 @@ const SectionInput: React.FC<SectionProps> = ({
 }) => {
   return (
     <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       style={[styles.container, inline && styles.inlineContainer]}>
       {/* Label */}
       <Text style={[styles.label, labelStyle]}>{label}</Text>
@@ -52,10 +55,8 @@ const styles = StyleSheet.create({
     alignItems: 'center', // 垂直居中对齐
   },
   label: {
-    fontSize: 18,
-    fontWeight: 'bold',
     marginBottom: 5, // 默认标签和输入框之间的间距
-    color: '#333',
+    ...fontStyle.subheading,
   },
   input: {
     minHeight: 40,
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    fontSize: 16,
+    ...fontStyle.bodyMedium,
   },
 });
 

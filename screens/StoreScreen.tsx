@@ -1,19 +1,11 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useState, useCallback, useEffect} from 'react';
-import {
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import Divider from '../components/Divider';
-import {cargoRepository} from '../models/CargoRepository';
 import CargoSpecInput from '../components/CargoSpecInput';
+import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
+import {cargoRepository} from '../models/CargoRepository';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoList, setCargoList] = useState<any[]>([]); // 存储所有货物
@@ -60,7 +52,7 @@ export default function StoreScreen({navigation}: any) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>货物入库</Text>
 
       <SectionInput label="货物类别">
@@ -107,7 +99,7 @@ export default function StoreScreen({navigation}: any) {
         onPress={() => navigation.navigate('AddCargo')}>
         <Text style={styles.addButtonText}>添加新货物</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 

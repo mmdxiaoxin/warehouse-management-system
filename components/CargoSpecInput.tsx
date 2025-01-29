@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {
-  View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
+  View,
 } from 'react-native';
+import {colorStyle, fontStyle} from '../styles';
 
 interface CargoSpecItem {
   key: string;
@@ -57,8 +59,26 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
     <View style={styles.container}>
       <Text style={styles.header}>输入货物规格</Text>
 
+      {/* 规格列表展示 */}
+      <View>
+        {specs.map((spec, index) => (
+          <View key={index} style={styles.specRow}>
+            <Text style={styles.specText}>
+              {spec.key}: {spec.value}
+            </Text>
+            <TouchableOpacity
+              onPress={() => handleRemoveSpec(spec.key)}
+              style={styles.removeButton}>
+              <Text style={styles.removeButtonText}>删除</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+
       {/* 键值对输入框 */}
-      <KeyboardAvoidingView style={styles.inputRow}>
+      <KeyboardAvoidingView
+        style={styles.inputRow}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
         <TextInput
           style={styles.input}
           placeholder="规格名称"
@@ -75,22 +95,6 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
           <Text style={styles.addButtonText}>添加</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-
-      {/* 规格列表展示 */}
-      <View>
-        {specs.map((spec, index) => (
-          <View key={index} style={styles.specRow}>
-            <Text style={styles.specText}>
-              {spec.key}: {spec.value}
-            </Text>
-            <TouchableOpacity
-              onPress={() => handleRemoveSpec(spec.key)}
-              style={styles.removeButton}>
-              <Text style={styles.removeButtonText}>删除</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
     </View>
   );
 };
@@ -100,8 +104,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   header: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    ...fontStyle.subheading,
     marginBottom: 15,
   },
   inputRow: {
@@ -116,9 +119,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
+    ...fontStyle.bodyMedium,
   },
   addButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: colorStyle.success,
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
@@ -137,11 +141,10 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   specText: {
-    fontSize: 16,
-    color: '#333',
+    ...fontStyle.bodyMedium,
   },
   removeButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: colorStyle.danger,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
