@@ -106,7 +106,7 @@ export default function InventoryScreen() {
   // 处理货物信息更新
   const handleEditCargo = (cargoId: BSON.ObjectId) => {
     try {
-      navigation.navigate('EditCargo', {cargoId});
+      navigation.navigate('EditCargo', {cargoId: cargoId.toHexString()}); // 导航到编辑页面
     } catch (error) {
       console.error('导航到编辑页面时出错：', error);
       Alert.alert('导航错误', '无法导航到编辑页面，请稍后再试。');

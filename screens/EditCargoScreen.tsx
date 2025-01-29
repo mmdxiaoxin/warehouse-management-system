@@ -12,7 +12,7 @@ export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
   const navigation = useNavigation();
 
-  const cargoId = route.params?.cargoId;
+  const cargoId = new BSON.ObjectId(route.params?.cargoId);
 
   const {cargoList, updateCargo} = useCargo();
 

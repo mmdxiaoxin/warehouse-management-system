@@ -3,5 +3,5 @@ import {BSON} from 'realm';
 export type RootStackParamList = {
   Home: undefined;
   AddCargo: undefined;
-  EditCargo: {cargoId: BSON.ObjectId};
+  EditCargo: {cargoId: string};
 };
