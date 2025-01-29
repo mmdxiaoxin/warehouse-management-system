@@ -1,9 +1,7 @@
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
-import {useObject} from '@realm/react'; // 引入 Realm hooks
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BSON} from 'realm';
-import {Cargo} from '../models/Cargo';
 import {colorStyle, fontStyle} from '../styles';
 
 interface CargoItemProps {
@@ -17,7 +15,9 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
   handleEditCargo,
   handleDeleteCargo,
 }) => {
-  const quantity = item.items.length;
+  const quantity = item.items.reduce((acc: number, cur: any) => {
+    return acc + cur.quantity;
+  }, 0);
   const [isExpanded, setIsExpanded] = useState(false);
 
   // 切换展开/收起状态
