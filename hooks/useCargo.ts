@@ -59,13 +59,18 @@ export const useCargo = () => {
 
   // 删除 Cargo
   const deleteCargo = (cargoId: BSON.ObjectId) => {
-    realm.write(() => {
-      const cargoToDelete = realm.objectForPrimaryKey(Cargo, cargoId);
-      if (cargoToDelete) {
-        realm.delete(cargoToDelete);
-        console.log('Cargo deleted:', cargoToDelete);
-      }
-    });
+    try {
+      realm.write(() => {
+        const cargoToDelete = realm.objectForPrimaryKey(Cargo, cargoId);
+        if (cargoToDelete) {
+          realm.delete(cargoToDelete);
+          console.log('Cargo deleted:', cargoToDelete);
+        }
+      });
+    } catch (error) {
+      console.error('删除失败:', error);
+      throw error;
+    }
   };
 
   return {
