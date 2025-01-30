@@ -34,10 +34,12 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
       <View style={styles.cardHeader}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.cardTitle}>{item.name}</Text>
-          <TouchableOpacity style={styles.toggleButton} onPress={toggleExpand}>
+          <TouchableOpacity
+            style={[styles.toggleButton, {marginTop: 5}]}
+            onPress={toggleExpand}>
             <AntDesignIcon
               name={isExpanded ? 'caret-down' : 'caret-right'}
-              size={14}
+              size={18}
             />
           </TouchableOpacity>
         </View>
@@ -96,6 +98,7 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 10,
   },
   cardTitle: {
@@ -136,7 +139,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   toggleButton: {
-    marginStart: 10,
+    width: 80,
+    paddingStart: 10,
   },
 });
 
