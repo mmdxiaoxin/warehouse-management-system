@@ -2,16 +2,15 @@ import React, {useState} from 'react';
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
+import {useCargo} from '../hooks/useCargo';
 import {colorStyle, fontStyle} from '../styles';
-import {useRealm} from '@realm/react';
-import {Cargo} from '../models/Cargo'; // 导入Cargo模型
-import {BSON} from 'realm';
 
 export default function AddCargoScreen({navigation}: any) {
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
-  const realm = useRealm(); // 使用 Realm Provider 获取 Realm 实例
+
+  const {createCargo} = useCargo(); // 使用 useCargo 钩子
 
   // 处理添加货物
   const handleAddCargo = async () => {
@@ -28,17 +27,11 @@ export default function AddCargoScreen({navigation}: any) {
     }
 
     try {
-      // 使用 Realm 实例添加新货物
-      realm.write(() => {
-        realm.create(Cargo, {
-          _id: new BSON.ObjectId(), // 为货物生成一个新的 ObjectId
-          name: newCargoName,
-          category: newCargoCategory,
-          unit: newCargoUnit,
-          ctime: new Date(),
-        });
+      createCargo({
+        name: newCargoName,
+        category: newCargoCategory,
+        unit: newCargoUnit,
       });
-
       Alert.alert('新货物添加成功!');
       navigation.goBack(); // 返回到库存页面
     } catch (error) {
