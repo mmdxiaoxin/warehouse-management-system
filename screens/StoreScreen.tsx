@@ -7,6 +7,7 @@ import ModelFlatItem from '../components/ModelFlatItem'; // 引入 ModelFlatItem
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
+import {useObject} from '@realm/react';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
@@ -19,9 +20,9 @@ export default function StoreScreen({navigation}: any) {
 
   const handleQuantityChange = (id: BSON.ObjectId, newQuantity: number) => {
     if (selectedCargo) {
-      const currentCargo = cargoList.filtered(
-        `_id == ObjectId("${selectedCargo}")`,
-      )[0];
+      const currentCargo = cargoList.find(cargo =>
+        cargo._id.equals(selectedCargo),
+      );
       if (currentCargo) {
         updateCargoItemQuantity(currentCargo._id, id, newQuantity);
       }
@@ -90,25 +91,21 @@ export default function StoreScreen({navigation}: any) {
           {selectedCargo && (
             <View style={styles.itemsContainer}>
               <Text style={styles.itemsTitle}>当前选中货物的型号:</Text>
-              {filterCargoByCategory()
-                .filter(
-                  cargo => cargo._id.toString() === selectedCargo.toString(),
-                )
-                .map(cargo => (
-                  <FlatList
-                    key={cargo._id.toString()}
-                    data={cargo.items}
-                    keyExtractor={item => item._id.toString()}
-                    renderItem={({item}) => (
-                      <ModelFlatItem
-                        item={item}
-                        onQuantityChange={handleQuantityChange}
-                        onEdit={handleEditModel}
-                        onDelete={handleDeleteModel}
-                      />
-                    )}
-                  />
-                ))}
+              {filterCargoByCategory().map(cargo => (
+                <FlatList
+                  key={cargo._id.toString()}
+                  data={cargo.items}
+                  keyExtractor={item => item._id.toString()}
+                  renderItem={({item}) => (
+                    <ModelFlatItem
+                      item={item}
+                      onQuantityChange={handleQuantityChange}
+                      onEdit={handleEditModel}
+                      onDelete={handleDeleteModel}
+                    />
+                  )}
+                />
+              ))}
             </View>
           )}
 
