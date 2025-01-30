@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
@@ -10,36 +10,21 @@ import {colorStyle} from '../styles';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
-  const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
-  const [selectedIndex, setSelectedIndex] = useState<number>(0); // 当前选择的货物索引
-  const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
+  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
+    null,
+  ); // 当前选择的货物ID
 
   // 使用 Realm 查询所有货物数据
   const {cargoList, updateCargoItemQuantity} = useCargo();
-  const currentCargo = useMemo(() => {
-    if (selectedIndex > 0) {
-      return filteredCargoList[selectedIndex - 1];
-    }
-    return null;
-  }, [selectedIndex, cargoList]);
-
-  // 根据货物类别筛选货物
-  const filterCargoByCategory = useCallback(() => {
-    if (!cargoCategory) {
-      setFilteredCargoList(Array.from(cargoList)); // 如果没有选择类别，显示所有货物
-    } else {
-      const filtered = cargoList.filtered(`category == "${cargoCategory}"`);
-      setFilteredCargoList(Array.from(filtered)); // 筛选出符合类别的货物
-    }
-  }, [cargoList, cargoCategory]);
-
-  useEffect(() => {
-    filterCargoByCategory(); // 组件挂载时默认筛选
-  }, [cargoCategory, cargoList]);
 
   const handleQuantityChange = (id: BSON.ObjectId, newQuantity: number) => {
-    if (currentCargo) {
-      updateCargoItemQuantity(currentCargo._id, id, newQuantity);
+    if (selectedCargo) {
+      const currentCargo = cargoList.filtered(
+        `_id == ObjectId("${selectedCargo}")`,
+      )[0];
+      if (currentCargo) {
+        updateCargoItemQuantity(currentCargo._id, id, newQuantity);
+      }
     }
   };
 
@@ -51,10 +36,19 @@ export default function StoreScreen({navigation}: any) {
     // TODO: 删除型号
   };
 
+  // 根据货物类别筛选货物
+  const filterCargoByCategory = () => {
+    if (!cargoCategory) {
+      return cargoList; // 如果没有选择类别，显示所有货物
+    } else {
+      return cargoList.filtered(`category == "${cargoCategory}"`);
+    }
+  };
+
   return (
     <FlatList
       style={styles.container}
-      data={filteredCargoList}
+      data={filterCargoByCategory()} // 直接使用过滤后的货物数据
       keyExtractor={item => item._id.toString()}
       ListHeaderComponent={
         <>
@@ -77,15 +71,14 @@ export default function StoreScreen({navigation}: any) {
           <SectionInput label="货物选择">
             <RNPickerSelect
               placeholder={{label: '请选择货物', value: ''}}
-              value={selectedCargo}
-              onValueChange={(value, index) => {
-                console.log('select:', value, index);
-                setSelectedCargo(value);
-                setSelectedIndex(index);
+              value={selectedCargo ? selectedCargo.toString() : ''}
+              onValueChange={value => {
+                const cargoId = value ? new BSON.ObjectId(value) : null;
+                setSelectedCargo(cargoId);
               }}
-              items={filteredCargoList.map(cargo => ({
+              items={filterCargoByCategory().map(cargo => ({
                 label: cargo.name,
-                value: cargo.name,
+                value: cargo._id.toString(),
               }))}
               style={pickerSelectStyles}
             />
@@ -94,24 +87,33 @@ export default function StoreScreen({navigation}: any) {
           <Divider />
 
           {/* 当前选中货物的 items 内容展示 */}
-          {currentCargo && currentCargo.items.length > 0 ? (
+          {selectedCargo && (
             <View style={styles.itemsContainer}>
               <Text style={styles.itemsTitle}>当前选中货物的型号:</Text>
-              <FlatList
-                data={currentCargo.items}
-                keyExtractor={item => item._id.toString()}
-                renderItem={({item}) => (
-                  <ModelFlatItem
-                    item={item}
-                    onQuantityChange={handleQuantityChange}
-                    onEdit={handleEditModel}
-                    onDelete={handleDeleteModel}
+              {filterCargoByCategory()
+                .filter(
+                  cargo => cargo._id.toString() === selectedCargo.toString(),
+                )
+                .map(cargo => (
+                  <FlatList
+                    key={cargo._id.toString()}
+                    data={cargo.items}
+                    keyExtractor={item => item._id.toString()}
+                    renderItem={({item}) => (
+                      <ModelFlatItem
+                        item={item}
+                        onQuantityChange={handleQuantityChange}
+                        onEdit={handleEditModel}
+                        onDelete={handleDeleteModel}
+                      />
+                    )}
                   />
-                )}
-              />
+                ))}
             </View>
-          ) : (
-            <Text style={styles.noItemsText}>当前货物没有型号信息</Text>
+          )}
+
+          {!selectedCargo && (
+            <Text style={styles.noItemsText}>请选择一个货物</Text>
           )}
 
           <Divider />
