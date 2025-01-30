@@ -25,18 +25,13 @@ export default function AddModelScreen({navigation}: any) {
   const {cargoList} = useCargo();
   const {createCargoItem} = useCargoItem();
 
-  // 根据货物类别筛选货物
-  const filterCargoByCategory = useCallback(() => {
+  useEffect(() => {
     if (!cargoCategory) {
       setFilteredCargoList(Array.from(cargoList)); // 如果没有选择类别，显示所有货物
     } else {
       const filtered = cargoList.filtered(`category == "${cargoCategory}"`);
       setFilteredCargoList(Array.from(filtered)); // 筛选出符合类别的货物
     }
-  }, [cargoList, cargoCategory]);
-
-  useEffect(() => {
-    filterCargoByCategory(); // 组件挂载时默认筛选
   }, [cargoCategory, cargoList]);
 
   // 入库逻辑

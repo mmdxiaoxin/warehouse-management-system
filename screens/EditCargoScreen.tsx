@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'; // 用于路由和导航
+import {useObject} from '@realm/react'; // Realm hook
+import React, {useEffect, useState} from 'react';
 import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import {useRoute, useNavigation, RouteProp} from '@react-navigation/native'; // 用于路由和导航
-import {RootStackParamList} from '../routes';
-import {useRealm} from '@realm/react'; // Realm hook
-import {Cargo} from '../models/Cargo'; // 导入Cargo模型
 import {BSON} from 'realm';
 import {useCargo} from '../hooks/useCargo';
+import {Cargo} from '../models/Cargo'; // 导入Cargo模型
+import {RootStackParamList} from '../routes';
 
 export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -14,21 +14,18 @@ export default function EditCargoScreen() {
 
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
 
-  const {cargoList, updateCargo} = useCargo();
+  const {updateCargo} = useCargo();
 
-  const [cargo, setCargo] = useState<Cargo | null>(null);
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
   const [newCargoDescription, setNewCargoDescription] = useState('');
+  const foundCargo = useObject(Cargo, cargoId);
 
   // 获取原始 Cargo 数据
   useEffect(() => {
     if (cargoId) {
-      // 从 Realm 中查询 cargo 数据
-      const foundCargo = cargoList.filtered(`_id == $0`, cargoId)[0];
       if (foundCargo) {
-        setCargo(foundCargo);
         setNewCargoName(foundCargo.name);
         setNewCargoCategory(foundCargo.category);
         setNewCargoUnit(foundCargo.unit);
@@ -49,7 +46,7 @@ export default function EditCargoScreen() {
     }
 
     try {
-      if (!cargo) {
+      if (!foundCargo) {
         throw new Error('货物数据不存在');
       }
 
@@ -71,7 +68,7 @@ export default function EditCargoScreen() {
     }
   };
 
-  if (!cargo) {
+  if (!foundCargo) {
     return <Text>加载货物信息...</Text>; // 如果 cargo 数据未加载完成，显示加载信息
   }
 
