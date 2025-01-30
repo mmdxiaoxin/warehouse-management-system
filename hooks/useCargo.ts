@@ -63,8 +63,12 @@ export const useCargo = () => {
       realm.write(() => {
         const cargoToDelete = realm.objectForPrimaryKey(Cargo, cargoId);
         if (cargoToDelete) {
+          // 删除关联的所有 CargoItem
+          realm.delete(cargoToDelete.items); // 删除 items 中的所有 CargoItem
+
+          // 删除 Cargo 本身
           realm.delete(cargoToDelete);
-          console.log('Cargo deleted:', cargoToDelete);
+          console.log('Cargo and associated items deleted:', cargoToDelete);
         }
       });
     } catch (error) {
