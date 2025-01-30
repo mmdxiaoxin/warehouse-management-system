@@ -1,67 +1,38 @@
-import {useQuery, useRealm} from '@realm/react'; // 引入 Realm hooks
 import React, {useState} from 'react';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput'; // 假设 Section 组件已存在
-import {Cargo} from '../models/Cargo'; // 导入 Cargo 模型
+import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
 
 export default function OutboundScreen({navigation}: any) {
   const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
-  const realm = useRealm();
+  const [selectedIndex, setSelectedIndex] = useState<number>(0); // 当前选择的货物索引
 
-  // 使用 Realm 查询所有货物数据
-  const cargoList = useQuery(Cargo);
-
-  // 获取货物列表
-  const fetchCargoList = () => {
-    try {
-      return cargoList;
-    } catch (error) {
-      console.error('Failed to fetch cargo list:', error);
-    }
-  };
-
-  // 处理出库操作
-  const handleOutbound = () => {
-    if (!selectedCargo) {
-      Alert.alert('Error', 'Please select a cargo');
-      return;
-    }
-
-    const cargoToOutbound = cargoList.filtered(`name == "${selectedCargo}"`)[0];
-    if (cargoToOutbound) {
-      // 这里可以执行出库的操作，例如减少库存
-      console.log(`出库货物: ${selectedCargo}`);
-      Alert.alert('成功', `已出库货物: ${selectedCargo}`);
-    } else {
-      Alert.alert('Error', 'Cargo not found');
-    }
-  };
+  const {cargoList, deleteCargo} = useCargo();
 
   // 处理删除货物
   const handleDeleteCargo = () => {
-    if (!selectedCargo) {
-      Alert.alert('Error', 'Please select a cargo');
-      return;
-    }
-
-    const cargoToRemove = cargoList.filtered(`name == "${selectedCargo}"`)[0];
-    if (!cargoToRemove) {
-      Alert.alert('Error', 'Cargo not found');
-      return;
-    }
-
-    // 执行删除操作
-    try {
-      realm.write(() => {
-        realm.delete(cargoToRemove);
-      });
-      Alert.alert('成功', `删除货物: ${selectedCargo}`);
-    } catch (error) {
-      console.error('删除货物时出错：', error);
-      Alert.alert('Error', '删除货物时出错');
+    if (selectedCargo) {
+      Alert.alert(
+        '删除货物',
+        '确定要删除该货物吗？',
+        [
+          {
+            text: '取消',
+            style: 'cancel',
+          },
+          {
+            text: '确定',
+            onPress: async () => {
+              // 删除货物
+              await deleteCargo(cargoList[selectedIndex]._id);
+            },
+          },
+        ],
+        {cancelable: false},
+      );
     }
   };
 
@@ -74,7 +45,7 @@ export default function OutboundScreen({navigation}: any) {
           value={selectedCargo}
           onValueChange={setSelectedCargo}
           items={
-            fetchCargoList()?.map(cargo => ({
+            cargoList.map(cargo => ({
               label: cargo.name,
               value: cargo.name,
             })) || []
@@ -82,11 +53,6 @@ export default function OutboundScreen({navigation}: any) {
           style={pickerSelectStyles}
         />
       </SectionInput>
-
-      {/* 确认出库按钮 */}
-      <TouchableOpacity style={styles.confirmButton} onPress={handleOutbound}>
-        <Text style={styles.addButtonText}>确认出库</Text>
-      </TouchableOpacity>
 
       <Divider />
 
