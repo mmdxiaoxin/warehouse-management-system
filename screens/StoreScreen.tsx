@@ -43,6 +43,14 @@ export default function StoreScreen({navigation}: any) {
     }
   };
 
+  const handleEditModel = (id: BSON.ObjectId) => {
+    // TODO: 编辑型号
+  };
+
+  const handleDeleteModel = (id: BSON.ObjectId) => {
+    // TODO: 删除型号
+  };
+
   return (
     <FlatList
       style={styles.container}
@@ -96,6 +104,8 @@ export default function StoreScreen({navigation}: any) {
                   <ModelFlatItem
                     item={item}
                     onQuantityChange={handleQuantityChange}
+                    onEdit={handleEditModel}
+                    onDelete={handleDeleteModel}
                   />
                 )}
               />
