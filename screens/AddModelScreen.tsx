@@ -13,11 +13,11 @@ import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
 import {colorStyle, fontStyle} from '../styles';
+import {BSON} from 'realm';
 
 export default function AddModelScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
-  const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
-  const [selectedIndex, setSelectedIndex] = useState<number>(0); // 当前选择的货物索引
+  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(); // 当前选择的货物
   const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
   const [spec, setSpec] = useState<CargoSpec>([]); // 货物规格
 
@@ -36,23 +36,20 @@ export default function AddModelScreen({navigation}: any) {
 
   // 入库逻辑
   const handleAddToStore = () => {
-    if (selectedIndex === 0 || !filteredCargoList[selectedIndex - 1]) {
+    if (!selectedCargo) {
       Alert.alert('请选择货物');
       return;
     }
 
-    // 获取选中货物的 _id
-    const selectedCargoId = filteredCargoList[selectedIndex - 1]._id;
-
     // 增加库存逻辑（例如增加数量）
-    createCargoItem(selectedCargoId, {
+    createCargoItem(selectedCargo, {
       quantity: 1,
       models: JSON.stringify(spec),
     });
 
     navigation.goBack();
 
-    Alert.alert(`已成功入库货物: ${selectedCargo}`);
+    Alert.alert(`已成功添加型号!`);
   };
 
   return (
@@ -79,13 +76,12 @@ export default function AddModelScreen({navigation}: any) {
         <RNPickerSelect
           placeholder={{label: '请选择货物', value: ''}}
           value={selectedCargo}
-          onValueChange={(value, index) => {
+          onValueChange={value => {
             setSelectedCargo(value);
-            setSelectedIndex(index);
           }}
           items={filteredCargoList.map(cargo => ({
             label: cargo.name,
-            value: cargo.name,
+            value: cargo._id,
           }))}
           style={pickerSelectStyles}
         />
