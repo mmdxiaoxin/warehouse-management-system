@@ -132,8 +132,7 @@ export default function InventoryScreen() {
 
   return (
     <SafeAreaView style={{flex: 1, padding: 20}}>
-      <Text style={{fontSize: 24, marginBottom: 20}}>库存管理</Text>
-      <Button title="添加一项随机货物" onPress={handleCreateCargo} />
+      {/* <Button title="添加一项随机货物" onPress={handleCreateCargo} /> */}
 
       {/* 筛选框 */}
       <TextInput
