@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
@@ -7,7 +7,6 @@ import ModelFlatItem from '../components/ModelFlatItem'; // 引入 ModelFlatItem
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
-import {useObject} from '@realm/react';
 
 export default function StoreScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
