@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import {BSON} from 'realm';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput'; // 假设 Section 组件已存在
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
 
 export default function OutboundScreen({navigation}: any) {
-  const [selectedCargo, setSelectedCargo] = useState<string>(''); // 当前选择的货物
-  const [selectedIndex, setSelectedIndex] = useState<number>(0); // 当前选择的货物索引
+  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(); // 当前选择的货物
 
   const {cargoList, deleteCargo} = useCargo();
 
@@ -27,7 +27,7 @@ export default function OutboundScreen({navigation}: any) {
             text: '确定',
             onPress: async () => {
               // 删除货物
-              await deleteCargo(cargoList[selectedIndex]._id);
+              await deleteCargo(selectedCargo);
             },
           },
         ],
@@ -47,7 +47,7 @@ export default function OutboundScreen({navigation}: any) {
           items={
             cargoList.map(cargo => ({
               label: cargo.name,
-              value: cargo.name,
+              value: cargo._id,
             })) || []
           }
           style={pickerSelectStyles}
