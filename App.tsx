@@ -26,7 +26,7 @@ const HomeTabs = () => {
 
           if (route.name === '主页') {
             iconName = 'home';
-          } else if (route.name === '进销') {
+          } else if (route.name === '仓管') {
             iconName = 'credit-card';
           } else if (route.name === '库存') {
             iconName = 'database';
@@ -38,7 +38,7 @@ const HomeTabs = () => {
         tabBarInactiveTintColor: 'gray',
       })}>
       <Tab.Screen name="主页" component={HomeScreen} />
-      <Tab.Screen name="进销" component={StoreScreen} />
+      <Tab.Screen name="仓管" component={StoreScreen} />
       <Tab.Screen name="库存" component={InventoryScreen} />
     </Tab.Navigator>
   );
