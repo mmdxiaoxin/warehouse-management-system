@@ -15,15 +15,14 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
   handleEditCargo,
   handleDeleteCargo,
 }) => {
-  const quantity = item.items.reduce((acc: number, cur: any) => {
-    return acc + cur.quantity;
-  }, 0);
+  const quantity = item.items.reduce(
+    (acc: number, cur: any) => acc + cur.quantity,
+    0,
+  );
   const [isExpanded, setIsExpanded] = useState(false);
 
   // 切换展开/收起状态
-  const toggleExpand = () => {
-    setIsExpanded(prev => !prev);
-  };
+  const toggleExpand = () => setIsExpanded(prev => !prev);
 
   const handleDelete = () => {
     handleDeleteCargo(item._id);
@@ -32,14 +31,15 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={styles.headerContent}>
           <Text style={styles.cardTitle}>{item.name}</Text>
           <TouchableOpacity
             style={[styles.toggleButton, {marginTop: 5}]}
             onPress={toggleExpand}>
             <AntDesignIcon
               name={isExpanded ? 'caret-down' : 'caret-right'}
-              size={18}
+              size={20}
+              color={colorStyle.primary}
             />
           </TouchableOpacity>
         </View>
@@ -85,62 +85,76 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
-    marginBottom: 15,
-    borderRadius: 10,
-    overflow: 'hidden',
+    marginBottom: 20,
+    borderRadius: 12,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 3,
-    padding: 15,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    padding: 20,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 15,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   cardTitle: {
     ...fontStyle.subheading,
+    fontSize: 18,
+    fontWeight: '600',
+    marginRight: 10,
   },
   cardCategory: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#4CAF50',
+    color: colorStyle.neutral500,
   },
   cardBody: {
-    marginBottom: 10,
+    marginBottom: 15,
   },
   cardText: {
     ...fontStyle.bodySmall,
-    marginBottom: 5,
+    fontSize: 14,
+    marginBottom: 8,
+    color: '#555',
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   buttonEdit: {
     backgroundColor: colorStyle.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 30,
+    width: '48%',
     alignItems: 'center',
   },
   buttonDelete: {
     backgroundColor: colorStyle.danger,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 30,
+    width: '48%',
     alignItems: 'center',
   },
   buttonText: {
     ...fontStyle.buttonText,
     fontSize: 14,
+    color: '#fff',
   },
   toggleButton: {
-    width: 80,
-    paddingStart: 10,
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
