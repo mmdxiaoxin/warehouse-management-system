@@ -1,6 +1,6 @@
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Animated} from 'react-native';
 import {BSON} from 'realm';
 import {colorStyle, fontStyle} from '../styles';
 
@@ -21,9 +21,16 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
     0,
   );
   const [isExpanded, setIsExpanded] = useState(false);
+  const [expandHeight] = useState(new Animated.Value(0));
 
-  // 切换展开/收起状态
-  const toggleExpand = () => setIsExpanded(prev => !prev);
+  const toggleExpand = () => {
+    Animated.timing(expandHeight, {
+      toValue: isExpanded ? 0 : 200, // 动态展开/收起
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+    setIsExpanded(prev => !prev);
+  };
 
   const handleDelete = () => {
     handleDeleteCargo(item._id);
@@ -47,49 +54,45 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
         <Text style={styles.cardCategory}>{item.category}</Text>
       </View>
 
-      {isExpanded && (
-        <>
-          <View style={styles.cardBody}>
-            <View style={styles.infoRow}>
-              <AntDesignIcon
-                name="appstore"
-                size={18}
-                color={colorStyle.primary}
-              />
-              <Text style={styles.cardText}>
-                {`剩余库存: ${quantity} ${item.unit}`}
-              </Text>
-            </View>
-            <View style={styles.infoRow}>
-              <AntDesignIcon name="bars" size={18} color={colorStyle.primary} />
-              <Text style={styles.cardText}>{`${modelsCount} 种型号`}</Text>
-            </View>
-            <Text style={styles.cardText}>货物描述: {item.description}</Text>
-            <Text style={styles.cardText}>
-              创建时间:{' '}
-              {item.ctime ? new Date(item.ctime).toLocaleString() : '错误!'}
-            </Text>
-            <Text style={styles.cardText}>
-              最近修改:{' '}
-              {item.utime
-                ? new Date(item.utime).toLocaleString()
-                : '无出库记录'}
-            </Text>
-          </View>
-          <View style={styles.cardFooter}>
-            <TouchableOpacity
-              style={styles.buttonEdit}
-              onPress={() => handleEditCargo(item._id)}>
-              <Text style={styles.buttonText}>编辑货物</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonDelete}
-              onPress={handleDelete}>
-              <Text style={styles.buttonText}>删除货物</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
+      <Animated.View style={[styles.cardBody, {height: expandHeight}]}>
+        <View style={styles.infoRow}>
+          <AntDesignIcon name="appstore" size={18} color={colorStyle.primary} />
+          <Text style={styles.cardText}>
+            <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
+            {item.unit}
+          </Text>
+        </View>
+        <View style={styles.infoRow}>
+          <AntDesignIcon name="bars" size={18} color={colorStyle.primary} />
+          <Text style={styles.cardText}>
+            <Text style={styles.boldText}>型号种类:</Text> {modelsCount} 种
+          </Text>
+        </View>
+        <Text style={styles.cardText}>
+          <Text style={styles.boldText}>货物描述:</Text> {item.description}
+        </Text>
+        <Text style={styles.cardText}>
+          <Text style={styles.boldText}>创建时间:</Text>{' '}
+          {item.ctime ? new Date(item.ctime).toLocaleString() : '错误!'}
+        </Text>
+        <Text style={styles.cardText}>
+          <Text style={styles.boldText}>最近修改:</Text>{' '}
+          {item.utime ? new Date(item.utime).toLocaleString() : '无出库记录'}
+        </Text>
+      </Animated.View>
+
+      <View style={styles.cardFooter}>
+        <TouchableOpacity
+          style={styles.buttonEdit}
+          onPress={() => handleEditCargo(item._id)}>
+          <AntDesignIcon name="edit" size={18} color="#fff" />
+          <Text style={styles.buttonText}>编辑</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonDelete} onPress={handleDelete}>
+          <AntDesignIcon name="delete" size={18} color="#fff" />
+          <Text style={styles.buttonText}>删除</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -128,13 +131,16 @@ const styles = StyleSheet.create({
     color: colorStyle.neutral500,
   },
   cardBody: {
-    marginBottom: 15,
+    overflow: 'hidden',
   },
   cardText: {
     ...fontStyle.bodySmall,
     fontSize: 14,
     marginBottom: 8,
     color: '#555',
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
   infoRow: {
     flexDirection: 'row',
@@ -145,6 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 10,
   },
   buttonEdit: {
     backgroundColor: colorStyle.primary,
@@ -153,6 +160,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: '48%',
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonDelete: {
     backgroundColor: colorStyle.danger,
@@ -161,11 +170,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: '48%',
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonText: {
     ...fontStyle.buttonText,
     fontSize: 14,
     color: '#fff',
+    marginLeft: 10,
   },
   toggleButton: {
     width: 30,
