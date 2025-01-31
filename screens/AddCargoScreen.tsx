@@ -6,7 +6,7 @@ import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
 import {useCargo} from '../hooks/useCargo';
 import {RootStackParamList} from '../routes';
-import {fontStyle} from '../styles';
+import {fontStyle, pickerSelectStyles} from '../styles';
 
 export default function AddCargoScreen({
   navigation,
@@ -117,30 +117,5 @@ const styles = StyleSheet.create({
     ...fontStyle.heading1,
     marginBottom: 20,
     textAlign: 'center',
-  },
-});
-
-// RNPickerSelect 样式
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    color: 'black',
-    backgroundColor: '#fff',
-    paddingRight: 30, // to ensure the text is not overrun by the icon
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is not overrun by the icon
   },
 });

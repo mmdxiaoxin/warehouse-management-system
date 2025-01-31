@@ -10,7 +10,7 @@ import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
 import {RootStackParamList} from '../routes';
-import {fontStyle} from '../styles';
+import {fontStyle, pickerSelectStyles} from '../styles';
 import {stringifyWithOrder} from '../utils';
 
 export default function AddModelScreen({navigation}: any) {
@@ -154,28 +154,5 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     marginBottom: 40,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
   },
 });

@@ -1,3 +1,4 @@
+import {NavigationProp} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -8,8 +9,8 @@ import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../routes';
+import {pickerSelectStyles} from '../styles';
 
 export default function ManagementScreen({
   navigation,
@@ -189,28 +190,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
     marginBottom: 40,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
   },
 });

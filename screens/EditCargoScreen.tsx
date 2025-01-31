@@ -6,14 +6,15 @@ import {
 } from '@react-navigation/native';
 import {useObject} from '@realm/react';
 import React, {useEffect, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, TextInput} from 'react-native';
+import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import AdvancedButton from '../components/AdvancedButton';
+import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo';
 import {RootStackParamList} from '../routes';
-import SectionInput from '../components/SectionInput';
+import {pickerSelectStyles} from '../styles';
 
 export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -166,30 +167,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 8,
     color: '#333',
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    color: 'black',
-    backgroundColor: '#fff',
-    paddingRight: 30, // to ensure the text is not overrun by the icon
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    color: 'black',
-    backgroundColor: '#fff',
-    paddingRight: 30, // to ensure the text is not overrun by the icon
   },
 });
