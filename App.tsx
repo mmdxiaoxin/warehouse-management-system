@@ -6,6 +6,7 @@ import {RealmProvider} from '@realm/react';
 import React from 'react';
 import {Cargo} from './models/Cargo';
 import {CargoItem} from './models/CargoItem';
+import {RootStackParamList, RootTabParamList} from './routes';
 import AddCargoScreen from './screens/AddCargoScreen';
 import AddModelScreen from './screens/AddModelScreen';
 import EditCargoScreen from './screens/EditCargoScreen';
@@ -13,8 +14,8 @@ import HomeScreen from './screens/HomeScreen';
 import InventoryScreen from './screens/InventoryScreen';
 import ManagementScreen from './screens/ManagementScreen';
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 // 定义主页的 Tab 导航器
 const HomeTabs = () => {

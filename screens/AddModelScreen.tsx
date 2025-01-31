@@ -9,12 +9,11 @@ import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {RootParamList} from '../routes';
+import {AddModelProps, RootStackParamList} from '../routes';
 import {fontStyle, pickerSelectStyles} from '../styles';
 import {stringifyWithOrder} from '../utils';
 
-export default function AddModelScreen({navigation}: any) {
-  const route = useRoute<RouteProp<RootParamList>>();
+export default function AddModelScreen({navigation, route}: AddModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
   // 使用 Realm 查询所有货物数据
   const {cargoList} = useCargo();

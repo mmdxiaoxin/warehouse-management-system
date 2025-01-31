@@ -1,9 +1,5 @@
-export type RootStackParamList = {
-  HomeTabs: undefined;
-  AddCargo: undefined;
-  AddModel: {cargoId: string} | undefined;
-  EditCargo: {cargoId: string};
-};
+import {NavigatorScreenParams} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 export type RootTabParamList = {
   Home: undefined;
@@ -11,4 +7,22 @@ export type RootTabParamList = {
   Inventory: undefined;
 };
 
-export type RootParamList = RootTabParamList & RootStackParamList;
+export type RootStackParamList = {
+  HomeTabs: NavigatorScreenParams<RootTabParamList>;
+  AddCargo: undefined;
+  AddModel: {cargoId: string} | undefined;
+  EditCargo: {cargoId: string};
+};
+
+export type AddCargoProps = NativeStackScreenProps<
+  RootStackParamList,
+  'AddCargo'
+>;
+export type AddModelProps = NativeStackScreenProps<
+  RootStackParamList,
+  'AddModel'
+>;
+export type EditCargoProps = NativeStackScreenProps<
+  RootStackParamList,
+  'EditCargo'
+>;
