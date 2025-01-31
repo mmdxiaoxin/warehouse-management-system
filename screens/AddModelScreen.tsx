@@ -17,6 +17,7 @@ import {useCargoItem} from '../hooks/useCargoItem';
 import {RootStackParamList} from '../routes';
 import {colorStyle, fontStyle} from '../styles';
 import {stringifyWithOrder} from '../utils';
+import CustomButton from '../components/CustomButton';
 
 export default function AddModelScreen({navigation}: any) {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -125,17 +126,21 @@ export default function AddModelScreen({navigation}: any) {
       {/* 货物规格输入 */}
       <CargoSpecInput specifications={spec} onChange={setSpec} />
 
-      {/* 入库按钮 */}
-      <TouchableOpacity style={styles.confirmButton} onPress={handleAddToStore}>
-        <Text style={styles.confirmButtonText}>型号添加</Text>
-      </TouchableOpacity>
+      {/* 型号添加按钮 */}
+      <CustomButton
+        title="型号添加"
+        onPress={handleAddToStore}
+        disabled={spec.length === 0 || !selectedCargo}
+        buttonStyle={styles.confirmButton}
+      />
 
       {/* 取消按钮 */}
-      <TouchableOpacity
-        style={styles.cancelButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.confirmButtonText}>取消添加</Text>
-      </TouchableOpacity>
+      <CustomButton
+        title="取消添加"
+        onPress={() => navigation.goBack()}
+        type="danger"
+        buttonStyle={styles.cancelButton}
+      />
     </ScrollView>
   );
 }
@@ -150,33 +155,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  label: {
-    fontSize: 18,
-    marginVertical: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 20,
-    fontSize: 16,
-  },
   confirmButton: {
-    backgroundColor: colorStyle.primary,
-    padding: 10,
     marginVertical: 10,
-    borderRadius: 5,
   },
   cancelButton: {
-    backgroundColor: colorStyle.danger,
-    padding: 10,
-    borderRadius: 5,
     marginBottom: 40,
-  },
-  confirmButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
   },
 });
 
