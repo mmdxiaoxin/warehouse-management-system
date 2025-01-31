@@ -11,7 +11,6 @@ import AddModelScreen from './screens/AddModelScreen';
 import EditCargoScreen from './screens/EditCargoScreen';
 import HomeScreen from './screens/HomeScreen';
 import InventoryScreen from './screens/InventoryScreen';
-import OutboundScreen from './screens/OutboundScreen';
 import StoreScreen from './screens/StoreScreen';
 
 const Stack = createNativeStackNavigator();
@@ -23,14 +22,12 @@ const HomeTabs = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
-          let iconName: 'home' | 'export' | 'import' | 'database' = 'home';
+          let iconName: 'home' | 'credit-card' | 'database' = 'home';
 
           if (route.name === '主页') {
             iconName = 'home';
-          } else if (route.name === '入库') {
-            iconName = 'import';
-          } else if (route.name === '出库') {
-            iconName = 'export';
+          } else if (route.name === '进销') {
+            iconName = 'credit-card';
           } else if (route.name === '库存') {
             iconName = 'database';
           }
@@ -41,8 +38,7 @@ const HomeTabs = () => {
         tabBarInactiveTintColor: 'gray',
       })}>
       <Tab.Screen name="主页" component={HomeScreen} />
-      <Tab.Screen name="入库" component={StoreScreen} />
-      <Tab.Screen name="出库" component={OutboundScreen} />
+      <Tab.Screen name="进销" component={StoreScreen} />
       <Tab.Screen name="库存" component={InventoryScreen} />
     </Tab.Navigator>
   );
