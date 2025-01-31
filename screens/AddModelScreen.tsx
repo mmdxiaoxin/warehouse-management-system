@@ -48,7 +48,7 @@ export default function AddModelScreen({navigation}: any) {
 
     // 增加库存逻辑（例如增加数量）
     createCargoItem(selectedCargo, {
-      quantity: 1,
+      quantity: 0,
       models: JSON.stringify(spec),
     });
 
