@@ -15,6 +15,7 @@ export default function AddCargoScreen({
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
+  const [newCargoDescription, setNewCargoDescription] = useState('');
 
   const {createCargo} = useCargo(); // 使用 useCargo 钩子
 
@@ -33,15 +34,18 @@ export default function AddCargoScreen({
     }
 
     try {
-      createCargo({
+      const newCargoId = createCargo({
         name: newCargoName,
         category: newCargoCategory,
         unit: newCargoUnit,
+        description: newCargoDescription,
       });
+      if (!newCargoId) {
+        throw new Error('创建货物失败');
+      }
       Alert.alert('新货物添加成功!');
       navigation.goBack(); // 返回到库存页面
     } catch (error) {
-      console.error('添加货物时出错：', error);
       Alert.alert('添加货物失败，请重试！');
     }
   };
@@ -76,6 +80,13 @@ export default function AddCargoScreen({
         placeholder="请输入货物单位"
         value={newCargoUnit}
         onChangeText={setNewCargoUnit}
+      />
+
+      <SectionInput
+        label="货物描述"
+        placeholder="请输入新的货物描述"
+        value={newCargoDescription}
+        onChangeText={setNewCargoDescription}
       />
 
       {/* 按钮 */}
