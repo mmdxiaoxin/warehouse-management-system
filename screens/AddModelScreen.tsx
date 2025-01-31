@@ -1,4 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   ScrollView,
@@ -7,17 +8,21 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import {BSON} from 'realm';
 import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
+import {RootStackParamList} from '../routes';
 import {colorStyle, fontStyle} from '../styles';
-import {BSON} from 'realm';
 
 export default function AddModelScreen({navigation}: any) {
+  const route = useRoute<RouteProp<RootStackParamList>>();
+  const cargoId = new BSON.ObjectId(route.params?.cargoId);
+
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
-  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(); // 当前选择的货物
+  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(cargoId); // 当前选择的货物
   const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
   const [spec, setSpec] = useState<CargoSpec>([]); // 货物规格
 

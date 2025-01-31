@@ -1,16 +1,21 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'; // 用于路由和导航
-import {useObject} from '@realm/react'; // Realm hook
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import {useObject} from '@realm/react';
 import React, {useEffect, useState} from 'react';
 import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import {useCargo} from '../hooks/useCargo';
-import {Cargo} from '../models/Cargo'; // 导入Cargo模型
+import {Cargo} from '../models/Cargo';
 import {RootStackParamList} from '../routes';
 
 export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
 

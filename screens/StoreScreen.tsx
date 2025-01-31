@@ -124,7 +124,11 @@ export default function StoreScreen({navigation}: any) {
           {/* 添加新型号按钮 */}
           <TouchableOpacity
             style={styles.addModelButton}
-            onPress={() => navigation.navigate('AddModel')}>
+            onPress={() =>
+              navigation.navigate('AddModel', {
+                cargoId: selectedCargo?.toHexString(),
+              })
+            }>
             <Text style={styles.buttonText}>添加新型号</Text>
           </TouchableOpacity>
         </>

@@ -7,7 +7,7 @@ import SectionInput from '../components/SectionInput'; // 假设 Section 组件�
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
 
-export default function OutboundScreen({navigation}: any) {
+export default function OutboundScreen() {
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(); // 当前选择的货物
 
   const {cargoList, deleteCargo} = useCargo();

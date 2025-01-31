@@ -1,11 +1,17 @@
+import {NavigationProp} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
 import {useCargo} from '../hooks/useCargo';
+import {RootStackParamList} from '../routes';
 import {colorStyle, fontStyle} from '../styles';
 
-export default function AddCargoScreen({navigation}: any) {
+export default function AddCargoScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<RootStackParamList>;
+}) {
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
