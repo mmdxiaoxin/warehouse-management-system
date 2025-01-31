@@ -1,28 +1,20 @@
 import React, {useState} from 'react';
-import {
-  Alert,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
+import CustomButton from '../components/CustomButton'; // 引入自定义按钮
 import Divider from '../components/Divider';
-import ModelFlatItem from '../components/ModelFlatItem'; // 引入 ModelFlatItem
+import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {colorStyle} from '../styles';
 
 export default function ManagementScreen({navigation}: any) {
-  const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
+  const [cargoCategory, setCargoCategory] = useState<string>('');
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
     null,
-  ); // 当前选择的货物ID
+  );
 
-  // 使用 Realm 查询所有货物数据
   const {cargoList, updateCargoItemQuantity} = useCargo();
   const {deleteCargoItem} = useCargoItem();
 
@@ -63,10 +55,9 @@ export default function ManagementScreen({navigation}: any) {
     ]);
   };
 
-  // 根据货物类别筛选货物
   const filterCargoByCategory = () => {
     if (!cargoCategory) {
-      return cargoList; // 如果没有选择类别，显示所有货物
+      return cargoList;
     } else {
       return cargoList.filtered(`category == "${cargoCategory}"`);
     }
@@ -75,7 +66,7 @@ export default function ManagementScreen({navigation}: any) {
   return (
     <FlatList
       style={styles.container}
-      data={filterCargoByCategory()} // 直接使用过滤后的货物数据
+      data={filterCargoByCategory()}
       keyExtractor={item => item._id.toString()}
       ListHeaderComponent={
         <>
@@ -112,11 +103,12 @@ export default function ManagementScreen({navigation}: any) {
           </SectionInput>
 
           {/* 添加新货物按钮 */}
-          <TouchableOpacity
-            style={styles.addCargoButton}
-            onPress={() => navigation.navigate('AddCargo')}>
-            <Text style={styles.buttonText}>添加新货物</Text>
-          </TouchableOpacity>
+          <CustomButton
+            title="添加新货物"
+            onPress={() => navigation.navigate('AddCargo')}
+            buttonStyle={styles.addCargoButton}
+            type="success"
+          />
 
           <Divider />
 
@@ -149,18 +141,21 @@ export default function ManagementScreen({navigation}: any) {
           )}
 
           {/* 添加新型号按钮 */}
-          <TouchableOpacity
-            style={styles.addModelButton}
-            onPress={() =>
-              navigation.navigate('AddModel', {
-                cargoId: selectedCargo?.toHexString(),
-              })
-            }>
-            <Text style={styles.buttonText}>添加新型号</Text>
-          </TouchableOpacity>
+          <CustomButton
+            title="添加新型号"
+            onPress={() => {
+              if (selectedCargo) {
+                navigation.navigate('AddModel', {selectedCargo});
+              } else {
+                navigation.navigate('AddModel');
+              }
+            }}
+            buttonStyle={styles.addModelButton}
+            type="warning"
+          />
         </>
       }
-      renderItem={({item}) => null} // FlatList 不需要渲染每个货物项
+      renderItem={({item}) => null}
     />
   );
 }
@@ -170,40 +165,9 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
   },
-  label: {
-    fontSize: 18,
-    marginVertical: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 20,
-    fontSize: 16,
-  },
-  confirmButton: {
-    backgroundColor: colorStyle.primary,
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
-  },
-  addCargoButton: {
-    backgroundColor: colorStyle.success,
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
-  },
+  addCargoButton: {},
   addModelButton: {
-    backgroundColor: colorStyle.warning,
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
     marginBottom: 40,
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
   },
   itemsContainer: {
     marginTop: 20,
@@ -216,6 +180,7 @@ const styles = StyleSheet.create({
   noItemsText: {
     fontSize: 16,
     color: '#888',
+    marginBottom: 40,
   },
 });
 
