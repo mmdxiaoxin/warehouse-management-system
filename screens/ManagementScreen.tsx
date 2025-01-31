@@ -111,6 +111,13 @@ export default function ManagementScreen({navigation}: any) {
             />
           </SectionInput>
 
+          {/* 添加新货物按钮 */}
+          <TouchableOpacity
+            style={styles.addCargoButton}
+            onPress={() => navigation.navigate('AddCargo')}>
+            <Text style={styles.buttonText}>添加新货物</Text>
+          </TouchableOpacity>
+
           <Divider />
 
           {/* 当前选中货物的 items 内容展示 */}
@@ -151,15 +158,6 @@ export default function ManagementScreen({navigation}: any) {
             }>
             <Text style={styles.buttonText}>添加新型号</Text>
           </TouchableOpacity>
-
-          <Divider />
-
-          {/* 添加新货物按钮 */}
-          <TouchableOpacity
-            style={styles.addCargoButton}
-            onPress={() => navigation.navigate('AddCargo')}>
-            <Text style={styles.buttonText}>添加新货物</Text>
-          </TouchableOpacity>
         </>
       }
       renderItem={({item}) => null} // FlatList 不需要渲染每个货物项
@@ -194,13 +192,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
-    marginBottom: 40,
   },
   addModelButton: {
     backgroundColor: colorStyle.warning,
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
+    marginBottom: 40,
   },
   buttonText: {
     color: '#fff',
