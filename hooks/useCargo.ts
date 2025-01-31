@@ -15,15 +15,21 @@ export const useCargo = () => {
 
   // 创建新的 Cargo
   const createCargo = (cargoData: CargoData) => {
-    realm.write(() => {
-      const newCargo = realm.create(Cargo, {
-        _id: new BSON.ObjectId(),
-        ...cargoData,
-        ctime: new Date(),
-        utime: new Date(),
+    try {
+      const newCargoId = new BSON.ObjectId();
+      realm.write(() => {
+        realm.create(Cargo, {
+          _id: newCargoId,
+          ...cargoData,
+          ctime: new Date(),
+          utime: new Date(),
+        });
       });
-      console.log('Created new Cargo:', newCargo);
-    });
+      return newCargoId;
+    } catch (error) {
+      console.error('创建失败:', error);
+      throw error;
+    }
   };
 
   // 更新 Cargo

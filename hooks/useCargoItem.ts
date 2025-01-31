@@ -16,23 +16,30 @@ export const useCargoItem = () => {
     cargoId: BSON.ObjectId,
     cargoItemData: CargoItemData,
   ) => {
-    realm.write(() => {
-      const cargo = realm.objectForPrimaryKey(Cargo, cargoId); // 获取关联的 Cargo 实例
-      if (!cargo) {
-        console.log('Cargo not found!');
-        return;
-      }
+    try {
+      const newItemId = new BSON.ObjectId();
+      realm.write(() => {
+        const cargo = realm.objectForPrimaryKey(Cargo, cargoId); // 获取关联的 Cargo 实例
+        if (!cargo) {
+          console.log('Cargo not found!');
+          return;
+        }
 
-      // 创建新的 CargoItem
-      const newCargoItem = realm.create(CargoItem, {
-        _id: new BSON.ObjectId(),
-        ...cargoItemData,
-        ctime: new Date(),
+        // 创建新的 CargoItem
+        const newCargoItem = realm.create(CargoItem, {
+          _id: newItemId,
+          ...cargoItemData,
+          ctime: new Date(),
+        });
+
+        // 将新创建的 CargoItem 直接关联到 Cargo 的 items 列表
+        cargo.items.push(newCargoItem);
       });
-
-      // 将新创建的 CargoItem 直接关联到 Cargo 的 items 列表
-      cargo.items.push(newCargoItem);
-    });
+      return newItemId;
+    } catch (error) {
+      console.error('创建失败:', error);
+      throw error;
+    }
   };
 
   // 删除 CargoItem
