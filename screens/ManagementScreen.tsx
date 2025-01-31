@@ -8,7 +8,7 @@ import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
 
-export default function StoreScreen({navigation}: any) {
+export default function ManagementScreen({navigation}: any) {
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
     null,
@@ -114,15 +114,6 @@ export default function StoreScreen({navigation}: any) {
             <Text style={styles.noItemsText}>请选择一个货物</Text>
           )}
 
-          <Divider />
-
-          {/* 添加新货物按钮 */}
-          <TouchableOpacity
-            style={styles.addCargoButton}
-            onPress={() => navigation.navigate('AddCargo')}>
-            <Text style={styles.buttonText}>添加新货物</Text>
-          </TouchableOpacity>
-
           {/* 添加新型号按钮 */}
           <TouchableOpacity
             style={styles.addModelButton}
@@ -132,6 +123,15 @@ export default function StoreScreen({navigation}: any) {
               })
             }>
             <Text style={styles.buttonText}>添加新型号</Text>
+          </TouchableOpacity>
+
+          <Divider />
+
+          {/* 添加新货物按钮 */}
+          <TouchableOpacity
+            style={styles.addCargoButton}
+            onPress={() => navigation.navigate('AddCargo')}>
+            <Text style={styles.buttonText}>添加新货物</Text>
           </TouchableOpacity>
         </>
       }
@@ -167,13 +167,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
+    marginBottom: 40,
   },
   addModelButton: {
     backgroundColor: colorStyle.warning,
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
-    marginBottom: 40,
   },
   buttonText: {
     color: '#fff',
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   itemsContainer: {
-    marginVertical: 20,
+    marginTop: 20,
   },
   itemsTitle: {
     fontSize: 18,

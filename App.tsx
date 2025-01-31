@@ -11,7 +11,7 @@ import AddModelScreen from './screens/AddModelScreen';
 import EditCargoScreen from './screens/EditCargoScreen';
 import HomeScreen from './screens/HomeScreen';
 import InventoryScreen from './screens/InventoryScreen';
-import StoreScreen from './screens/StoreScreen';
+import ManagementScreen from './screens/ManagementScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,7 +38,7 @@ const HomeTabs = () => {
         tabBarInactiveTintColor: 'gray',
       })}>
       <Tab.Screen name="主页" component={HomeScreen} />
-      <Tab.Screen name="仓管" component={StoreScreen} />
+      <Tab.Screen name="仓管" component={ManagementScreen} />
       <Tab.Screen name="库存" component={InventoryScreen} />
     </Tab.Navigator>
   );
