@@ -8,8 +8,14 @@ import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
+import {NavigationProp} from '@react-navigation/native';
+import {RootStackParamList} from '../routes';
 
-export default function ManagementScreen({navigation}: any) {
+export default function ManagementScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<RootStackParamList>;
+}) {
   const [cargoCategory, setCargoCategory] = useState<string>('');
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
     null,
@@ -145,7 +151,9 @@ export default function ManagementScreen({navigation}: any) {
             title="添加新型号"
             onPress={() => {
               if (selectedCargo) {
-                navigation.navigate('AddModel', {selectedCargo});
+                navigation.navigate('AddModel', {
+                  cargoId: selectedCargo.toHexString(),
+                });
               } else {
                 navigation.navigate('AddModel');
               }
