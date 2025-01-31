@@ -126,9 +126,9 @@ export default function AddModelScreen({navigation}: any) {
       {/* 货物规格输入 */}
       <CargoSpecInput specifications={spec} onChange={setSpec} />
 
-      {/* 型号添加按钮 */}
+      {/* 确认添加按钮 */}
       <AdvancedButton
-        title="型号添加"
+        title="确认添加"
         onPress={handleAddToStore}
         disabled={spec.length === 0 || !selectedCargo}
         buttonStyle={styles.confirmButton}

@@ -6,6 +6,7 @@ import SectionInput from '../components/SectionInput'; // 假设Section组件已
 import {useCargo} from '../hooks/useCargo';
 import {RootStackParamList} from '../routes';
 import {colorStyle, fontStyle} from '../styles';
+import AdvancedButton from '../components/AdvancedButton';
 
 export default function AddCargoScreen({
   navigation,
@@ -89,21 +90,20 @@ export default function AddCargoScreen({
         onChangeText={setNewCargoDescription}
       />
 
-      {/* 按钮 */}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="确认添加"
-          onPress={handleAddCargo}
-          color={colorStyle.success}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          title="取消"
-          onPress={() => navigation.goBack()}
-          color={colorStyle.danger}
-        />
-      </View>
+      {/* 确认添加按钮 */}
+      <AdvancedButton
+        title="确认添加"
+        onPress={handleAddCargo}
+        buttonStyle={{marginBottom: 10}}
+        type="success"
+      />
+      {/* 取消按钮 */}
+      <AdvancedButton
+        title="取消添加"
+        onPress={() => navigation.goBack()}
+        buttonStyle={{marginBottom: 40}}
+        type="danger"
+      />
     </View>
   );
 }
@@ -117,9 +117,6 @@ const styles = StyleSheet.create({
     ...fontStyle.heading1,
     marginBottom: 20,
     textAlign: 'center',
-  },
-  buttonContainer: {
-    marginVertical: 10,
   },
 });
 
