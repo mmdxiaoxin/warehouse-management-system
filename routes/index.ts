@@ -5,7 +5,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 // 根 Tab 参数类型
 export type RootTabParamList = {
   Home: undefined;
-  Management: undefined;
+  Management: undefined | {cargoId: string};
   Inventory: undefined;
 };
 

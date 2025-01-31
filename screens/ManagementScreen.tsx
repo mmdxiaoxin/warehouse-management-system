@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
@@ -11,7 +11,15 @@ import {useCargoItem} from '../hooks/useCargoItem';
 import {ManagementScreenProps} from '../routes';
 import {pickerSelectStyles} from '../styles';
 
-export default function ManagementScreen({navigation}: ManagementScreenProps) {
+export default function ManagementScreen({
+  navigation,
+  route,
+}: ManagementScreenProps) {
+  // cargoId从route.params获取，如果存在，则转换为 BSON.ObjectId 类型
+  const cargoId = route.params?.cargoId
+    ? new BSON.ObjectId(route.params.cargoId)
+    : null;
+
   const [cargoCategory, setCargoCategory] = useState<string>('');
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
     null,
@@ -19,6 +27,13 @@ export default function ManagementScreen({navigation}: ManagementScreenProps) {
 
   const {cargoList, updateCargoItemQuantity} = useCargo();
   const {deleteCargoItem} = useCargoItem();
+
+  // 如果 cargoId 存在，初始化 selectedCargo
+  useEffect(() => {
+    if (cargoId && !selectedCargo?.equals(cargoId)) {
+      setSelectedCargo(cargoId); // 只在需要时更新 selectedCargo
+    }
+  }, [cargoId, selectedCargo]);
 
   const handleQuantityChange = (id: BSON.ObjectId, newQuantity: number) => {
     if (selectedCargo) {

@@ -1,9 +1,3 @@
-import {
-  NavigationProp,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
 import {useObject} from '@realm/react';
 import React, {useEffect, useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
@@ -13,34 +7,36 @@ import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo';
-import {RootParamList} from '../routes';
-import {pickerSelectStyles} from '../styles';
+import {EditCargoProps} from '../routes';
+import {fontStyle, pickerSelectStyles} from '../styles';
 
-export default function EditCargoScreen() {
-  const route = useRoute<RouteProp<RootParamList>>();
-  const navigation = useNavigation<NavigationProp<RootParamList>>();
-
+export default function EditCargoScreen({navigation, route}: EditCargoProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
 
   const {updateCargo} = useCargo();
+  const foundCargo = useObject(Cargo, cargoId);
 
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
   const [newCargoDescription, setNewCargoDescription] = useState('');
-  const foundCargo = useObject(Cargo, cargoId);
 
   // 获取原始 Cargo 数据
   useEffect(() => {
-    if (cargoId) {
-      if (foundCargo) {
-        setNewCargoName(foundCargo.name);
-        setNewCargoCategory(foundCargo.category);
-        setNewCargoUnit(foundCargo.unit);
-        setNewCargoDescription(foundCargo.description || '');
-      }
+    if (foundCargo) {
+      setNewCargoName(foundCargo.name);
+      setNewCargoCategory(foundCargo.category);
+      setNewCargoUnit(foundCargo.unit);
+      setNewCargoDescription(foundCargo.description || '');
     }
-  }, [cargoId]);
+
+    return () => {
+      setNewCargoName('');
+      setNewCargoCategory('');
+      setNewCargoUnit('个');
+      setNewCargoDescription('');
+    };
+  }, [foundCargo]);
 
   // 校验输入数据
   const handleSaveCargo = async () => {
@@ -58,15 +54,12 @@ export default function EditCargoScreen() {
         throw new Error('货物数据不存在');
       }
 
-      // 更新货物信息
-      if (cargoId) {
-        updateCargo(cargoId, {
-          name: newCargoName,
-          category: newCargoCategory,
-          unit: newCargoUnit,
-          description: newCargoDescription,
-        });
-      }
+      updateCargo(foundCargo._id, {
+        name: newCargoName,
+        category: newCargoCategory,
+        unit: newCargoUnit,
+        description: newCargoDescription,
+      });
 
       Alert.alert('货物更新成功');
       navigation.goBack(); // 返回上一页
@@ -134,8 +127,20 @@ export default function EditCargoScreen() {
       <AdvancedButton
         title="取消"
         onPress={() => navigation.goBack()}
-        type="danger"
-        buttonStyle={{marginBottom: 40}}
+        type="warning"
+        buttonStyle={{marginBottom: 10}}
+      />
+
+      {/* 库管 */}
+      <AdvancedButton
+        title="库管"
+        onPress={() =>
+          navigation.navigate('HomeTabs', {
+            screen: 'Management',
+            params: {cargoId: foundCargo._id.toHexString()},
+          })
+        }
+        type="success"
       />
     </ScrollView>
   );
@@ -148,24 +153,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    ...fontStyle.heading1,
     marginBottom: 20,
-    color: '#333',
     textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  label: {
-    fontSize: 18,
-    marginVertical: 8,
-    color: '#333',
   },
 });
