@@ -9,13 +9,13 @@ import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {RootStackParamList} from '../routes';
+import {RootParamList} from '../routes';
 import {pickerSelectStyles} from '../styles';
 
 export default function ManagementScreen({
   navigation,
 }: {
-  navigation: NavigationProp<RootStackParamList>;
+  navigation: NavigationProp<RootParamList>;
 }) {
   const [cargoCategory, setCargoCategory] = useState<string>('');
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(

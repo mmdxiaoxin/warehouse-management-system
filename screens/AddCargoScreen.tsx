@@ -5,13 +5,13 @@ import RNPickerSelect from 'react-native-picker-select';
 import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
 import {useCargo} from '../hooks/useCargo';
-import {RootStackParamList} from '../routes';
+import {RootParamList} from '../routes';
 import {fontStyle, pickerSelectStyles} from '../styles';
 
 export default function AddCargoScreen({
   navigation,
 }: {
-  navigation: NavigationProp<RootStackParamList>;
+  navigation: NavigationProp<RootParamList>;
 }) {
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');

@@ -13,7 +13,7 @@ import CargoSectionItem from '../components/CargoSectionItem';
 import Divider from '../components/Divider';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo'; // 导入Cargo模型
-import {RootStackParamList} from '../routes';
+import {RootParamList} from '../routes';
 import {colorStyle} from '../styles';
 
 export default function InventoryScreen() {
@@ -21,7 +21,7 @@ export default function InventoryScreen() {
   const [groupedCargo, setGroupedCargo] = useState<
     {title: string; data: any[]}[]
   >([]);
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootParamList>>();
 
   // 使用 Realm 查询所有的货物数据
   const {cargoList, deleteCargo} = useCargo();

@@ -13,12 +13,12 @@ import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo';
-import {RootStackParamList} from '../routes';
+import {RootParamList} from '../routes';
 import {pickerSelectStyles} from '../styles';
 
 export default function EditCargoScreen() {
-  const route = useRoute<RouteProp<RootStackParamList>>();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootParamList>>();
+  const navigation = useNavigation<NavigationProp<RootParamList>>();
 
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
 

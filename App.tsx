@@ -24,11 +24,11 @@ const HomeTabs = () => {
         tabBarIcon: ({focused, color, size}) => {
           let iconName: 'home' | 'credit-card' | 'database' = 'home';
 
-          if (route.name === '主页') {
+          if (route.name === 'Home') {
             iconName = 'home';
-          } else if (route.name === '仓管') {
+          } else if (route.name === 'Management') {
             iconName = 'credit-card';
-          } else if (route.name === '库存') {
+          } else if (route.name === 'Inventory') {
             iconName = 'database';
           }
 
@@ -37,9 +37,25 @@ const HomeTabs = () => {
         tabBarActiveTintColor: 'blue',
         tabBarInactiveTintColor: 'gray',
       })}>
-      <Tab.Screen name="主页" component={HomeScreen} />
-      <Tab.Screen name="仓管" component={ManagementScreen} />
-      <Tab.Screen name="库存" component={InventoryScreen} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{title: '首页'}}
+      />
+      <Tab.Screen
+        name="Management"
+        component={ManagementScreen}
+        options={{
+          title: '仓管',
+        }}
+      />
+      <Tab.Screen
+        name="Inventory"
+        component={InventoryScreen}
+        options={{
+          title: '库存',
+        }}
+      />
     </Tab.Navigator>
   );
 };
