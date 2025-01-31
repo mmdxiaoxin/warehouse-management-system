@@ -20,11 +20,14 @@ interface CargoSpecItem {
 export type CargoSpec = CargoSpecItem[];
 
 interface CargoSpecInputProps {
+  specifications: CargoSpec;
   onChange: (specs: CargoSpec) => void;
 }
 
-const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
-  const [specs, setSpecs] = useState<CargoSpec>([]);
+const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
+  specifications,
+  onChange,
+}) => {
   const [key, setKey] = useState<string>('');
   const [value, setValue] = useState<string>('');
 
@@ -36,23 +39,23 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
     }
 
     // 校验 key 是否重复
-    if (specs.some(spec => spec.key === key)) {
+    if (specifications.some(spec => spec.key === key)) {
       Alert.alert('错误', '规格名称不能重复');
       return;
     }
 
     // 添加新的规格
     const newSpec = {key, value};
-    const updatedSpecs = [...specs, newSpec];
-    setSpecs(updatedSpecs);
+    const updatedSpecs = [...specifications, newSpec];
     setKey('');
     setValue('');
     onChange(updatedSpecs); // 向父组件传递更新的规格数据
   };
 
   const handleRemoveSpec = (keyToRemove: string) => {
-    const updatedSpecs = specs.filter(spec => spec.key !== keyToRemove);
-    setSpecs(updatedSpecs);
+    const updatedSpecs = specifications.filter(
+      spec => spec.key !== keyToRemove,
+    );
     onChange(updatedSpecs);
   };
 
@@ -61,7 +64,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
       <Text style={styles.header}>输入货物规格</Text>
 
       {/* 规格表格展示 */}
-      {specs.length > 0 && (
+      {specifications.length > 0 && (
         <View style={styles.table}>
           {/* 表头 */}
           <View style={styles.tableRow}>
@@ -77,7 +80,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
           </View>
 
           {/* 数据行 */}
-          {specs.map((spec, index) => (
+          {specifications.map((spec, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={styles.tableCell}>{spec.key}</Text>
               <Text style={styles.tableCell}>{spec.value}</Text>
@@ -91,7 +94,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({onChange}) => {
         </View>
       )}
 
-      {specs.length > 0 && <Divider />}
+      {specifications.length > 0 && <Divider />}
 
       {/* 键值对输入框 */}
       <KeyboardAvoidingView

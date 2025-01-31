@@ -46,15 +46,27 @@ export default function AddModelScreen({navigation}: any) {
       return;
     }
 
-    // 增加库存逻辑（例如增加数量）
-    createCargoItem(selectedCargo, {
+    // 增加新型号
+    const modelId = createCargoItem(selectedCargo, {
       quantity: 0,
       models: JSON.stringify(spec),
     });
 
-    navigation.goBack();
-
-    Alert.alert(`已成功添加型号!`);
+    if (modelId) {
+      Alert.alert('型号添加成功', '您已成功添加了一个新型号', [
+        {
+          text: '继续添加',
+          onPress: () => {
+            setSelectedCargo(cargoId);
+            setSpec([]);
+          },
+        },
+        {
+          text: '返回仓管',
+          onPress: () => navigation.goBack(),
+        },
+      ]);
+    }
   };
 
   return (
@@ -95,7 +107,7 @@ export default function AddModelScreen({navigation}: any) {
       <Divider />
 
       {/* 货物规格输入 */}
-      <CargoSpecInput onChange={setSpec} />
+      <CargoSpecInput specifications={spec} onChange={setSpec} />
 
       {/* 入库按钮 */}
       <TouchableOpacity style={styles.confirmButton} onPress={handleAddToStore}>

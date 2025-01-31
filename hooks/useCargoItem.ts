@@ -38,7 +38,7 @@ export const useCargoItem = () => {
       return newItemId;
     } catch (error) {
       console.error('创建失败:', error);
-      throw error;
+      return null;
     }
   };
 
