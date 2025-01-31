@@ -1,4 +1,3 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
@@ -13,15 +12,14 @@ import CargoSectionItem from '../components/CargoSectionItem';
 import Divider from '../components/Divider';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo'; // 导入Cargo模型
-import {RootParamList} from '../routes';
+import {InventoryScreenProps} from '../routes';
 import {colorStyle} from '../styles';
 
-export default function InventoryScreen() {
+export default function InventoryScreen({navigation}: InventoryScreenProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [groupedCargo, setGroupedCargo] = useState<
     {title: string; data: any[]}[]
   >([]);
-  const navigation = useNavigation<NavigationProp<RootParamList>>();
 
   // 使用 Realm 查询所有的货物数据
   const {cargoList, deleteCargo} = useCargo();

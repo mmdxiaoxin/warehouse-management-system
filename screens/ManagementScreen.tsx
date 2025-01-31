@@ -1,4 +1,3 @@
-import {NavigationProp} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -9,14 +8,10 @@ import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {RootParamList} from '../routes';
+import {ManagementScreenProps} from '../routes';
 import {pickerSelectStyles} from '../styles';
 
-export default function ManagementScreen({
-  navigation,
-}: {
-  navigation: NavigationProp<RootParamList>;
-}) {
+export default function ManagementScreen({navigation}: ManagementScreenProps) {
   const [cargoCategory, setCargoCategory] = useState<string>('');
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
     null,
