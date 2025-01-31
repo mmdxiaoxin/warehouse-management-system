@@ -16,19 +16,19 @@ import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
 import {RootStackParamList} from '../routes';
 import {colorStyle, fontStyle} from '../styles';
+import {stringifyWithOrder} from '../utils';
 
 export default function AddModelScreen({navigation}: any) {
   const route = useRoute<RouteProp<RootStackParamList>>();
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
+  // 使用 Realm 查询所有货物数据
+  const {cargoList} = useCargo();
+  const {createCargoItem} = useCargoItem();
 
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(cargoId); // 当前选择的货物
   const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
   const [spec, setSpec] = useState<CargoSpec>([]); // 货物规格
-
-  // 使用 Realm 查询所有货物数据
-  const {cargoList} = useCargo();
-  const {createCargoItem} = useCargoItem();
 
   useEffect(() => {
     if (!cargoCategory) {
@@ -51,10 +51,21 @@ export default function AddModelScreen({navigation}: any) {
       return;
     }
 
+    const newModels = stringifyWithOrder(spec);
+
+    if (
+      cargoList
+        .find(cargo => cargo._id.equals(selectedCargo))
+        ?.items.find(item => item.models === newModels)
+    ) {
+      Alert.alert('型号重复', '您已经添加过相同的型号了!');
+      return;
+    }
+
     // 增加新型号
     const modelId = createCargoItem(selectedCargo, {
       quantity: 0,
-      models: JSON.stringify(spec),
+      models: newModels,
     });
 
     if (modelId) {

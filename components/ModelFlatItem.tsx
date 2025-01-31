@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {BSON} from 'realm';
+import {parseWithOrder} from '../utils';
 
 interface ModelFlatItemProps {
   item: {
@@ -37,8 +38,9 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
     // 安全解析 JSON
     const parseModels = () => {
       try {
-        const parsed: ModelsParsed = JSON.parse(item.models);
+        const parsed: ModelsParsed = parseWithOrder(item.models);
         // 确保解析后的数据是一个数组
+
         if (Array.isArray(parsed)) {
           setModelsParsed(parsed);
         } else {
