@@ -15,6 +15,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
   handleEditCargo,
   handleDeleteCargo,
 }) => {
+  const modelsCount = item.items.length;
   const quantity = item.items.reduce(
     (acc: number, cur: any) => acc + cur.quantity,
     0,
@@ -49,16 +50,27 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
       {isExpanded && (
         <>
           <View style={styles.cardBody}>
-            <Text style={styles.cardText}>
-              剩余库存: {`${quantity} ${item.unit}`}
-            </Text>
+            <View style={styles.infoRow}>
+              <AntDesignIcon
+                name="appstore"
+                size={18}
+                color={colorStyle.primary}
+              />
+              <Text style={styles.cardText}>
+                {`剩余库存: ${quantity} ${item.unit}`}
+              </Text>
+            </View>
+            <View style={styles.infoRow}>
+              <AntDesignIcon name="bars" size={18} color={colorStyle.primary} />
+              <Text style={styles.cardText}>{`${modelsCount} 种型号`}</Text>
+            </View>
             <Text style={styles.cardText}>货物描述: {item.description}</Text>
             <Text style={styles.cardText}>
               创建时间:{' '}
               {item.ctime ? new Date(item.ctime).toLocaleString() : '错误!'}
             </Text>
             <Text style={styles.cardText}>
-              最近出库:{' '}
+              最近修改:{' '}
               {item.utime
                 ? new Date(item.utime).toLocaleString()
                 : '无出库记录'}
@@ -123,6 +135,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 8,
     color: '#555',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   cardFooter: {
     flexDirection: 'row',
