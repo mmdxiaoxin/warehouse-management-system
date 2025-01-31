@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {colorStyle} from '../styles';
 
-interface CustomButtonProps {
+interface AdvancedButtonProps {
   title: string; // 按钮的文本
   onPress: () => void; // 按钮点击事件
   buttonStyle?: ViewStyle; // 自定义按钮容器样式
@@ -17,7 +17,7 @@ interface CustomButtonProps {
   type?: 'primary' | 'danger' | 'success' | 'warning' | 'info'; // 按钮类型
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({
+const AdvancedButton: React.FC<AdvancedButtonProps> = ({
   title,
   onPress,
   buttonStyle,
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomButton;
+export default AdvancedButton;

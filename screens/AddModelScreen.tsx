@@ -17,7 +17,7 @@ import {useCargoItem} from '../hooks/useCargoItem';
 import {RootStackParamList} from '../routes';
 import {colorStyle, fontStyle} from '../styles';
 import {stringifyWithOrder} from '../utils';
-import CustomButton from '../components/CustomButton';
+import AdvancedButton from '../components/AdvancedButton';
 
 export default function AddModelScreen({navigation}: any) {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -127,7 +127,7 @@ export default function AddModelScreen({navigation}: any) {
       <CargoSpecInput specifications={spec} onChange={setSpec} />
 
       {/* 型号添加按钮 */}
-      <CustomButton
+      <AdvancedButton
         title="型号添加"
         onPress={handleAddToStore}
         disabled={spec.length === 0 || !selectedCargo}
@@ -135,7 +135,7 @@ export default function AddModelScreen({navigation}: any) {
       />
 
       {/* 取消按钮 */}
-      <CustomButton
+      <AdvancedButton
         title="取消添加"
         onPress={() => navigation.goBack()}
         type="danger"
