@@ -1,6 +1,6 @@
 import {NavigationProp} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
@@ -52,7 +52,7 @@ export default function AddCargoScreen({
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>添加新货物</Text>
 
       <SectionInput
@@ -104,7 +104,7 @@ export default function AddCargoScreen({
         buttonStyle={{marginBottom: 40}}
         type="danger"
       />
-    </View>
+    </ScrollView>
   );
 }
 

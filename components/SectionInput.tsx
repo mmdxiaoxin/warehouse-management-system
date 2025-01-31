@@ -24,12 +24,13 @@ const SectionInput: React.FC<SectionProps> = ({
   inputStyle,
   inline = false,
   children,
+  style,
   ...rest
 }) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      style={[styles.container, inline && styles.inlineContainer]}>
+      style={[styles.container, inline && styles.inlineContainer, style]}>
       {/* Label */}
       <Text style={[styles.label, labelStyle]}>{label}</Text>
 
