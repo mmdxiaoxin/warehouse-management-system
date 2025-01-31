@@ -65,7 +65,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
         <View style={styles.infoRow}>
           <AntDesignIcon name="bars" size={18} color={colorStyle.primary} />
           <Text style={styles.cardText}>
-            <Text style={styles.boldText}>型号种类:</Text> {modelsCount} 种
+            <Text style={styles.boldText}>型号数目:</Text> {modelsCount} 种
           </Text>
         </View>
         <Text style={styles.cardText}>
