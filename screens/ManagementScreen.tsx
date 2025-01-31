@@ -1,11 +1,19 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import Divider from '../components/Divider';
 import ModelFlatItem from '../components/ModelFlatItem'; // 引入 ModelFlatItem
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
+import {useCargoItem} from '../hooks/useCargoItem';
 import {colorStyle} from '../styles';
 
 export default function ManagementScreen({navigation}: any) {
@@ -16,6 +24,7 @@ export default function ManagementScreen({navigation}: any) {
 
   // 使用 Realm 查询所有货物数据
   const {cargoList, updateCargoItemQuantity} = useCargo();
+  const {deleteCargoItem} = useCargoItem();
 
   const handleQuantityChange = (id: BSON.ObjectId, newQuantity: number) => {
     if (selectedCargo) {
@@ -33,7 +42,25 @@ export default function ManagementScreen({navigation}: any) {
   };
 
   const handleDeleteModel = (id: BSON.ObjectId) => {
-    // TODO: 删除型号
+    Alert.alert('删除型号', '确定要删除这个型号吗？', [
+      {
+        text: '取消',
+        style: 'cancel',
+      },
+      {
+        text: '删除',
+        onPress: () => {
+          if (selectedCargo) {
+            const currentCargo = cargoList.find(cargo =>
+              cargo._id.equals(selectedCargo),
+            );
+            if (currentCargo) {
+              deleteCargoItem(id);
+            }
+          }
+        },
+      },
+    ]);
   };
 
   // 根据货物类别筛选货物
