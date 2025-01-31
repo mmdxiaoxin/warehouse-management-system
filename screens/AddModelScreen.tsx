@@ -132,7 +132,7 @@ export default function AddModelScreen({navigation}: any) {
       <AdvancedButton
         title="取消添加"
         onPress={() => navigation.goBack()}
-        type="danger"
+        type="warning"
         buttonStyle={styles.cancelButton}
       />
     </ScrollView>

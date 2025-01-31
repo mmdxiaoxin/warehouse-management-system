@@ -97,12 +97,13 @@ export default function AddCargoScreen({
         buttonStyle={{marginBottom: 10}}
         type="success"
       />
+
       {/* 取消按钮 */}
       <AdvancedButton
         title="取消添加"
         onPress={() => navigation.goBack()}
         buttonStyle={{marginBottom: 40}}
-        type="danger"
+        type="warning"
       />
     </ScrollView>
   );
