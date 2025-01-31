@@ -46,6 +46,11 @@ export default function AddModelScreen({navigation}: any) {
       return;
     }
 
+    if (spec.length === 0) {
+      Alert.alert('请输入货物规格');
+      return;
+    }
+
     // 增加新型号
     const modelId = createCargoItem(selectedCargo, {
       quantity: 0,
