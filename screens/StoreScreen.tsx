@@ -90,21 +90,23 @@ export default function StoreScreen({navigation}: any) {
           {selectedCargo && (
             <View style={styles.itemsContainer}>
               <Text style={styles.itemsTitle}>当前选中货物的型号:</Text>
-              {filterCargoByCategory().map(cargo => (
-                <FlatList
-                  key={cargo._id.toString()}
-                  data={cargo.items}
-                  keyExtractor={item => item._id.toString()}
-                  renderItem={({item}) => (
-                    <ModelFlatItem
-                      item={item}
-                      onQuantityChange={handleQuantityChange}
-                      onEdit={handleEditModel}
-                      onDelete={handleDeleteModel}
-                    />
-                  )}
-                />
-              ))}
+              {filterCargoByCategory()
+                .filter(cargo => cargo._id.equals(selectedCargo))
+                .map(cargo => (
+                  <FlatList
+                    key={cargo._id.toString()}
+                    data={cargo.items}
+                    keyExtractor={item => item._id.toString()}
+                    renderItem={({item}) => (
+                      <ModelFlatItem
+                        item={item}
+                        onQuantityChange={handleQuantityChange}
+                        onEdit={handleEditModel}
+                        onDelete={handleDeleteModel}
+                      />
+                    )}
+                  />
+                ))}
             </View>
           )}
 
