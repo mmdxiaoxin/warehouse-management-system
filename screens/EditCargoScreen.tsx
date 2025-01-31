@@ -6,12 +6,14 @@ import {
 } from '@react-navigation/native';
 import {useObject} from '@realm/react';
 import React, {useEffect, useState} from 'react';
-import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet, Text, TextInput} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
+import AdvancedButton from '../components/AdvancedButton';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo';
 import {RootStackParamList} from '../routes';
+import SectionInput from '../components/SectionInput';
 
 export default function EditCargoScreen() {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -78,59 +80,63 @@ export default function EditCargoScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>编辑货物</Text>
 
       {/* 货物名称 */}
-      <Text style={styles.label}>货物名称:</Text>
-      <TextInput
-        style={styles.input}
+      <SectionInput
+        label="货物名称"
         value={newCargoName}
         onChangeText={setNewCargoName}
         placeholder="请输入货物名称"
       />
 
       {/* 货物类别 */}
-      <Text style={styles.label}>货物类别:</Text>
-      <RNPickerSelect
-        value={newCargoCategory}
-        onValueChange={setNewCargoCategory}
-        items={[
-          {label: '木门', value: '木门'},
-          {label: '木地板', value: '木地板'},
-          {label: '辅料', value: '辅料'},
-        ]}
-        style={pickerSelectStyles}
-      />
+      <SectionInput label="货物类别">
+        <RNPickerSelect
+          value={newCargoCategory}
+          onValueChange={setNewCargoCategory}
+          items={[
+            {label: '木门', value: '木门'},
+            {label: '木地板', value: '木地板'},
+            {label: '辅料', value: '辅料'},
+          ]}
+          style={pickerSelectStyles}
+        />
+      </SectionInput>
 
       {/* 货物单位 */}
-      <Text style={styles.label}>货物单位:</Text>
-      <TextInput
-        style={styles.input}
+      <SectionInput
+        label="货物单位"
         value={newCargoUnit}
         onChangeText={setNewCargoUnit}
         placeholder="请输入货物单位"
       />
 
       {/* 货物描述 */}
-      <Text style={styles.label}>货物描述:</Text>
-      <TextInput
-        style={styles.input}
+      <SectionInput
+        label="货物描述"
         value={newCargoDescription}
         onChangeText={setNewCargoDescription}
         placeholder="请输入货物描述"
       />
 
       {/* 保存按钮 */}
-      <Button title="保存" onPress={handleSaveCargo} color="#4CAF50" />
+      <AdvancedButton
+        title="保存"
+        onPress={handleSaveCargo}
+        type="primary"
+        buttonStyle={{marginBottom: 10}}
+      />
 
       {/* 取消按钮 */}
-      <Button
+      <AdvancedButton
         title="取消"
         onPress={() => navigation.goBack()}
-        color="#f44336"
+        type="danger"
+        buttonStyle={{marginBottom: 40}}
       />
-    </View>
+    </ScrollView>
   );
 }
 
