@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["fontawesome", "RNFS", "TRUEPREDICATE", "utime", "uuidv"],
+  "cSpell.words": [
+    "appstore",
+    "fontawesome",
+    "RNFS",
+    "TRUEPREDICATE",
+    "utime",
+    "uuidv"
+  ],
   "java.compile.nullAnalysis.mode": "automatic",
   "java.configuration.updateBuildConfiguration": "interactive"
 }

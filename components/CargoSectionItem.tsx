@@ -100,13 +100,14 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
+    marginHorizontal: 5,
     marginBottom: 20,
     borderRadius: 12,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowOffset: {width: 0, height: 12},
+    shadowOpacity: 0.15, // 降低透明度，形成柔和的阴影效果
+    shadowRadius: 10, // 增加模糊半径，使阴影自然
+    elevation: 5, // 适配 Android 设备的阴影
     padding: 20,
   },
   cardHeader: {
