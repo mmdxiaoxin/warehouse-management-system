@@ -1,12 +1,12 @@
 import {NavigationProp} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Alert, Button, StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
 import {useCargo} from '../hooks/useCargo';
 import {RootStackParamList} from '../routes';
-import {colorStyle, fontStyle} from '../styles';
-import AdvancedButton from '../components/AdvancedButton';
+import {fontStyle} from '../styles';
 
 export default function AddCargoScreen({
   navigation,

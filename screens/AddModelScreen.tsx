@@ -1,23 +1,17 @@
 import {RouteProp, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
+import AdvancedButton from '../components/AdvancedButton';
 import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
 import {RootStackParamList} from '../routes';
-import {colorStyle, fontStyle} from '../styles';
+import {fontStyle} from '../styles';
 import {stringifyWithOrder} from '../utils';
-import AdvancedButton from '../components/AdvancedButton';
 
 export default function AddModelScreen({navigation}: any) {
   const route = useRoute<RouteProp<RootStackParamList>>();
