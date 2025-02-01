@@ -1,6 +1,6 @@
 import AntDesignIcon from '@react-native-vector-icons/ant-design';
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Animated} from 'react-native';
+import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BSON} from 'realm';
 import {colorStyle, fontStyle} from '../styles';
 
@@ -56,14 +56,24 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
 
       <Animated.View style={[styles.cardBody, {height: expandHeight}]}>
         <View style={styles.infoRow}>
-          <AntDesignIcon name="appstore" size={18} color={colorStyle.primary} />
+          <AntDesignIcon
+            name="appstore"
+            size={18}
+            color={colorStyle.primary}
+            style={styles.icon}
+          />
           <Text style={styles.cardText}>
             <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
             {item.unit}
           </Text>
         </View>
         <View style={styles.infoRow}>
-          <AntDesignIcon name="bars" size={18} color={colorStyle.primary} />
+          <AntDesignIcon
+            name="bars"
+            size={18}
+            color={colorStyle.primary}
+            style={styles.icon}
+          />
           <Text style={styles.cardText}>
             <Text style={styles.boldText}>型号数目:</Text> {modelsCount} 种
           </Text>
@@ -147,6 +157,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+  },
+  icon: {
+    marginRight: 10,
+    marginTop: -5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardFooter: {
     flexDirection: 'row',
