@@ -1,4 +1,4 @@
-import {Button} from '@rneui/themed';
+import {Button, Divider} from '@rneui/themed';
 import React, {useState} from 'react';
 import {
   Alert,
@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {colorStyle, fontStyle} from '../styles';
-import Divider from './Divider';
 
 interface CargoSpecItem {
   key: string;
@@ -105,7 +104,9 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
         </View>
       )}
 
-      {specifications.length > 0 && <Divider />}
+      {specifications.length > 0 && (
+        <Divider width={1} style={{marginVertical: 10}} />
+      )}
 
       {/* 键值对输入框 */}
       <KeyboardAvoidingView

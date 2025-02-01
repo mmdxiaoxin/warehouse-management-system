@@ -1,10 +1,9 @@
-import {Button} from '@rneui/themed';
+import {Button, Divider} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
-import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
@@ -113,7 +112,7 @@ export default function AddModelScreen({navigation, route}: AddModelProps) {
         />
       </SectionInput>
 
-      <Divider />
+      <Divider width={1} style={{marginVertical: 10}} />
 
       {/* 货物规格输入 */}
       <CargoSpecInput specifications={spec} onChange={setSpec} />

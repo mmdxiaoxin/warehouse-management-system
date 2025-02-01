@@ -1,9 +1,8 @@
-import {SearchBar} from '@rneui/themed';
+import {Divider, SearchBar} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import {BSON} from 'realm';
 import CargoSectionItem from '../components/CargoSectionItem';
-import Divider from '../components/Divider';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo'; // 导入Cargo模型
 import {InventoryScreenProps} from '../routes/types';
@@ -103,7 +102,7 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
         renderSectionHeader={({section: {title}}) => (
           <>
             <Text style={styles.sectionHeader}>{title}</Text>
-            <Divider />
+            <Divider width={1} style={{marginVertical: 10}} />
           </>
         )}
         ListEmptyComponent={

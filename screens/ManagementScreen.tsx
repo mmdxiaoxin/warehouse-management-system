@@ -1,9 +1,8 @@
-import {Button} from '@rneui/themed';
+import {Button, Divider} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import Divider from '../components/Divider';
 import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
@@ -124,7 +123,7 @@ export default function ManagementScreen({
             color="success"
           />
 
-          <Divider />
+          <Divider width={1} style={{marginVertical: 10}} />
 
           {/* 当前选中货物的 items 内容展示 */}
           {selectedCargo && (
