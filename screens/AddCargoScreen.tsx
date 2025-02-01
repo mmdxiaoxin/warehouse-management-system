@@ -4,7 +4,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
 import {useCargo} from '../hooks/useCargo';
-import {AddCargoProps} from '../routes';
+import {AddCargoProps} from '../routes/types';
 import {fontStyle, pickerSelectStyles} from '../styles';
 
 export default function AddCargoScreen({navigation}: AddCargoProps) {

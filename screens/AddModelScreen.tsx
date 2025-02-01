@@ -1,4 +1,3 @@
-import {RouteProp, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -9,7 +8,7 @@ import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {AddModelProps, RootStackParamList} from '../routes';
+import {AddModelProps} from '../routes/types';
 import {fontStyle, pickerSelectStyles} from '../styles';
 import {stringifyWithOrder} from '../utils';
 

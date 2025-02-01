@@ -7,7 +7,7 @@ import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo';
-import {EditCargoProps} from '../routes';
+import {EditCargoProps} from '../routes/types';
 import {fontStyle, pickerSelectStyles} from '../styles';
 
 export default function EditCargoScreen({navigation, route}: EditCargoProps) {

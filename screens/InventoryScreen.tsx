@@ -12,7 +12,7 @@ import CargoSectionItem from '../components/CargoSectionItem';
 import Divider from '../components/Divider';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo'; // 导入Cargo模型
-import {InventoryScreenProps} from '../routes';
+import {InventoryScreenProps} from '../routes/types';
 import {colorStyle} from '../styles';
 
 export default function InventoryScreen({navigation}: InventoryScreenProps) {

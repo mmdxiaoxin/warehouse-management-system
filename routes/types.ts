@@ -15,6 +15,7 @@ export type RootStackParamList = {
   AddCargo: undefined;
   AddModel: {cargoId: string} | undefined;
   EditCargo: {cargoId: string};
+  EditModel: {cargoId: string; cargoItemId: string};
 };
 
 // 为 AddCargo, AddModel, EditCargo 提供正确的类型
@@ -29,6 +30,10 @@ export type AddModelProps = NativeStackScreenProps<
 export type EditCargoProps = NativeStackScreenProps<
   RootStackParamList,
   'EditCargo'
+>;
+export type EditModelProps = NativeStackScreenProps<
+  RootStackParamList,
+  'EditModel'
 >;
 
 // 为 Tab 屏幕定义 props 类型，结合 BottomTabScreenProps 和 NativeStackScreenProps

@@ -8,7 +8,7 @@ import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {useCargoItem} from '../hooks/useCargoItem';
-import {ManagementScreenProps} from '../routes';
+import {ManagementScreenProps} from '../routes/types';
 import {pickerSelectStyles} from '../styles';
 
 export default function ManagementScreen({
