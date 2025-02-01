@@ -33,11 +33,25 @@ export const useCargo = () => {
   };
 
   // 更新 Cargo
-  const updateCargo = (cargoId: BSON.ObjectId, updatedData: Partial<Cargo>) => {
+  const updateCargo = (
+    cargoId: BSON.ObjectId,
+    updatedData: {
+      name?: string;
+      category?: string;
+      unit?: string;
+      description?: string;
+    },
+  ) => {
     realm.write(() => {
       const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
       if (cargo) {
-        Object.assign(cargo, updatedData, {utime: new Date()});
+        if (updatedData.name !== undefined) cargo.name = updatedData.name;
+        if (updatedData.category !== undefined)
+          cargo.category = updatedData.category;
+        if (updatedData.unit !== undefined) cargo.unit = updatedData.unit;
+        if (updatedData.description !== undefined)
+          cargo.description = updatedData.description;
+        cargo.utime = new Date();
       }
     });
   };
