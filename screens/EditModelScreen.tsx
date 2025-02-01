@@ -29,8 +29,14 @@ export default function EditModelScreen({navigation, route}: EditModelProps) {
       return;
     }
 
+    const newModels = stringifyWithOrder(spec);
+    if (cargo.items.find(item => item.models === newModels)) {
+      Alert.alert('型号重复', '当前已有相同的型号!');
+      return;
+    }
+
     updateCargoItem(cargo._id, cargoItem._id, {
-      models: stringifyWithOrder(spec),
+      models: newModels,
     });
     navigation.goBack();
   };
