@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 import {colorStyle, fontStyle} from '../styles';
 import Divider from './Divider';
 
@@ -30,11 +31,12 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
 }) => {
   const [key, setKey] = useState<string>('');
   const [value, setValue] = useState<string>('');
+  const [unit, setUnit] = useState<string>(''); // 选择的单位
 
   const handleAddSpec = () => {
     // 校验 key 和 value 是否为空
-    if (!key || !value) {
-      Alert.alert('错误', '规格名称和规格值不能为空');
+    if (!key || !value || !unit) {
+      Alert.alert('错误', '规格名称、规格值和单位不能为空');
       return;
     }
 
@@ -44,12 +46,16 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
       return;
     }
 
+    // 将单位添加到 value 中
+    const updatedValue = `${value} ${unit}`;
+
     // 添加新的规格
-    const newSpec = {key, value};
+    const newSpec = {key, value: updatedValue};
     const updatedSpecs = [...specifications, newSpec];
     setKey('');
     setValue('');
-    onChange(updatedSpecs); // 向父组件传递更新的规格数据
+    setUnit('');
+    onChange(updatedSpecs);
   };
 
   const handleRemoveSpec = (keyToRemove: string) => {
@@ -68,13 +74,16 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
         <View style={styles.table}>
           {/* 表头 */}
           <View style={styles.tableRow}>
-            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+            <Text
+              style={[styles.tableHeaderCell, styles.tableHeader, {flex: 2}]}>
               规格名称
             </Text>
-            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+            <Text
+              style={[styles.tableHeaderCell, styles.tableHeader, {flex: 2}]}>
               规格值
             </Text>
-            <Text style={[styles.tableHeaderCell, styles.tableHeader]}>
+            <Text
+              style={[styles.tableHeaderCell, styles.tableHeader, {flex: 1}]}>
               操作
             </Text>
           </View>
@@ -82,13 +91,15 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
           {/* 数据行 */}
           {specifications.map((spec, index) => (
             <View key={index} style={styles.tableRow}>
-              <Text style={styles.tableCell}>{spec.key}</Text>
-              <Text style={styles.tableCell}>{spec.value}</Text>
-              <TouchableOpacity
-                onPress={() => handleRemoveSpec(spec.key)}
-                style={styles.removeButton}>
-                <Text style={styles.removeButtonText}>删除</Text>
-              </TouchableOpacity>
+              <Text style={[styles.tableCell, {flex: 2}]}>{spec.key}</Text>
+              <Text style={[styles.tableCell, {flex: 2}]}>{spec.value}</Text>
+              <View style={styles.tableCell}>
+                <TouchableOpacity
+                  onPress={() => handleRemoveSpec(spec.key)}
+                  style={styles.removeButton}>
+                  <Text style={styles.removeButtonText}>删除</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           ))}
         </View>
@@ -112,10 +123,38 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
           value={value}
           onChangeText={setValue}
         />
-        <TouchableOpacity onPress={handleAddSpec} style={styles.addButton}>
-          <Text style={styles.addButtonText}>添加</Text>
-        </TouchableOpacity>
       </KeyboardAvoidingView>
+
+      {/* 单位选择器 */}
+      <View>
+        <RNPickerSelect
+          style={pickerSelectStyles}
+          placeholder={{label: '选择单位', value: ''}}
+          value={unit}
+          onValueChange={setUnit}
+          items={[
+            //重量
+            {label: 'kg', value: 'kg'},
+            {label: 'g', value: 'g'},
+            //长度
+            {label: 'm', value: 'm'},
+            {label: 'cm', value: 'cm'},
+            {label: 'mm', value: 'mm'},
+            //体积
+            {label: 'm³', value: 'm³'},
+            {label: 'dm³', value: 'dm³'},
+            {label: 'cm³', value: 'cm³'},
+            //面积
+            {label: 'm²', value: 'm²'},
+            {label: 'dm²', value: 'dm²'},
+            {label: 'cm²', value: 'cm²'},
+          ]}
+        />
+      </View>
+
+      <TouchableOpacity onPress={handleAddSpec} style={styles.addButton}>
+        <Text style={styles.addButtonText}>添加</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -141,7 +180,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: '40%',
+    width: '49%',
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
@@ -198,6 +237,30 @@ const styles = StyleSheet.create({
   removeButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 14,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30,
+    width: '100%',
+  },
+  inputAndroid: {
+    fontSize: 14,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30,
+    width: '100%',
   },
 });
 
