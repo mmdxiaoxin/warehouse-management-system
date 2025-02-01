@@ -1,13 +1,13 @@
 import {useObject} from '@realm/react';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
+import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
 import AdvancedButton from '../components/AdvancedButton';
 import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
 import {useCargoItem} from '../hooks/useCargoItem';
 import {Cargo} from '../models/Cargo';
 import {EditModelProps} from '../routes/types';
-import {fontStyle} from '../styles';
+import {colorStyle, fontStyle} from '../styles';
 import {parseWithOrder, stringifyWithOrder} from '../utils';
 
 export default function EditModelScreen({navigation, route}: EditModelProps) {
@@ -45,6 +45,13 @@ export default function EditModelScreen({navigation, route}: EditModelProps) {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>编辑型号规格</Text>
 
+      {/* 货物属性展示卡片 */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>{cargo?.name}</Text>
+        <Text style={styles.cardCategory}>类别: {cargo?.category}</Text>
+        <Text style={styles.cardDescription}>描述: {cargo?.description}</Text>
+      </View>
+
       {/* 货物规格输入 */}
       <CargoSpecInput specifications={spec} onChange={setSpec} />
 
@@ -58,7 +65,7 @@ export default function EditModelScreen({navigation, route}: EditModelProps) {
 
       {/* 取消按钮 */}
       <AdvancedButton
-        title="取消添加"
+        title="取消编辑"
         onPress={() => navigation.goBack()}
         type="warning"
         buttonStyle={{marginBottom: 40}}
@@ -76,5 +83,35 @@ const styles = StyleSheet.create({
     ...fontStyle.heading1,
     marginBottom: 20,
     textAlign: 'center',
+  },
+
+  // 卡片样式
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 15,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5, // Android阴影
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colorStyle.textPrimary,
+    marginBottom: 5,
+  },
+  cardCategory: {
+    fontSize: 14,
+    color: colorStyle.textSecondary,
+    marginBottom: 5,
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: colorStyle.textSecondary,
   },
 });
