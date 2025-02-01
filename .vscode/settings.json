@@ -5,7 +5,8 @@
     "RNFS",
     "TRUEPREDICATE",
     "utime",
-    "uuidv"
+    "uuidv",
+    "Yangzi"
   ],
   "java.compile.nullAnalysis.mode": "automatic",
   "java.configuration.updateBuildConfiguration": "interactive"
