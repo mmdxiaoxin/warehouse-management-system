@@ -91,8 +91,8 @@ export default function EditCargoScreen({navigation, route}: EditCargoProps) {
           value={newCargoCategory}
           onValueChange={setNewCargoCategory}
           items={[
-            {label: '木门', value: '木门'},
-            {label: '木地板', value: '木地板'},
+            {label: '门', value: '门'},
+            {label: '地板', value: '地板'},
             {label: '辅料', value: '辅料'},
           ]}
           style={pickerSelectStyles}

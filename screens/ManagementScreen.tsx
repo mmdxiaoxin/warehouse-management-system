@@ -90,8 +90,8 @@ export default function ManagementScreen({
               value={cargoCategory}
               onValueChange={setCargoCategory}
               items={[
-                {label: '木门', value: '木门'},
-                {label: '木地板', value: '木地板'},
+                {label: '门', value: '门'},
+                {label: '地板', value: '地板'},
                 {label: '辅料', value: '辅料'},
               ]}
               style={pickerSelectStyles}
@@ -119,7 +119,6 @@ export default function ManagementScreen({
           <AdvancedButton
             title="添加新货物"
             onPress={() => navigation.navigate('AddCargo')}
-            buttonStyle={styles.addCargoButton}
             type="success"
           />
 
@@ -131,21 +130,27 @@ export default function ManagementScreen({
               <Text style={styles.itemsTitle}>当前选中货物的型号:</Text>
               {filterCargoByCategory()
                 .filter(cargo => cargo._id.equals(selectedCargo))
-                .map(cargo => (
-                  <FlatList
-                    key={cargo._id.toString()}
-                    data={cargo.items}
-                    keyExtractor={item => item._id.toString()}
-                    renderItem={({item}) => (
-                      <ModelFlatItem
-                        item={item}
-                        onQuantityChange={handleQuantityChange}
-                        onEdit={handleEditModel}
-                        onDelete={handleDeleteModel}
-                      />
-                    )}
-                  />
-                ))}
+                .map(cargo =>
+                  cargo.items.length > 0 ? (
+                    <FlatList
+                      key={cargo._id.toString()}
+                      data={cargo.items}
+                      keyExtractor={item => item._id.toString()}
+                      renderItem={({item}) => (
+                        <ModelFlatItem
+                          item={item}
+                          onQuantityChange={handleQuantityChange}
+                          onEdit={handleEditModel}
+                          onDelete={handleDeleteModel}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Text key={cargo._id.toString()} style={styles.noItemsText}>
+                      当前货物下没有型号
+                    </Text>
+                  ),
+                )}
             </View>
           )}
 
@@ -165,7 +170,7 @@ export default function ManagementScreen({
                 navigation.navigate('AddModel');
               }
             }}
-            buttonStyle={styles.addModelButton}
+            buttonStyle={{marginBottom: 40}}
             type="warning"
           />
         </>
@@ -179,10 +184,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-  },
-  addCargoButton: {},
-  addModelButton: {
-    marginBottom: 40,
   },
   itemsContainer: {
     marginTop: 20,
