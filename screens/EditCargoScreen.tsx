@@ -131,9 +131,9 @@ export default function EditCargoScreen({navigation, route}: EditCargoProps) {
         buttonStyle={{marginBottom: 10}}
       />
 
-      {/* 库管 */}
+      {/* 仓管快捷跳转 */}
       <AdvancedButton
-        title="库管"
+        title="仓管"
         onPress={() =>
           navigation.navigate('HomeTabs', {
             screen: 'Management',
@@ -141,6 +141,7 @@ export default function EditCargoScreen({navigation, route}: EditCargoProps) {
           })
         }
         type="success"
+        buttonStyle={{marginBottom: 40}}
       />
     </ScrollView>
   );
