@@ -16,27 +16,14 @@ export default function EditCargoScreen({navigation, route}: EditCargoProps) {
   const {updateCargo} = useCargo();
   const foundCargo = useObject(Cargo, cargoId);
 
-  const [newCargoName, setNewCargoName] = useState('');
-  const [newCargoCategory, setNewCargoCategory] = useState('');
-  const [newCargoUnit, setNewCargoUnit] = useState('个');
-  const [newCargoDescription, setNewCargoDescription] = useState('');
-
-  // 获取原始 Cargo 数据
-  useEffect(() => {
-    if (foundCargo) {
-      setNewCargoName(foundCargo.name);
-      setNewCargoCategory(foundCargo.category);
-      setNewCargoUnit(foundCargo.unit);
-      setNewCargoDescription(foundCargo.description || '');
-    }
-
-    return () => {
-      setNewCargoName('');
-      setNewCargoCategory('');
-      setNewCargoUnit('个');
-      setNewCargoDescription('');
-    };
-  }, [foundCargo]);
+  const [newCargoName, setNewCargoName] = useState(foundCargo?.name || '');
+  const [newCargoCategory, setNewCargoCategory] = useState(
+    foundCargo?.category || '',
+  );
+  const [newCargoUnit, setNewCargoUnit] = useState(foundCargo?.unit || '个');
+  const [newCargoDescription, setNewCargoDescription] = useState(
+    foundCargo?.description || '',
+  );
 
   // 校验输入数据
   const handleSaveCargo = async () => {
