@@ -161,20 +161,22 @@ export default function ManagementScreen({
           )}
 
           {/* 添加新型号按钮 */}
-          <AdvancedButton
-            title="添加新型号"
-            onPress={() => {
-              if (selectedCargo) {
-                navigation.navigate('AddModel', {
-                  cargoId: selectedCargo.toHexString(),
-                });
-              } else {
-                navigation.navigate('AddModel');
-              }
-            }}
-            buttonStyle={{marginBottom: 40}}
-            type="warning"
-          />
+          {selectedCargo && (
+            <AdvancedButton
+              title="添加新型号"
+              onPress={() => {
+                if (selectedCargo) {
+                  navigation.navigate('AddModel', {
+                    cargoId: selectedCargo.toHexString(),
+                  });
+                } else {
+                  navigation.navigate('AddModel');
+                }
+              }}
+              buttonStyle={{marginBottom: 40}}
+              type="warning"
+            />
+          )}
         </>
       }
       renderItem={({item}) => null}
@@ -199,5 +201,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
     marginBottom: 40,
+    textAlign: 'center',
   },
 });
