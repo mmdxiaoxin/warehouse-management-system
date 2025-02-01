@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
@@ -24,7 +24,8 @@ export default function ManagementScreen({
     null,
   );
 
-  const {cargoList, updateCargoItemQuantity, deleteCargoItem} = useCargo();
+  const {cargoList} = useCargo();
+  const {deleteCargoItem, updateCargoItem} = useCargoItem();
 
   useEffect(() => {
     if (cargoId && !selectedCargo?.equals(cargoId)) {
@@ -38,7 +39,7 @@ export default function ManagementScreen({
         cargo._id.equals(selectedCargo),
       );
       if (currentCargo) {
-        updateCargoItemQuantity(currentCargo._id, id, newQuantity);
+        updateCargoItem(currentCargo._id, id, {quantity: newQuantity});
       }
     }
   };
