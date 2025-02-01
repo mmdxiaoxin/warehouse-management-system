@@ -15,7 +15,6 @@ export default function ManagementScreen({
   navigation,
   route,
 }: ManagementScreenProps) {
-  // cargoId从route.params获取，如果存在，则转换为 BSON.ObjectId 类型
   const cargoId = route.params?.cargoId
     ? new BSON.ObjectId(route.params.cargoId)
     : null;
@@ -25,13 +24,11 @@ export default function ManagementScreen({
     null,
   );
 
-  const {cargoList, updateCargoItemQuantity} = useCargo();
-  const {deleteCargoItem} = useCargoItem();
+  const {cargoList, updateCargoItemQuantity, deleteCargoItem} = useCargo();
 
-  // 如果 cargoId 存在，初始化 selectedCargo
   useEffect(() => {
     if (cargoId && !selectedCargo?.equals(cargoId)) {
-      setSelectedCargo(cargoId); // 只在需要时更新 selectedCargo
+      setSelectedCargo(cargoId);
     }
   }, [cargoId, selectedCargo]);
 
@@ -59,14 +56,12 @@ export default function ManagementScreen({
       {
         text: '删除',
         onPress: () => {
-          if (selectedCargo) {
-            const currentCargo = cargoList.find(cargo =>
-              cargo._id.equals(selectedCargo),
-            );
-            if (currentCargo) {
-              deleteCargoItem(id);
-            }
+          if (!selectedCargo) {
+            Alert.alert('错误', '未选择货物');
+            return;
           }
+
+          deleteCargoItem(selectedCargo, id);
         },
       },
     ]);

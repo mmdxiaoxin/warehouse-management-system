@@ -83,11 +83,33 @@ export const useCargo = () => {
     }
   };
 
+  // 删除CargoItem
+  const deleteCargoItem = (cargoId: BSON.ObjectId, itemId: BSON.ObjectId) => {
+    try {
+      realm.write(() => {
+        const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
+        if (cargo) {
+          const cargoItemToDelete = cargo.items.find(
+            item => item._id.toString() === itemId.toString(),
+          );
+          if (cargoItemToDelete) {
+            realm.delete(cargoItemToDelete);
+            console.log('CargoItem deleted:', cargoItemToDelete);
+          }
+        }
+      });
+    } catch (error) {
+      console.error('删除失败:', error);
+      throw error;
+    }
+  };
+
   return {
     cargoList,
     createCargo,
     updateCargo,
     updateCargoItemQuantity,
     deleteCargo,
+    deleteCargoItem,
   };
 };

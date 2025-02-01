@@ -2,11 +2,13 @@ import {useQuery, useRealm} from '@realm/react';
 import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
 import {CargoItem} from '../models/CargoItem';
+import {useCargo} from './useCargo';
 
 export type CargoItemData = Pick<CargoItem, 'models' | 'quantity'>;
 
 export const useCargoItem = () => {
   const realm = useRealm();
+  const {deleteCargoItem} = useCargo();
 
   // 查询所有的 CargoItem 数据
   const cargoItemList = useQuery(CargoItem);
@@ -40,20 +42,6 @@ export const useCargoItem = () => {
       console.error('创建失败:', error);
       return null;
     }
-  };
-
-  // 删除 CargoItem
-  const deleteCargoItem = (cargoItemId: BSON.ObjectId) => {
-    realm.write(() => {
-      const cargoItemToDelete = realm.objectForPrimaryKey(
-        CargoItem,
-        cargoItemId,
-      );
-      if (cargoItemToDelete) {
-        realm.delete(cargoItemToDelete);
-        console.log('CargoItem deleted:', cargoItemToDelete);
-      }
-    });
   };
 
   return {
