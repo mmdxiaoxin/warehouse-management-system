@@ -45,7 +45,15 @@ export default function ManagementScreen({
   };
 
   const handleEditModel = (id: BSON.ObjectId) => {
-    // TODO: 编辑型号
+    if (!selectedCargo) {
+      Alert.alert('错误', '未选择货物');
+      return;
+    }
+
+    navigation.navigate('EditModel', {
+      cargoId: selectedCargo.toHexString(),
+      cargoItemId: id.toHexString(),
+    });
   };
 
   const handleDeleteModel = (id: BSON.ObjectId) => {

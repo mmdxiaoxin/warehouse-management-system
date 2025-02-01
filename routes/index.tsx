@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AddCargoScreen from '../screens/AddCargoScreen';
 import AddModelScreen from '../screens/AddModelScreen';
 import EditCargoScreen from '../screens/EditCargoScreen';
+import EditModelScreen from '../screens/EditModelScreen';
 import HomeScreen from '../screens/HomeScreen';
 import InventoryScreen from '../screens/InventoryScreen';
 import ManagementScreen from '../screens/ManagementScreen';
@@ -78,6 +79,11 @@ export default function AppNavigator() {
       <Stack.Screen
         name="AddModel"
         component={AddModelScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditModel"
+        component={EditModelScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

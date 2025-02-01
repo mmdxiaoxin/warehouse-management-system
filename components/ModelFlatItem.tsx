@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {BSON} from 'realm';
+import {colorStyle} from '../styles';
 import {parseWithOrder} from '../utils';
 
 interface ModelFlatItemProps {
@@ -171,13 +172,13 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
   actionButton: {
-    backgroundColor: '#4CAF50', // 绿色背景
+    backgroundColor: colorStyle.success,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 5,
   },
   deleteButton: {
-    backgroundColor: '#f44336', // 红色背景
+    backgroundColor: colorStyle.danger,
   },
   buttonText: {
     color: '#fff',
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   removeButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: colorStyle.danger,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
   button: {
     width: 30,
     height: 30,
-    backgroundColor: '#007bff',
+    backgroundColor: colorStyle.primary,
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',

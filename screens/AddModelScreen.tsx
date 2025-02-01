@@ -123,7 +123,7 @@ export default function AddModelScreen({navigation, route}: AddModelProps) {
         title="确认添加"
         onPress={handleAddToStore}
         disabled={spec.length === 0 || !selectedCargo}
-        buttonStyle={styles.confirmButton}
+        buttonStyle={{marginVertical: 10}}
       />
 
       {/* 取消按钮 */}
@@ -131,7 +131,7 @@ export default function AddModelScreen({navigation, route}: AddModelProps) {
         title="取消添加"
         onPress={() => navigation.goBack()}
         type="warning"
-        buttonStyle={styles.cancelButton}
+        buttonStyle={{marginBottom: 40}}
       />
     </ScrollView>
   );
@@ -146,11 +146,5 @@ const styles = StyleSheet.create({
     ...fontStyle.heading1,
     marginBottom: 20,
     textAlign: 'center',
-  },
-  confirmButton: {
-    marginVertical: 10,
-  },
-  cancelButton: {
-    marginBottom: 40,
   },
 });
