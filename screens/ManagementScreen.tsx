@@ -21,17 +21,11 @@ export default function ManagementScreen({
 
   const [cargoCategory, setCargoCategory] = useState<string>('');
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
-    null,
+    cargoId,
   );
 
   const {cargoList} = useCargo();
   const {deleteCargoItem, updateCargoItem} = useCargoItem();
-
-  useEffect(() => {
-    if (cargoId && !selectedCargo?.equals(cargoId)) {
-      setSelectedCargo(cargoId);
-    }
-  }, [cargoId, selectedCargo]);
 
   const handleQuantityChange = (id: BSON.ObjectId, newQuantity: number) => {
     if (selectedCargo) {
