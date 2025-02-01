@@ -41,16 +41,15 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
       <View style={styles.cardHeader}>
         <View style={styles.headerContent}>
           <Text style={styles.cardTitle}>{item.name}</Text>
-          <TouchableOpacity
-            style={[styles.toggleButton]}
-            onPress={toggleExpand}>
-            <Icon
-              name={isExpanded ? 'caret-down' : 'caret-right'}
-              size={20}
-              color={colorStyle.primary}
-              type="font-awesome"
-            />
-          </TouchableOpacity>
+          <Button
+            type="clear"
+            icon={{
+              name: isExpanded ? 'caret-down' : 'caret-right',
+              size: 18,
+              type: 'font-awesome-5',
+              color: colorStyle.primary,
+            }}
+            onPress={toggleExpand}></Button>
         </View>
         <Text style={styles.cardCategory}>{item.category}</Text>
       </View>
@@ -186,12 +185,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     gap: 10,
-  },
-  toggleButton: {
-    width: 30,
-    height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 

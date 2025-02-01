@@ -1,3 +1,4 @@
+import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {
   Alert,
@@ -6,7 +7,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -94,11 +94,11 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
               <Text style={[styles.tableCell, {flex: 2}]}>{spec.key}</Text>
               <Text style={[styles.tableCell, {flex: 2}]}>{spec.value}</Text>
               <View style={styles.tableCell}>
-                <TouchableOpacity
+                <Button
                   onPress={() => handleRemoveSpec(spec.key)}
-                  style={styles.removeButton}>
-                  <Text style={styles.removeButtonText}>删除</Text>
-                </TouchableOpacity>
+                  color={'error'}>
+                  删除
+                </Button>
               </View>
             </View>
           ))}
@@ -152,9 +152,9 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
         />
       </View>
 
-      <TouchableOpacity onPress={handleAddSpec} style={styles.addButton}>
-        <Text style={styles.addButtonText}>添加</Text>
-      </TouchableOpacity>
+      <Button onPress={handleAddSpec} color={'success'}>
+        添加
+      </Button>
     </View>
   );
 };
@@ -187,18 +187,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     ...fontStyle.bodyMedium,
   },
-  addButton: {
-    backgroundColor: colorStyle.success,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
 
   // 表格相关样式
   table: {
@@ -225,19 +213,6 @@ const styles = StyleSheet.create({
   tableHeader: {
     borderBottomWidth: 2,
     borderBottomColor: '#333',
-  },
-
-  // 删除按钮样式
-  removeButton: {
-    backgroundColor: colorStyle.danger,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  removeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
 

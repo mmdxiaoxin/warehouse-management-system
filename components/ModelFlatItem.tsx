@@ -1,12 +1,6 @@
-import {Icon} from '@rneui/themed';
+import {Button, Icon} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {BSON} from 'realm';
 import {colorStyle} from '../styles';
 import {parseWithOrder} from '../utils';
@@ -122,9 +116,13 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
       {/* 数量调整 */}
       <View style={styles.quantityContainer}>
         <View style={styles.quantityControls}>
-          <TouchableOpacity onPress={decrementQuantity} style={styles.button}>
-            <Icon name="minus" size={20} color="white" type="antdesign" />
-          </TouchableOpacity>
+          <Button
+            onPress={decrementQuantity}
+            containerStyle={{borderRadius: '50%'}}
+            icon={
+              <Icon name="minus" size={18} color="white" type="antdesign" />
+            }
+          />
 
           <TextInput
             style={[styles.quantityInput, error ? styles.inputError : {}]}
@@ -134,23 +132,27 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
             maxLength={3}
           />
 
-          <TouchableOpacity onPress={incrementQuantity} style={styles.button}>
-            <Icon name="plus" size={20} color="white" type="antdesign" />
-          </TouchableOpacity>
+          <Button
+            onPress={incrementQuantity}
+            containerStyle={{borderRadius: '50%'}}
+            icon={<Icon name="plus" size={18} color="white" type="antdesign" />}
+          />
         </View>
 
         <View style={styles.tools}>
           {/* 编辑和删除按钮 */}
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => onEdit(item._id)}>
-            <Text style={styles.buttonText}>编辑</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionButton, styles.deleteButton]}
-            onPress={() => onDelete(item._id)}>
-            <Text style={styles.buttonText}>删除</Text>
-          </TouchableOpacity>
+          <Button
+            color={'success'}
+            onPress={() => onEdit(item._id)}
+            buttonStyle={{borderRadius: 5, paddingHorizontal: 20}}>
+            编辑
+          </Button>
+          <Button
+            color={'error'}
+            onPress={() => onDelete(item._id)}
+            buttonStyle={{borderRadius: 5, paddingHorizontal: 20}}>
+            删除
+          </Button>
         </View>
       </View>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -170,15 +172,6 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowRadius: 10,
-  },
-  actionButton: {
-    backgroundColor: colorStyle.success,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-  },
-  deleteButton: {
-    backgroundColor: colorStyle.danger,
   },
   buttonText: {
     color: '#fff',
@@ -258,14 +251,6 @@ const styles = StyleSheet.create({
   },
   inputError: {
     borderColor: 'red',
-  },
-  button: {
-    width: 30,
-    height: 30,
-    backgroundColor: colorStyle.primary,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   errorText: {
     color: 'red',
