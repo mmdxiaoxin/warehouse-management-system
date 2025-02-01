@@ -1,4 +1,4 @@
-import AntDesignIcon from '@react-native-vector-icons/ant-design';
+import {Icon} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BSON} from 'realm';
@@ -42,12 +42,13 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
         <View style={styles.headerContent}>
           <Text style={styles.cardTitle}>{item.name}</Text>
           <TouchableOpacity
-            style={[styles.toggleButton, {marginTop: 5}]}
+            style={[styles.toggleButton]}
             onPress={toggleExpand}>
-            <AntDesignIcon
+            <Icon
               name={isExpanded ? 'caret-down' : 'caret-right'}
               size={20}
               color={colorStyle.primary}
+              type="font-awesome"
             />
           </TouchableOpacity>
         </View>
@@ -56,11 +57,12 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
 
       <Animated.View style={[styles.cardBody, {height: expandHeight}]}>
         <View style={styles.infoRow}>
-          <AntDesignIcon
-            name="appstore"
+          <Icon
+            name="box"
             size={18}
             color={colorStyle.primary}
             style={styles.icon}
+            type="font-awesome-5"
           />
           <Text style={styles.cardText}>
             <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
@@ -68,11 +70,12 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
           </Text>
         </View>
         <View style={styles.infoRow}>
-          <AntDesignIcon
-            name="bars"
+          <Icon
+            name="boxes"
             size={18}
             color={colorStyle.primary}
             style={styles.icon}
+            type="font-awesome-5"
           />
           <Text style={styles.cardText}>
             <Text style={styles.boldText}>型号数目:</Text> {modelsCount} 种
@@ -95,11 +98,11 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
         <TouchableOpacity
           style={styles.buttonEdit}
           onPress={() => handleEditCargo(item._id)}>
-          <AntDesignIcon name="edit" size={18} color="#fff" />
+          <Icon name="edit" size={18} color="#fff" type="antdesign" />
           <Text style={styles.buttonText}>编辑</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonDelete} onPress={handleDelete}>
-          <AntDesignIcon name="delete" size={18} color="#fff" />
+          <Icon name="delete" size={18} color="#fff" type="antdesign" />
           <Text style={styles.buttonText}>删除</Text>
         </TouchableOpacity>
       </View>

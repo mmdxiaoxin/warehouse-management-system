@@ -1,6 +1,6 @@
-import AntDesignIcon from '@react-native-vector-icons/ant-design';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Icon} from '@rneui/themed';
 import AddCargoScreen from '../screens/AddCargoScreen';
 import AddModelScreen from '../screens/AddModelScreen';
 import EditCargoScreen from '../screens/EditCargoScreen';
@@ -19,17 +19,20 @@ const HomeTabs = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
-          let iconName: 'home' | 'credit-card' | 'database' = 'home';
+          let iconName = 'home';
+          let type = 'antdesign';
 
           if (route.name === 'Home') {
             iconName = 'home';
           } else if (route.name === 'Management') {
-            iconName = 'credit-card';
+            iconName = 'package';
+            type = 'material-community';
           } else if (route.name === 'Inventory') {
-            iconName = 'database';
+            iconName = 'warehouse';
+            type = 'material';
           }
 
-          return <AntDesignIcon name={iconName} size={size} color={color} />;
+          return <Icon name={iconName} size={size} color={color} type={type} />;
         },
         tabBarActiveTintColor: 'blue',
         tabBarInactiveTintColor: 'gray',
@@ -43,7 +46,7 @@ const HomeTabs = () => {
         name="Management"
         component={ManagementScreen}
         options={{
-          title: '仓管',
+          title: '货品',
         }}
       />
       <Tab.Screen

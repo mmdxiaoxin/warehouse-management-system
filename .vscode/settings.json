@@ -2,6 +2,7 @@
   "cSpell.words": [
     "appstore",
     "fontawesome",
+    "rneui",
     "RNFS",
     "TRUEPREDICATE",
     "utime",
@@ -9,5 +10,6 @@
     "Yangzi"
   ],
   "java.compile.nullAnalysis.mode": "automatic",
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

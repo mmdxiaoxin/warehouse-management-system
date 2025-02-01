@@ -1,4 +1,4 @@
-import AntDesignIcon from '@react-native-vector-icons/ant-design';
+import {Icon} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -123,7 +123,7 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
       <View style={styles.quantityContainer}>
         <View style={styles.quantityControls}>
           <TouchableOpacity onPress={decrementQuantity} style={styles.button}>
-            <AntDesignIcon name="minus" size={20} color="white" />
+            <Icon name="minus" size={20} color="white" type="antdesign" />
           </TouchableOpacity>
 
           <TextInput
@@ -135,7 +135,7 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
           />
 
           <TouchableOpacity onPress={incrementQuantity} style={styles.button}>
-            <AntDesignIcon name="plus" size={20} color="white" />
+            <Icon name="plus" size={20} color="white" type="antdesign" />
           </TouchableOpacity>
         </View>
 
