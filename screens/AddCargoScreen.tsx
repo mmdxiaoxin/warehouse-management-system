@@ -1,7 +1,7 @@
+import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
 import {useCargo} from '../hooks/useCargo';
 import {AddCargoProps} from '../routes/types';
@@ -86,19 +86,19 @@ export default function AddCargoScreen({navigation}: AddCargoProps) {
       />
 
       {/* 确认添加按钮 */}
-      <AdvancedButton
+      <Button
         title="确认添加"
         onPress={handleAddCargo}
         buttonStyle={{marginBottom: 10}}
-        type="success"
+        color="success"
       />
 
       {/* 取消按钮 */}
-      <AdvancedButton
+      <Button
         title="取消添加"
         onPress={() => navigation.goBack()}
         buttonStyle={{marginBottom: 40}}
-        type="warning"
+        color="warning"
       />
     </ScrollView>
   );

@@ -1,12 +1,6 @@
+import {SearchBar} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {
-  Alert,
-  SafeAreaView,
-  SectionList,
-  StyleSheet,
-  Text,
-  TextInput,
-} from 'react-native';
+import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import {BSON} from 'realm';
 import CargoSectionItem from '../components/CargoSectionItem';
 import Divider from '../components/Divider';
@@ -89,11 +83,11 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
+      <SearchBar
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
+        platform="android"
       />
 
       <SectionList
@@ -125,16 +119,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f5f5f5',
-  },
-  searchInput: {
-    height: 45,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    fontSize: 16,
-    backgroundColor: '#fff',
   },
   sectionHeader: {
     fontSize: 22,

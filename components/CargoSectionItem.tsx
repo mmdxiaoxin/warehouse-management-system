@@ -1,4 +1,4 @@
-import {Icon} from '@rneui/themed';
+import {Button, Icon} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BSON} from 'realm';
@@ -25,7 +25,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
 
   const toggleExpand = () => {
     Animated.timing(expandHeight, {
-      toValue: isExpanded ? 0 : 200, // 动态展开/收起
+      toValue: isExpanded ? 0 : 180, // 动态展开/收起
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -95,16 +95,29 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
       </Animated.View>
 
       <View style={styles.cardFooter}>
-        <TouchableOpacity
-          style={styles.buttonEdit}
+        <Button
+          icon={{
+            name: 'edit',
+            size: 18,
+            color: '#fff',
+            type: 'antdesign',
+          }}
+          buttonStyle={{
+            backgroundColor: colorStyle.primary,
+            borderRadius: 5,
+          }}
           onPress={() => handleEditCargo(item._id)}>
-          <Icon name="edit" size={18} color="#fff" type="antdesign" />
-          <Text style={styles.buttonText}>编辑</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonDelete} onPress={handleDelete}>
-          <Icon name="delete" size={18} color="#fff" type="antdesign" />
-          <Text style={styles.buttonText}>删除</Text>
-        </TouchableOpacity>
+          编辑
+        </Button>
+        <Button
+          icon={{name: 'delete', size: 18, color: '#fff', type: 'antdesign'}}
+          buttonStyle={{
+            backgroundColor: colorStyle.danger,
+            borderRadius: 5,
+          }}
+          onPress={handleDelete}>
+          删除
+        </Button>
       </View>
     </View>
   );
@@ -170,35 +183,9 @@ const styles = StyleSheet.create({
   },
   cardFooter: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonEdit: {
-    backgroundColor: colorStyle.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    borderRadius: 30,
-    width: '48%',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  buttonDelete: {
-    backgroundColor: colorStyle.danger,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    borderRadius: 30,
-    width: '48%',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    ...fontStyle.buttonText,
-    fontSize: 14,
-    color: '#fff',
-    marginLeft: 10,
+    gap: 10,
   },
   toggleButton: {
     width: 30,

@@ -1,9 +1,9 @@
 import {useObject} from '@realm/react';
-import React, {useEffect, useState} from 'react';
+import {Button} from '@rneui/themed';
+import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import AdvancedButton from '../components/AdvancedButton';
 import SectionInput from '../components/SectionInput';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo';
@@ -103,23 +103,23 @@ export default function EditCargoScreen({navigation, route}: EditCargoProps) {
       />
 
       {/* 保存按钮 */}
-      <AdvancedButton
+      <Button
         title="保存"
         onPress={handleSaveCargo}
-        type="primary"
+        color="primary"
         buttonStyle={{marginBottom: 10}}
       />
 
       {/* 取消按钮 */}
-      <AdvancedButton
+      <Button
         title="取消"
         onPress={() => navigation.goBack()}
-        type="warning"
+        color="warning"
         buttonStyle={{marginBottom: 10}}
       />
 
       {/* 仓管快捷跳转 */}
-      <AdvancedButton
+      <Button
         title="仓管"
         onPress={() =>
           navigation.navigate('HomeTabs', {
@@ -127,7 +127,7 @@ export default function EditCargoScreen({navigation, route}: EditCargoProps) {
             params: {cargoId: foundCargo._id.toHexString()},
           })
         }
-        type="success"
+        color="success"
         buttonStyle={{marginBottom: 40}}
       />
     </ScrollView>

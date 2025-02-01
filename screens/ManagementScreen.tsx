@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import {Button} from '@rneui/themed';
+import React, {useState} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import AdvancedButton from '../components/AdvancedButton'; // 引入自定义按钮
 import Divider from '../components/Divider';
 import ModelFlatItem from '../components/ModelFlatItem';
 import SectionInput from '../components/SectionInput';
@@ -118,10 +118,10 @@ export default function ManagementScreen({
           </SectionInput>
 
           {/* 添加新货物按钮 */}
-          <AdvancedButton
+          <Button
             title="添加新货物"
             onPress={() => navigation.navigate('AddCargo')}
-            type="success"
+            color="success"
           />
 
           <Divider />
@@ -162,7 +162,7 @@ export default function ManagementScreen({
 
           {/* 添加新型号按钮 */}
           {selectedCargo && (
-            <AdvancedButton
+            <Button
               title="添加新型号"
               onPress={() => {
                 if (selectedCargo) {
@@ -174,7 +174,7 @@ export default function ManagementScreen({
                 }
               }}
               buttonStyle={{marginBottom: 40}}
-              type="warning"
+              color="warning"
             />
           )}
         </>

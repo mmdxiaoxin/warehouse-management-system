@@ -1,8 +1,8 @@
+import {Button} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import AdvancedButton from '../components/AdvancedButton';
 import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
 import Divider from '../components/Divider';
 import SectionInput from '../components/SectionInput';
@@ -119,7 +119,7 @@ export default function AddModelScreen({navigation, route}: AddModelProps) {
       <CargoSpecInput specifications={spec} onChange={setSpec} />
 
       {/* 确认添加按钮 */}
-      <AdvancedButton
+      <Button
         title="确认添加"
         onPress={handleAddToStore}
         disabled={spec.length === 0 || !selectedCargo}
@@ -127,10 +127,10 @@ export default function AddModelScreen({navigation, route}: AddModelProps) {
       />
 
       {/* 取消按钮 */}
-      <AdvancedButton
+      <Button
         title="取消添加"
         onPress={() => navigation.goBack()}
-        type="warning"
+        color="warning"
         buttonStyle={{marginBottom: 40}}
       />
     </ScrollView>

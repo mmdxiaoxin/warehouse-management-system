@@ -1,8 +1,8 @@
 import {useObject} from '@realm/react';
+import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
-import AdvancedButton from '../components/AdvancedButton';
 import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
 import {useCargoItem} from '../hooks/useCargoItem';
 import {Cargo} from '../models/Cargo';
@@ -56,7 +56,7 @@ export default function EditModelScreen({navigation, route}: EditModelProps) {
       <CargoSpecInput specifications={spec} onChange={setSpec} />
 
       {/* 保存修改按钮 */}
-      <AdvancedButton
+      <Button
         title="保存修改"
         onPress={handleSaveModels}
         disabled={spec.length === 0}
@@ -64,10 +64,10 @@ export default function EditModelScreen({navigation, route}: EditModelProps) {
       />
 
       {/* 取消按钮 */}
-      <AdvancedButton
+      <Button
         title="取消编辑"
         onPress={() => navigation.goBack()}
-        type="warning"
+        color="warning"
         buttonStyle={{marginBottom: 40}}
       />
     </ScrollView>
