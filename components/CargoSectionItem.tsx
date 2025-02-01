@@ -1,6 +1,6 @@
 import {Button, Icon} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
 import {colorStyle, fontStyle} from '../styles';
 
@@ -25,7 +25,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
 
   const toggleExpand = () => {
     Animated.timing(expandHeight, {
-      toValue: isExpanded ? 0 : 180, // 动态展开/收起
+      toValue: isExpanded ? 0 : 160, // 动态展开/收起
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -58,7 +58,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
         <View style={styles.infoRow}>
           <Icon
             name="box"
-            size={18}
+            size={15}
             color={colorStyle.primary}
             style={styles.icon}
             type="font-awesome-5"
@@ -71,7 +71,7 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
         <View style={styles.infoRow}>
           <Icon
             name="boxes"
-            size={18}
+            size={15}
             color={colorStyle.primary}
             style={styles.icon}
             type="font-awesome-5"
@@ -93,30 +93,39 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
         </Text>
       </Animated.View>
 
+      {/* 只在未展开时显示剩余库存 */}
       <View style={styles.cardFooter}>
-        <Button
-          icon={{
-            name: 'edit',
-            size: 18,
-            color: '#fff',
-            type: 'antdesign',
-          }}
-          buttonStyle={{
-            backgroundColor: colorStyle.primary,
-            borderRadius: 5,
-          }}
-          onPress={() => handleEditCargo(item._id)}>
-          编辑
-        </Button>
-        <Button
-          icon={{name: 'delete', size: 18, color: '#fff', type: 'antdesign'}}
-          buttonStyle={{
-            backgroundColor: colorStyle.danger,
-            borderRadius: 5,
-          }}
-          onPress={handleDelete}>
-          删除
-        </Button>
+        <Text
+          style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
+          <Text style={styles.boldText}>剩余库存:</Text> {quantity} {item.unit}
+        </Text>
+
+        {/* 保持按钮位置固定 */}
+        <View style={styles.toolBar}>
+          <Button
+            icon={{
+              name: 'edit',
+              size: 18,
+              color: '#fff',
+              type: 'antdesign',
+            }}
+            buttonStyle={{
+              backgroundColor: colorStyle.primary,
+              borderRadius: 5,
+            }}
+            onPress={() => handleEditCargo(item._id)}>
+            编辑
+          </Button>
+          <Button
+            icon={{name: 'delete', size: 18, color: '#fff', type: 'antdesign'}}
+            buttonStyle={{
+              backgroundColor: colorStyle.danger,
+              borderRadius: 5,
+            }}
+            onPress={handleDelete}>
+            删除
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -166,6 +175,7 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   boldText: {
+    fontSize: 14,
     fontWeight: 'bold',
   },
   infoRow: {
@@ -175,15 +185,16 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
-    marginTop: -5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   cardFooter: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  toolBar: {
+    flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    flex: 1,
     gap: 10,
   },
 });
