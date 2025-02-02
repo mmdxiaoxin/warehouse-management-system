@@ -42,6 +42,7 @@ const FormItem: React.FC<SectionProps> = ({
   inputStyle,
   inline = false,
   children,
+  placeholder,
   errorMessage,
   style,
   ...rest
@@ -51,7 +52,6 @@ const FormItem: React.FC<SectionProps> = ({
     <View style={[styles.labelContainer, labelContainerStyle]}>
       <Text style={[styles.label, labelStyle]}>{label}</Text>
       {inline && (
-        // 确保 separator 渲染方式正确
         <View style={[styles.separatorContainer, {paddingStart: 5}]}>
           {typeof separator === 'string' ? (
             <Text style={styles.separatorText}>{separator}</Text>
@@ -71,8 +71,8 @@ const FormItem: React.FC<SectionProps> = ({
     return (
       <Input
         {...rest}
-        placeholder={label}
-        containerStyle={{flex: 1}}
+        placeholder={placeholder || `请输入${label}`}
+        containerStyle={[styles.inputContainer, {flex: 1}]}
         inputStyle={[styles.input, inputStyle]}
         errorStyle={{color: colorStyle.danger}}
       />
@@ -102,11 +102,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingStart: 10,
+    justifyContent: 'flex-end',
+    width: '24%',
   },
   label: {
     fontWeight: 'bold',
     fontSize: 16,
     color: colorStyle.textPrimary,
+  },
+  inputContainer: {
+    flex: 1,
   },
   input: {
     fontSize: 16,
