@@ -36,10 +36,12 @@ export default function InboundManage({navigation}: InboundManageProps) {
   const [index, setIndex] = useState(0);
   const [inboundDetails, setInboundDetails] = useState<any[]>([]);
   const [quantity, setQuantity] = useState('1');
+  const [unit, setUnit] = useState('');
 
   // 处理选择货品
   const handleSelectCargo = (cargoId: BSON.ObjectId) => {
     setSelectedCargo(cargoId);
+    setUnit(cargoList.find(item => item._id.equals(cargoId))?.unit || '件');
     setSelectedModel(null); // 重置规格
     setIndex(1);
   };
@@ -173,7 +175,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
                 />
                 <ListItem.Title>{item.name}</ListItem.Title>
                 <ListItem.Subtitle>
-                  当前库存: {item.quantity} {item.cargo.map(c => c.unit)[0]}
+                  当前库存: {item.quantity} {unit}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -226,7 +228,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
           <ListItem.Content>
             <ListItem.Title>{item.cargoName}</ListItem.Title>
             <ListItem.Subtitle>
-              {item.modelName} - {item.quantity} 件
+              {item.modelName} - {item.quantity} {unit}
             </ListItem.Subtitle>
           </ListItem.Content>
           <Button

@@ -25,7 +25,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
   const [newCargoCategory, setNewCargoCategory] = useState(
     foundCargo?.category || '',
   );
-  const [newCargoUnit, setNewCargoUnit] = useState(foundCargo?.unit || '个');
+  const [newCargoUnit, setNewCargoUnit] = useState(foundCargo?.unit || '');
   const [newCargoDescription, setNewCargoDescription] = useState(
     foundCargo?.description || '',
   );
