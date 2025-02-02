@@ -18,7 +18,7 @@ export default function EditModel({navigation, route}: EditModelProps) {
   const cargo = useObject(Cargo, cargoId);
   const model = useObject(Model, modelId);
 
-  const {modelList, updateModel} = useModel();
+  const {updateModel} = useModel();
 
   const [modelName, setModelName] = useState<string>(model?.name || ''); // 规格名称
   const [modelValue, setModelValue] = useState<ModelValue>(
@@ -42,13 +42,13 @@ export default function EditModel({navigation, route}: EditModelProps) {
         throw new Error('货品不存在!');
       }
 
-      modelList.forEach(item => {
-        if (item._id.toHexString() !== modelId.toHexString()) {
-          if (item.name === modelName) {
-            throw new Error('规格名称已存在!');
-          }
-        }
-      });
+      // 规格名称不能重复
+      const foundModel = cargo.models.find(
+        m => m.name === modelName && !m._id.equals(modelId),
+      );
+      if (foundModel) {
+        throw new Error('规格名称已存在!');
+      }
 
       updateModel(cargoId, modelId, {
         name: modelName,
