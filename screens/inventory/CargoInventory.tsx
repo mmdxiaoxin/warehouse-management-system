@@ -19,13 +19,17 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
 
   const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
     const grouped: {title: string; data: any[]}[] = [];
+
+    // 处理空类别，默认显示为 "未分类"
     const categories = Array.from(
-      new Set(cargoList.map(cargo => cargo.category)),
+      new Set(cargoList.map(cargo => cargo.category || '未分类')), // 如果为空，归类为 "未分类"
     );
 
     categories.forEach(category => {
       const filteredCargo = cargoList.filter(
-        cargo => cargo.category === category,
+        cargo =>
+          cargo.category === category ||
+          (category === '未分类' && !cargo.category),
       );
       grouped.push({
         title: category,
