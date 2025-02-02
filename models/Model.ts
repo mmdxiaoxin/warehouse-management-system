@@ -2,7 +2,9 @@ import Realm, {BSON} from 'realm';
 
 export class Model extends Realm.Object {
   _id!: BSON.ObjectId;
-  value!: string;
+  name!: string;
+  value?: string;
+  description?: string;
   quantity!: number;
   ctime!: Date;
   utime!: Date;
@@ -12,12 +14,14 @@ export class Model extends Realm.Object {
     primaryKey: '_id',
     properties: {
       _id: 'objectId',
+      name: 'string',
       cargo: {
         type: 'linkingObjects',
         objectType: 'Cargo', // 关联到 Cargo 模型
         property: 'models', // 反向关系字段名
       },
-      value: 'string',
+      value: 'string?',
+      description: 'string?',
       quantity: 'int',
       ctime: 'date',
       utime: 'date',

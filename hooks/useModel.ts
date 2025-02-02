@@ -3,7 +3,10 @@ import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
 import {Model} from '../models/Model';
 
-export type ModelData = Pick<Model, 'value' | 'quantity'>;
+export type ModelData = Pick<
+  Model,
+  'name' | 'value' | 'quantity' | 'description'
+>;
 
 export const useModel = () => {
   const realm = useRealm();
@@ -11,7 +14,7 @@ export const useModel = () => {
   const modelList = useQuery(Model);
 
   // 创建新的 Model
-  const createModel = (cargoId: BSON.ObjectId, cargoItemData: ModelData) => {
+  const createModel = (cargoId: BSON.ObjectId, modelData: ModelData) => {
     try {
       const newItemId = new BSON.ObjectId();
       realm.write(() => {
@@ -24,7 +27,7 @@ export const useModel = () => {
         // 创建新的 Model
         const newModel = realm.create(Model, {
           _id: newItemId,
-          ...cargoItemData,
+          ...modelData,
           ctime: new Date(),
         });
 
@@ -41,23 +44,20 @@ export const useModel = () => {
   // 更新货物中的某个 Model
   const updateModel = (
     cargoId: BSON.ObjectId,
-    itemId: BSON.ObjectId,
-    cargoItemData: {
-      value?: string;
-      quantity?: number;
-    },
+    modelId: BSON.ObjectId,
+    modelData: ModelData,
   ) => {
     realm.write(() => {
       const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
       if (cargo) {
         // 查找要更新的 Model
         const model = cargo.models.find(
-          item => item._id.toString() === itemId.toString(),
+          item => item._id.toString() === modelId.toString(),
         );
         if (model) {
-          if (cargoItemData.value) model.value = cargoItemData.value;
-          if (cargoItemData.quantity !== undefined)
-            model.quantity = cargoItemData.quantity;
+          if (modelData.value) model.value = modelData.value;
+          if (modelData.quantity !== undefined)
+            model.quantity = modelData.quantity;
           cargo.utime = new Date(); // 更新时间
         }
       }
