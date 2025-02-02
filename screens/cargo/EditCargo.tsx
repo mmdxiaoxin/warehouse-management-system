@@ -123,8 +123,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         title="仓管"
         onPress={() =>
           navigation.navigate('HomeTabs', {
-            screen: 'Management',
-            params: {cargoId: foundCargo._id.toHexString()},
+            screen: 'Cargo',
           })
         }
         color="success"
