@@ -1,6 +1,14 @@
-import {Button, Icon, ListItem, SearchBar} from '@rneui/themed';
+import {
+  Button,
+  Icon,
+  ListItem,
+  SearchBar,
+  Tab,
+  TabView,
+  Text,
+} from '@rneui/themed';
 import React, {useState} from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
 import {BSON} from 'realm';
 import {useCargo} from '../../hooks/useCargo';
 import {InboundManageProps} from '../../routes/types';
@@ -17,11 +25,13 @@ export default function InboundManage({navigation}: InboundManageProps) {
     null,
   );
   const [searchQuery, setSearchQuery] = useState('');
+  const [index, setIndex] = useState(0);
   const [inboundDetails, setInboundDetails] = useState<any[]>([]);
 
   // 处理选择货品
   const handleSelectCargo = (cargoId: BSON.ObjectId) => {
     setSelectedCargo(cargoId);
+    setIndex(1);
   };
 
   // 处理选择规格
@@ -46,6 +56,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
       ]);
       setSelectedCargo(null);
       setSelectedModel(null);
+      setIndex(2);
     }
   };
 
@@ -61,46 +72,40 @@ export default function InboundManage({navigation}: InboundManageProps) {
 
   // 渲染货品部分
   const renderCargoList = () => (
-    <View style={styles.leftContainer}>
-      <Text style={styles.sectionTitle}>选择货品</Text>
-      <FlatList
-        data={cargoList}
-        keyExtractor={item => item._id.toString()}
-        style={styles.scrollableList}
-        renderItem={({item}) => (
-          <ListItem bottomDivider onPress={() => handleSelectCargo(item._id)}>
-            <Icon
-              name={
-                selectedCargo?.toHexString() === item._id.toHexString()
-                  ? 'label-important'
-                  : 'label-important-outline'
-              }
-              type="material"
-              color={
-                selectedCargo?.toHexString() === item._id.toHexString()
-                  ? colorStyle.primary
-                  : colorStyle.textPrimary
-              }
-            />
-            <ListItem.Content>
-              <ListItem.Title>{item.name}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
-        )}
-      />
-    </View>
+    <FlatList
+      data={cargoList}
+      keyExtractor={item => item._id.toString()}
+      renderItem={({item}) => (
+        <ListItem bottomDivider onPress={() => handleSelectCargo(item._id)}>
+          <Icon
+            name={
+              selectedCargo?.toHexString() === item._id.toHexString()
+                ? 'label-important'
+                : 'label-important-outline'
+            }
+            type="material"
+            color={
+              selectedCargo?.toHexString() === item._id.toHexString()
+                ? colorStyle.primary
+                : colorStyle.textPrimary
+            }
+          />
+          <ListItem.Content>
+            <ListItem.Title>{item.name}</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem>
+      )}
+    />
   );
 
   // 渲染规格部分
   const renderModelList = () => (
-    <View style={styles.rightContainer}>
-      <Text style={styles.sectionTitle}>选择规格</Text>
+    <>
       {selectedCargo ? (
         <FlatList
           data={cargoList.find(item => item._id.equals(selectedCargo))?.models}
           keyExtractor={item => item._id.toString()}
-          style={styles.scrollableList}
           renderItem={({item}) => (
             <ListItem bottomDivider onPress={() => handleSelectModel(item._id)}>
               <ListItem.Content>
@@ -127,29 +132,26 @@ export default function InboundManage({navigation}: InboundManageProps) {
       ) : (
         <Text>请先选择货品。</Text>
       )}
-    </View>
+    </>
   );
 
   // 渲染入库明细部分
   const renderInboundDetails = () => (
-    <View style={styles.detailsContainer}>
-      <Text style={styles.sectionTitle}>入库明细</Text>
-      <FlatList
-        data={inboundDetails}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <ListItem bottomDivider>
-            <Icon name="package-variant-closed" type="material-community" />
-            <ListItem.Content>
-              <ListItem.Title>{item.cargo}</ListItem.Title>
-              <ListItem.Subtitle>
-                {item.model} - {item.quantity} 件
-              </ListItem.Subtitle>
-            </ListItem.Content>
-          </ListItem>
-        )}
-      />
-    </View>
+    <FlatList
+      data={inboundDetails}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({item}) => (
+        <ListItem bottomDivider>
+          <Icon name="package-variant-closed" type="material-community" />
+          <ListItem.Content>
+            <ListItem.Title>{item.cargo}</ListItem.Title>
+            <ListItem.Subtitle>
+              {item.model} - {item.quantity} 件
+            </ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+      )}
+    />
   );
 
   return (
@@ -163,24 +165,48 @@ export default function InboundManage({navigation}: InboundManageProps) {
         round
       />
 
-      {/* 主内容区域 */}
-      <View style={styles.mainContent}>
-        {renderCargoList()}
-        {renderModelList()}
-      </View>
+      <Tab value={index} onChange={e => setIndex(e)}>
+        <Tab.Item
+          title="选择货品"
+          titleStyle={{fontSize: 12}}
+          icon={{name: 'timer', type: 'ionicon'}}
+        />
+        <Tab.Item
+          title="选择规格"
+          titleStyle={{fontSize: 12}}
+          icon={{name: 'heart', type: 'ionicon'}}
+        />
+        <Tab.Item
+          title="入库明细"
+          titleStyle={{fontSize: 12}}
+          icon={{name: 'cart', type: 'ionicon'}}
+        />
+      </Tab>
 
-      {/* 添加到入库明细按钮 */}
-      <Button
-        title="添加入库货品"
-        onPress={handleAddToInbound}
-        color={'primary'}
-      />
-
-      {/* 入库明细部分 */}
-      {renderInboundDetails()}
+      <TabView
+        value={index}
+        onChange={setIndex}
+        animationType="spring"
+        containerStyle={styles.mainContent}>
+        <TabView.Item style={styles.tabContainer}>
+          {renderCargoList()}
+        </TabView.Item>
+        <TabView.Item style={styles.tabContainer}>
+          {renderModelList()}
+        </TabView.Item>
+        <TabView.Item style={styles.tabContainer}>
+          {renderInboundDetails()}
+        </TabView.Item>
+      </TabView>
 
       {/* 操作按钮 */}
       <View style={styles.buttonContainer}>
+        {/* 添加到入库明细按钮 */}
+        <Button
+          title="添加入库货品"
+          onPress={handleAddToInbound}
+          color={'primary'}
+        />
         <Button title="提交入库单" onPress={handleSubmit} color={'success'} />
         <Button title="保存草稿" onPress={handleSaveDraft} color={'error'} />
       </View>
@@ -191,7 +217,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    flexDirection: 'column',
   },
   sectionTitle: {
     fontSize: 18,
@@ -199,23 +225,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   mainContent: {
-    flexDirection: 'row',
-    marginBottom: 10,
+    flex: 7,
   },
-  leftContainer: {
-    flex: 1,
-    marginRight: 10,
-  },
-  rightContainer: {
-    flex: 2,
-  },
-  detailsContainer: {
-    marginTop: 20,
+  tabContainer: {
+    width: '100%',
+    padding: 16,
   },
   buttonContainer: {
-    marginTop: 20,
-  },
-  scrollableList: {
-    maxHeight: 500, // 限制最大高度
+    flex: 2,
+    flexDirection: 'column',
+    padding: 16,
+    gap: 10,
   },
 });
