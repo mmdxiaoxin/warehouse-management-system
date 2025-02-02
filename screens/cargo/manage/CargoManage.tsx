@@ -2,13 +2,13 @@ import {Divider, SearchBar, SpeedDial} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import {BSON} from 'realm';
-import CargoSectionItem from '../../components/CargoSectionItem';
-import {useCargo} from '../../hooks/useCargo';
-import {Cargo} from '../../models/Cargo'; // 导入Cargo模型
-import {CargoManagementProps} from '../../routes/types';
-import {colorStyle} from '../../styles';
+import CargoSectionItem from '../../../components/CargoSectionItem';
+import {useCargo} from '../../../hooks/useCargo';
+import {Cargo} from '../../../models/Cargo'; // 导入Cargo模型
+import {CargoManageProps} from '../../../routes/types';
+import {colorStyle} from '../../../styles';
 
-export default function CargoManagement({navigation}: CargoManagementProps) {
+export default function CargoManage({navigation}: CargoManageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [groupedCargo, setGroupedCargo] = useState<

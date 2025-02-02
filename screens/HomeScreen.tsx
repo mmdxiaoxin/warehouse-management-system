@@ -30,7 +30,7 @@ export default function HomeScreen({navigation}: HomeScreenProps) {
       <View style={styles.featuresSection}>
         <Text style={styles.featuresTitle}>主要功能</Text>
         <View style={styles.featureItem}>
-          <Text style={styles.featureText}>✔ 仓库管理</Text>
+          <Text style={styles.featureText}>✔ 货品管理</Text>
         </View>
         <View style={styles.featureItem}>
           <Text style={styles.featureText}>✔ 库存管理</Text>

@@ -17,14 +17,14 @@ export default function CargoScreen({navigation}: CargoScreenProps) {
         }}>
         货品管理
       </Text>
-      <ListItem onPress={() => navigation.navigate('CargoManagement')}>
+      <ListItem onPress={() => navigation.navigate('CargoManage')}>
         <Icon name="isv" type="antdesign" color="grey" />
         <ListItem.Content>
           <ListItem.Title>货品管理</ListItem.Title>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem>
+      <ListItem onPress={() => navigation.navigate('CargoManage')}>
         <Icon name="category" type="material" color="grey" />
         <ListItem.Content>
           <ListItem.Title>货品分类</ListItem.Title>
@@ -32,21 +32,21 @@ export default function CargoScreen({navigation}: CargoScreenProps) {
         <ListItem.Chevron />
       </ListItem>
       <View style={{paddingVertical: 10}}></View>
-      <ListItem>
+      <ListItem onPress={() => navigation.navigate('CategoryManage')}>
         <Icon name="folder-open" type="font-awesome" color="grey" />
         <ListItem.Content>
           <ListItem.Title>类别管理</ListItem.Title>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem>
+      <ListItem onPress={() => navigation.navigate('UnitManage')}>
         <Icon name="balance-scale" type="font-awesome" color="grey" />
         <ListItem.Content>
           <ListItem.Title>单位管理</ListItem.Title>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem>
+      <ListItem onPress={() => navigation.navigate('ModelManage')}>
         <Icon name="cogs" type="font-awesome" color="grey" />
         <ListItem.Content>
           <ListItem.Title>规格管理</ListItem.Title>

@@ -2,17 +2,20 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Icon} from '@rneui/themed';
 import HomeScreen from '../screens/HomeScreen';
+import CargoScreen from '../screens/cargo';
 import AddCargo from '../screens/cargo/AddCargo';
 import AddCategory from '../screens/cargo/AddCategory';
 import AddModel from '../screens/cargo/AddModel';
 import AddUnit from '../screens/cargo/AddUnit';
-import CargoManagement from '../screens/cargo/CargoManagement';
-import CargoScreen from '../screens/cargo/CargoScreen';
 import EditCargo from '../screens/cargo/EditCargo';
 import EditModel from '../screens/cargo/EditModel';
+import CargoManage from '../screens/cargo/manage/CargoManage';
+import CategoryManage from '../screens/cargo/manage/CategoryManage';
+import ModelManage from '../screens/cargo/manage/ModelManage';
+import UnitManage from '../screens/cargo/manage/UnitManage';
+import InventoryScreen from '../screens/inventory';
 import CargoInventory from '../screens/inventory/CargoInventory';
 import InboundManagement from '../screens/inventory/InboundManagement';
-import InventoryScreen from '../screens/inventory/InventoryScreen';
 import OutboundManagement from '../screens/inventory/OutboundManagement';
 import {RootStackParamList, RootTabParamList} from './types';
 
@@ -108,9 +111,24 @@ export default function AppNavigator() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="CargoManagement"
-        component={CargoManagement}
+        name="CargoManage"
+        component={CargoManage}
         options={{title: '货品管理'}}
+      />
+      <Stack.Screen
+        name="CategoryManage"
+        component={CategoryManage}
+        options={{title: '种类管理'}}
+      />
+      <Stack.Screen
+        name="UnitManage"
+        component={UnitManage}
+        options={{title: '单位管理'}}
+      />
+      <Stack.Screen
+        name="ModelManage"
+        component={ModelManage}
+        options={{title: '型号管理'}}
       />
       <Stack.Screen
         name="CargoInventory"
