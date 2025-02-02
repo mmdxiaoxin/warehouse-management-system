@@ -31,7 +31,7 @@ const ModelItem: React.FC<CargoItemProps> = ({
       content={
         <ListItem.Content style={styles.modelDetails}>
           <ListItem.Title style={styles.boldText}>
-            {`型号: ${item.name}`}
+            {`规格: ${item.name}`}
           </ListItem.Title>
         </ListItem.Content>
       }>

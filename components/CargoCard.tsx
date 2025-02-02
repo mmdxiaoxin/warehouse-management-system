@@ -36,7 +36,7 @@ const CargoCard: React.FC<CargoCardProps> = ({
 
   const toggleExpand = () => {
     Animated.timing(expandHeight, {
-      toValue: isExpanded ? 0 : 160, // 动态展开/收起
+      toValue: isExpanded ? 0 : 125, // 动态展开/收起
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -64,19 +64,6 @@ const CargoCard: React.FC<CargoCardProps> = ({
       <Animated.View style={[styles.cardBody, {height: expandHeight}]}>
         <View style={styles.infoRow}>
           <Icon
-            name="box"
-            size={15}
-            color={colorStyle.primary}
-            style={styles.icon}
-            type="font-awesome-5"
-          />
-          <Text style={styles.cardText}>
-            <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
-            {item.unit}
-          </Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Icon
             name="boxes"
             size={15}
             color={colorStyle.primary}
@@ -84,11 +71,11 @@ const CargoCard: React.FC<CargoCardProps> = ({
             type="font-awesome-5"
           />
           <Text style={styles.cardText}>
-            <Text style={styles.boldText}>型号数目:</Text> {modelsCount} 种
+            <Text style={styles.boldText}>规格数目:</Text> {modelsCount} 种
           </Text>
         </View>
         <Text style={styles.cardText}>
-          <Text style={styles.boldText}>货物描述:</Text> {item.description}
+          <Text style={styles.boldText}>货品描述:</Text> {item.description}
         </Text>
         <Text style={styles.cardText}>
           <Text style={styles.boldText}>创建时间:</Text>{' '}
@@ -104,7 +91,7 @@ const CargoCard: React.FC<CargoCardProps> = ({
       <View style={styles.cardFooter}>
         <Text
           style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
-          <Text style={styles.boldText}>剩余库存:</Text> {quantity} {item.unit}
+          <Text style={styles.boldText}>规格数目:</Text> {modelsCount} 种
         </Text>
 
         {/* 保持按钮位置固定 */}

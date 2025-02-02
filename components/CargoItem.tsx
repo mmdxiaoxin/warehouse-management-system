@@ -88,7 +88,7 @@ const CargoItem: React.FC<CargoItemProps> = ({
             type="font-awesome-5"
           />
           <Text style={styles.cardText}>
-            <Text style={styles.boldText}>型号数目:</Text> {modelsCount} 种
+            <Text style={styles.boldText}>规格数目:</Text> {modelsCount} 种
           </Text>
         </View>
         <Text style={styles.cardText}>
