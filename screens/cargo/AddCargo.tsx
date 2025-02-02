@@ -4,6 +4,8 @@ import {Alert, ScrollView, StyleSheet} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import FormItem from '../../components/FormItem'; // 假设Section组件已经在项目中
 import {useCargo} from '../../hooks/useCargo';
+import {useCategory} from '../../hooks/useCategory';
+import {useUnit} from '../../hooks/useUnit';
 import {AddCargoProps} from '../../routes/types';
 import {pickerSelectStyles} from '../../styles';
 
@@ -13,10 +15,12 @@ export default function AddCargo({navigation}: AddCargoProps) {
   const [newCargoUnit, setNewCargoUnit] = useState('个');
   const [newCargoDescription, setNewCargoDescription] = useState('');
 
-  const {createCargo} = useCargo(); // 使用 useCargo 钩子
+  const {createCargo} = useCargo();
+  const {categories} = useCategory();
+  const {units} = useUnit();
 
   // 处理添加货物
-  const handleAddCargo = async () => {
+  const handleAdd = async () => {
     // 校验输入字段是否为空
     if (!newCargoName.trim()) {
       Alert.alert('请输入货物名称');
@@ -26,6 +30,12 @@ export default function AddCargo({navigation}: AddCargoProps) {
     // 校验类别是否选择
     if (!newCargoCategory) {
       Alert.alert('请选择货物类别');
+      return;
+    }
+
+    // 校验单位是否选择
+    if (!newCargoUnit) {
+      Alert.alert('请选择货物单位');
       return;
     }
 
@@ -39,8 +49,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
       if (!newCargoId) {
         throw new Error('创建货物失败');
       }
-      Alert.alert('新货物添加成功!');
-      navigation.goBack(); // 返回到库存页面
+      navigation.goBack();
     } catch (error) {
       Alert.alert('添加货物失败，请重试！');
     }
@@ -62,22 +71,27 @@ export default function AddCargo({navigation}: AddCargoProps) {
           value={newCargoCategory}
           onValueChange={setNewCargoCategory}
           useNativeAndroidPickerStyle={false}
-          items={[
-            {label: '门', value: '门'},
-            {label: '地板', value: '地板'},
-            {label: '辅料', value: '辅料'},
-          ]}
+          items={categories.map(category => ({
+            label: category.name,
+            value: category.name,
+          }))}
           style={pickerSelectStyles}
         />
       </FormItem>
 
-      <FormItem
-        inline
-        label="货物单位"
-        placeholder="请输入货物单位"
-        value={newCargoUnit}
-        onChangeText={setNewCargoUnit}
-      />
+      <FormItem inline label="货物单位">
+        <RNPickerSelect
+          placeholder={{label: '请选择货物单位', value: ''}}
+          value={newCargoUnit}
+          onValueChange={setNewCargoUnit}
+          useNativeAndroidPickerStyle={false}
+          items={units.map(unit => ({
+            label: unit.name,
+            value: unit.name,
+          }))}
+          style={pickerSelectStyles}
+        />
+      </FormItem>
 
       <FormItem
         inline
@@ -90,7 +104,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
       {/* 确认添加按钮 */}
       <Button
         title="确认添加"
-        onPress={handleAddCargo}
+        onPress={handleAdd}
         buttonStyle={{marginBottom: 10}}
         color="success"
       />

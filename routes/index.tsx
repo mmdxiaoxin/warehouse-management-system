@@ -90,7 +90,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name="EditCargo"
         component={EditCargo}
-        options={{headerShown: false}}
+        options={{title: '编辑货品'}}
       />
       <Stack.Screen
         name="AddModel"

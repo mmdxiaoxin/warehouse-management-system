@@ -6,6 +6,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import {useCargo} from '../../hooks/useCargo';
+import {useCategory} from '../../hooks/useCategory';
+import {useUnit} from '../../hooks/useUnit';
 import {Cargo} from '../../models/Cargo';
 import {EditCargoProps} from '../../routes/types';
 import {fontStyle, pickerSelectStyles} from '../../styles';
@@ -14,6 +16,9 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
 
   const {updateCargo} = useCargo();
+  const {categories} = useCategory();
+  const {units} = useUnit();
+
   const foundCargo = useObject(Cargo, cargoId);
 
   const [newCargoName, setNewCargoName] = useState(foundCargo?.name || '');
@@ -31,8 +36,14 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       Alert.alert('请输入货物名称');
       return;
     }
+
     if (!newCargoCategory.trim()) {
       Alert.alert('请选择货物类别');
+      return;
+    }
+
+    if (!newCargoUnit.trim()) {
+      Alert.alert('请选择货物单位');
       return;
     }
 
@@ -47,9 +58,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         unit: newCargoUnit,
         description: newCargoDescription,
       });
-
-      Alert.alert('货物更新成功');
-      navigation.goBack(); // 返回上一页
+      navigation.goBack();
     } catch (error) {
       console.error('更新货物失败:', error);
       Alert.alert('更新货物失败，请重试！');
@@ -62,8 +71,6 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>编辑货物</Text>
-
       {/* 货物名称 */}
       <FormItem
         inline
@@ -79,23 +86,28 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
           useNativeAndroidPickerStyle={false}
           value={newCargoCategory}
           onValueChange={setNewCargoCategory}
-          items={[
-            {label: '门', value: '门'},
-            {label: '地板', value: '地板'},
-            {label: '辅料', value: '辅料'},
-          ]}
+          items={categories.map(category => ({
+            label: category.name,
+            value: category.name,
+          }))}
           style={pickerSelectStyles}
         />
       </FormItem>
 
       {/* 货物单位 */}
-      <FormItem
-        inline
-        label="货物单位"
-        value={newCargoUnit}
-        onChangeText={setNewCargoUnit}
-        placeholder="请输入货物单位"
-      />
+      <FormItem inline label="货物单位">
+        <RNPickerSelect
+          placeholder={{label: '请选择货物单位', value: ''}}
+          value={newCargoUnit}
+          onValueChange={setNewCargoUnit}
+          useNativeAndroidPickerStyle={false}
+          items={units.map(unit => ({
+            label: unit.name,
+            value: unit.name,
+          }))}
+          style={pickerSelectStyles}
+        />
+      </FormItem>
 
       {/* 货物描述 */}
       <FormItem
@@ -110,7 +122,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       <Button
         title="保存"
         onPress={handleSaveCargo}
-        color="primary"
+        color="success"
         buttonStyle={{marginBottom: 10}}
       />
 
@@ -121,18 +133,6 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         color="warning"
         buttonStyle={{marginBottom: 10}}
       />
-
-      {/* 仓管快捷跳转 */}
-      <Button
-        title="仓管"
-        onPress={() =>
-          navigation.navigate('HomeTabs', {
-            screen: 'Cargo',
-          })
-        }
-        color="success"
-        buttonStyle={{marginBottom: 40}}
-      />
     </ScrollView>
   );
 }
@@ -142,10 +142,5 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
     backgroundColor: '#f5f5f5',
-  },
-  title: {
-    ...fontStyle.heading1,
-    marginBottom: 20,
-    textAlign: 'center',
   },
 });
