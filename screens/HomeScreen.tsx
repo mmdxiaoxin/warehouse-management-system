@@ -40,7 +40,7 @@ export default function HomeScreen({navigation}: HomeScreenProps) {
       {/* 开始按钮 */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Management')}>
+        onPress={() => navigation.navigate('Cargo')}>
         <Text style={styles.buttonText}>开始使用</Text>
       </TouchableOpacity>
     </ScrollView>

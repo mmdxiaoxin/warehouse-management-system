@@ -2,12 +2,12 @@ import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import SectionInput from '../components/SectionInput'; // 假设Section组件已经在项目中
-import {useCargo} from '../hooks/useCargo';
-import {AddCargoProps} from '../routes/types';
-import {fontStyle, pickerSelectStyles} from '../styles';
+import SectionInput from '../../components/SectionInput'; // 假设Section组件已经在项目中
+import {useCargo} from '../../hooks/useCargo';
+import {AddCargoProps} from '../../routes/types';
+import {fontStyle, pickerSelectStyles} from '../../styles';
 
-export default function AddCargoScreen({navigation}: AddCargoProps) {
+export default function AddCargo({navigation}: AddCargoProps) {
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
@@ -48,8 +48,6 @@ export default function AddCargoScreen({navigation}: AddCargoProps) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>添加新货物</Text>
-
       <SectionInput
         label="货物名称"
         placeholder="请输入新的货物名称"
@@ -108,10 +106,5 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-  },
-  title: {
-    ...fontStyle.heading1,
-    marginBottom: 20,
-    textAlign: 'center',
   },
 });

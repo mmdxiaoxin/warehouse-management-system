@@ -3,17 +3,17 @@ import React, {useState} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import ModelFlatItem from '../components/ModelFlatItem';
-import SectionInput from '../components/SectionInput';
-import {useCargo} from '../hooks/useCargo';
-import {useCargoItem} from '../hooks/useCargoItem';
-import {ManagementScreenProps} from '../routes/types';
-import {pickerSelectStyles} from '../styles';
+import ModelFlatItem from '../../components/ModelFlatItem';
+import SectionInput from '../../components/SectionInput';
+import {useCargo} from '../../hooks/useCargo';
+import {useCargoItem} from '../../hooks/useCargoItem';
+import {CargoScreenProps} from '../../routes/types';
+import {pickerSelectStyles} from '../../styles';
 
 export default function ManagementScreen({
   navigation,
   route,
-}: ManagementScreenProps) {
+}: CargoScreenProps) {
   const cargoId = route.params?.cargoId
     ? new BSON.ObjectId(route.params.cargoId)
     : null;

@@ -3,15 +3,15 @@ import React, {useEffect, useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
-import SectionInput from '../components/SectionInput';
-import {useCargo} from '../hooks/useCargo';
-import {useCargoItem} from '../hooks/useCargoItem';
-import {AddModelProps} from '../routes/types';
-import {fontStyle, pickerSelectStyles} from '../styles';
-import {stringifyWithOrder} from '../utils';
+import CargoSpecInput, {CargoSpec} from '../../components/CargoSpecInput';
+import SectionInput from '../../components/SectionInput';
+import {useCargo} from '../../hooks/useCargo';
+import {useCargoItem} from '../../hooks/useCargoItem';
+import {AddModelProps} from '../../routes/types';
+import {fontStyle, pickerSelectStyles} from '../../styles';
+import {stringifyWithOrder} from '../../utils';
 
-export default function AddModelScreen({navigation, route}: AddModelProps) {
+export default function AddModel({navigation, route}: AddModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
   // 使用 Realm 查询所有货物数据
   const {cargoList} = useCargo();

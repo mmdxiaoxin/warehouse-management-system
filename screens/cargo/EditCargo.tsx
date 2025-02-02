@@ -4,13 +4,13 @@ import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import SectionInput from '../components/SectionInput';
-import {useCargo} from '../hooks/useCargo';
-import {Cargo} from '../models/Cargo';
-import {EditCargoProps} from '../routes/types';
-import {fontStyle, pickerSelectStyles} from '../styles';
+import SectionInput from '../../components/SectionInput';
+import {useCargo} from '../../hooks/useCargo';
+import {Cargo} from '../../models/Cargo';
+import {EditCargoProps} from '../../routes/types';
+import {fontStyle, pickerSelectStyles} from '../../styles';
 
-export default function EditCargoScreen({navigation, route}: EditCargoProps) {
+export default function EditCargo({navigation, route}: EditCargoProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
 
   const {updateCargo} = useCargo();

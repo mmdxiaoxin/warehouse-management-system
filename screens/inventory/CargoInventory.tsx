@@ -2,13 +2,13 @@ import {Divider, SearchBar} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import {BSON} from 'realm';
-import CargoSectionItem from '../components/CargoSectionItem';
-import {useCargo} from '../hooks/useCargo';
-import {Cargo} from '../models/Cargo'; // 导入Cargo模型
-import {InventoryScreenProps} from '../routes/types';
-import {colorStyle} from '../styles';
+import CargoSectionItem from '../../components/CargoSectionItem';
+import {useCargo} from '../../hooks/useCargo';
+import {Cargo} from '../../models/Cargo'; // 导入Cargo模型
+import {CargoInventoryProps} from '../../routes/types';
+import {colorStyle} from '../../styles';
 
-export default function InventoryScreen({navigation}: InventoryScreenProps) {
+export default function CargoInventory({navigation}: CargoInventoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [groupedCargo, setGroupedCargo] = useState<
     {title: string; data: any[]}[]

@@ -3,14 +3,14 @@ import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
-import CargoSpecInput, {CargoSpec} from '../components/CargoSpecInput';
-import {useCargoItem} from '../hooks/useCargoItem';
-import {Cargo} from '../models/Cargo';
-import {EditModelProps} from '../routes/types';
-import {colorStyle, fontStyle} from '../styles';
-import {parseWithOrder, stringifyWithOrder} from '../utils';
+import CargoSpecInput, {CargoSpec} from '../../components/CargoSpecInput';
+import {useCargoItem} from '../../hooks/useCargoItem';
+import {Cargo} from '../../models/Cargo';
+import {EditModelProps} from '../../routes/types';
+import {colorStyle, fontStyle} from '../../styles';
+import {parseWithOrder, stringifyWithOrder} from '../../utils';
 
-export default function EditModelScreen({navigation, route}: EditModelProps) {
+export default function EditModel({navigation, route}: EditModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
   const cargoItemId = new BSON.ObjectId(route.params?.cargoItemId);
 
