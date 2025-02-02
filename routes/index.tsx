@@ -182,7 +182,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name="ModelManage"
         component={ModelManage}
-        options={{title: '型号管理'}}
+        options={{title: '规格管理'}}
       />
       <Stack.Screen
         name="CargoInventory"
