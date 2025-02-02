@@ -206,9 +206,20 @@ export default function InboundManage({navigation}: InboundManageProps) {
           title="添加入库货品"
           onPress={handleAddToInbound}
           color={'primary'}
+          disabled={!selectedCargo || !selectedModel}
         />
-        <Button title="提交入库单" onPress={handleSubmit} color={'success'} />
-        <Button title="保存草稿" onPress={handleSaveDraft} color={'error'} />
+        <Button
+          title="提交入库单"
+          onPress={handleSubmit}
+          color={'success'}
+          disabled={inboundDetails.length === 0}
+        />
+        <Button
+          title="保存草稿"
+          onPress={handleSaveDraft}
+          color={'error'}
+          disabled={inboundDetails.length === 0}
+        />
       </View>
     </SafeAreaView>
   );
