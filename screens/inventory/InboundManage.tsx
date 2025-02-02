@@ -171,16 +171,16 @@ export default function InboundManage({navigation}: InboundManageProps) {
               {renderCargoList()}
               {renderModelList()}
             </View>
-            {renderInboundDetails()}
-          </View>
-        )}
-        ListFooterComponent={
-          <View style={styles.buttonContainer}>
             <Button
               title="添加入库货品"
               onPress={handleAddToInbound}
               color={'primary'}
             />
+            {renderInboundDetails()}
+          </View>
+        )}
+        ListFooterComponent={
+          <View style={styles.buttonContainer}>
             <Button
               title="提交入库单"
               onPress={handleSubmit}
@@ -202,23 +202,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  sectionHeader: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#fff',
-    backgroundColor: colorStyle.info,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-    marginVertical: 8,
-    textAlign: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
   },
   sectionTitle: {
     fontSize: 18,
@@ -228,10 +211,7 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     flexDirection: 'row',
-  },
-  leftRightContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   leftContainer: {
     flex: 1,
