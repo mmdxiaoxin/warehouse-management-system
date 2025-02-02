@@ -171,6 +171,21 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
           title="新增单位"
           onPress={() => navigation.navigate('AddUnit')}
         />
+        <SpeedDial.Action
+          icon={{
+            name: 'cogs',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="规格管理"
+          onPress={() => {
+            navigation.navigate('ModelManage', {
+              cargoId: foundCargo._id.toHexString(),
+            });
+            setOpen(false);
+          }}
+        />
       </SpeedDial>
     </View>
   );

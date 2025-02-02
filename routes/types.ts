@@ -23,7 +23,7 @@ export type RootStackParamList = {
   CargoManage: undefined;
   CategoryManage: undefined;
   UnitManage: undefined;
-  ModelManage: undefined;
+  ModelManage: {cargoId: string} | undefined;
   CargoInventory: undefined;
   OutboundManage: undefined;
   InboundManage: undefined;

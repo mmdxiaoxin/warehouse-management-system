@@ -9,12 +9,14 @@ import {Divider} from '@rneui/base';
 import ModelItem from '../../../components/ModelItem';
 import {useModel} from '../../../hooks/useModel';
 
-export default function ModelManage({navigation}: ModelManageProps) {
+export default function ModelManage({navigation, route}: ModelManageProps) {
+  const cargoId = new BSON.ObjectId(route.params?.cargoId);
+
   const {cargoList} = useCargo();
   const {deleteModel} = useModel();
 
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
-    null,
+    cargoId,
   );
 
   // 处理选中货品
