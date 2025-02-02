@@ -8,6 +8,7 @@ import AddCategory from '../screens/cargo/AddCategory';
 import AddModel from '../screens/cargo/AddModel';
 import AddUnit from '../screens/cargo/AddUnit';
 import EditCargo from '../screens/cargo/EditCargo';
+import EditCategory from '../screens/cargo/EditCategory';
 import EditModel from '../screens/cargo/EditModel';
 import CargoManage from '../screens/cargo/manage/CargoManage';
 import CategoryManage from '../screens/cargo/manage/CategoryManage';
@@ -98,7 +99,12 @@ export default function AppNavigator() {
       <Stack.Screen
         name="AddCategory"
         component={AddCategory}
-        options={{title: '新增种类'}}
+        options={{title: '新增类别'}}
+      />
+      <Stack.Screen
+        name="EditCategory"
+        component={EditCategory}
+        options={{title: '编辑类别'}}
       />
       <Stack.Screen
         name="AddUnit"

@@ -5,10 +5,29 @@ import {FlatList, StyleSheet, View} from 'react-native';
 import {useCategory} from '../../../hooks/useCategory';
 import {CategoryManageProps} from '../../../routes/types';
 import {colorStyle} from '../../../styles';
+import {BSON} from 'realm';
+import {Alert} from 'react-native';
 
 export default function CategoryManage({navigation}: CategoryManageProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
-  const {categories} = useCategory();
+  const {categories, deleteCategory} = useCategory();
+
+  const handleDelete = (id: BSON.ObjectId) => {
+    try {
+      Alert.alert('删除确认', '确定要删除该类别吗？', [
+        {text: '取消', style: 'cancel'},
+        {
+          text: '删除',
+          style: 'destructive',
+          onPress: () => {
+            deleteCategory(id);
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error('删除类别失败:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -34,14 +53,43 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
         }}
       />
       <FlatList
+        style={{marginTop: 10}}
         data={categories}
         keyExtractor={item => item._id.toString()}
         renderItem={({item}) => (
-          <ListItem>
-            <ListItem.Content>
-              <ListItem.Title>{item.name}</ListItem.Title>
-            </ListItem.Content>
-          </ListItem>
+          <View style={{marginBottom: 10, backgroundColor: 'white'}}>
+            <ListItem.Swipeable
+              leftWidth={100}
+              leftContent={
+                <Button
+                  title="编辑"
+                  onPress={() => {
+                    navigation.navigate('EditCategory', {
+                      categoryId: item._id.toHexString(),
+                    });
+                  }}
+                  icon={{name: 'edit', color: 'white'}}
+                  buttonStyle={{minHeight: '100%', width: 100}}
+                  color={'success'}
+                />
+              }
+              rightWidth={100}
+              rightContent={
+                <Button
+                  title="删除"
+                  onPress={() => handleDelete(item._id)}
+                  icon={{name: 'delete', color: 'white'}}
+                  buttonStyle={{minHeight: '100%', width: 100}}
+                  color={'error'}
+                />
+              }>
+              <Icon name="label-important-outline" type="material" />
+              <ListItem.Content>
+                <ListItem.Title>{item.name}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem.Swipeable>
+          </View>
         )}
         ListEmptyComponent={
           <Text

@@ -8,13 +8,14 @@ export const useCategory = () => {
   const categories = useQuery(Category);
 
   // 创建新的 Category
-  const createCategory = (name: string) => {
+  const createCategory = (name: string, description: string) => {
     try {
       const newId = new BSON.ObjectId();
       realm.write(() => {
         realm.create(Category.schema.name, {
           _id: newId,
           name,
+          description,
           ctime: new Date(),
           utime: new Date(),
         });

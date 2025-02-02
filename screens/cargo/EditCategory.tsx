@@ -1,14 +1,22 @@
+import {useObject} from '@realm/react';
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import {useCategory} from '../../hooks/useCategory';
-import {AddCategoryProps} from '../../routes/types';
+import {Category} from '../../models/Category';
+import {EditCategoryProps} from '../../routes/types';
 import {fontStyle} from '../../styles';
 
-export default function AddCategory({navigation}: AddCategoryProps) {
-  const [newName, setNewName] = useState('');
-  const [newDescription, setNewDescription] = useState('');
+export default function EditCategory({navigation, route}: EditCategoryProps) {
+  const categoryId = new BSON.ObjectId(route.params?.categoryId);
+  const category = useObject(Category, categoryId);
+
+  const [newName, setNewName] = useState(category?.name || '');
+  const [newDescription, setNewDescription] = useState(
+    category?.description || '',
+  );
 
   const {categories, createCategory} = useCategory(); // 使用 useCategory 钩子
 

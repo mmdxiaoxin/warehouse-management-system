@@ -133,7 +133,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
             size: 20,
             style: {marginLeft: 2, marginTop: 2},
           }}
-          title="新增种类"
+          title="新增类别"
           onPress={() => navigation.navigate('AddCategory')}
         />
         <SpeedDial.Action
