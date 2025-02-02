@@ -1,5 +1,9 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
+import {
+  NativeStackHeaderLeftProps,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 import {Icon} from '@rneui/themed';
 import HomeScreen from '../screens/HomeScreen';
 import CargoScreen from '../screens/cargo';
@@ -73,10 +77,48 @@ const HomeTabs = () => {
   );
 };
 
+const renderHeaderLeft = (props: NativeStackHeaderLeftProps) => {
+  const navigation = useNavigation<any>();
+  if (props.canGoBack) {
+    return (
+      <Icon
+        name="chevron-back"
+        type="ionicon"
+        size={24}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+    );
+  } else {
+    return null;
+  }
+};
+
+const renderHeaderRight = () => {
+  const navigation = useNavigation<any>();
+  return (
+    <Icon
+      name="home"
+      size={24}
+      type="material-community"
+      onPress={() => {
+        navigation.navigate('HomeTabs');
+      }}
+    />
+  );
+};
+
 // 主导航器
 export default function AppNavigator() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="HomeTabs"
+      screenOptions={{
+        headerLeft: renderHeaderLeft,
+        headerRight: renderHeaderRight,
+        headerTitleAlign: 'center',
+      }}>
       <Stack.Screen
         name="HomeTabs"
         component={HomeTabs}
@@ -95,7 +137,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name="AddModel"
         component={AddModel}
-        options={{headerShown: false}}
+        options={{title: '新增规格'}}
       />
       <Stack.Screen
         name="AddCategory"
