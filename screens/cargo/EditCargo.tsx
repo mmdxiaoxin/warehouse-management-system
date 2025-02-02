@@ -29,22 +29,14 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
   const [newCargoDescription, setNewCargoDescription] = useState(
     foundCargo?.description || '',
   );
+  const [newPrice, setNewPrice] = useState(foundCargo?.price?.toString() || '');
+  const [newBrand, setNewBrand] = useState(foundCargo?.brand || '');
   const [open, setOpen] = useState(false);
 
   // 校验输入数据
   const handleSaveCargo = async () => {
     if (!newCargoName.trim()) {
       Alert.alert('请输入货物名称');
-      return;
-    }
-
-    if (!newCargoCategory.trim()) {
-      Alert.alert('请选择货物类别');
-      return;
-    }
-
-    if (!newCargoUnit.trim()) {
-      Alert.alert('请选择货物单位');
       return;
     }
 
@@ -58,6 +50,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         category: newCargoCategory,
         unit: newCargoUnit,
         description: newCargoDescription,
+        price: newPrice ? parseFloat(newPrice) : undefined,
+        brand: newBrand,
       });
       navigation.goBack();
     } catch (error) {
@@ -110,13 +104,28 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         />
       </FormItem>
 
-      {/* 货物描述 */}
       <FormItem
         inline
-        label="货物描述"
+        label="价格"
+        placeholder="请输入价格(可选)"
+        value={newPrice}
+        onChangeText={setNewPrice}
+      />
+
+      <FormItem
+        inline
+        label="品牌"
+        placeholder="请输入品牌(可选)"
+        value={newBrand}
+        onChangeText={setNewBrand}
+      />
+
+      <FormItem
+        inline
+        label="备注"
+        placeholder="请输入备注(可选)"
         value={newCargoDescription}
         onChangeText={setNewCargoDescription}
-        placeholder="请输入货物描述"
       />
 
       {/* 保存按钮 */}

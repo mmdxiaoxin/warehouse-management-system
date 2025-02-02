@@ -4,7 +4,7 @@ import {BSON} from 'realm';
 
 export type CargoData = Pick<
   Cargo,
-  'name' | 'category' | 'unit' | 'description'
+  'name' | 'category' | 'unit' | 'description' | 'price' | 'brand'
 >;
 
 export const useCargo = () => {
@@ -33,15 +33,7 @@ export const useCargo = () => {
   };
 
   // 更新 Cargo
-  const updateCargo = (
-    cargoId: BSON.ObjectId,
-    updatedData: {
-      name?: string;
-      category?: string;
-      unit?: string;
-      description?: string;
-    },
-  ) => {
+  const updateCargo = (cargoId: BSON.ObjectId, updatedData: CargoData) => {
     realm.write(() => {
       const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
       if (cargo) {
@@ -49,6 +41,8 @@ export const useCargo = () => {
         if (updatedData.category !== undefined)
           cargo.category = updatedData.category;
         if (updatedData.unit !== undefined) cargo.unit = updatedData.unit;
+        if (updatedData.price !== undefined) cargo.price = updatedData.price;
+        if (updatedData.brand !== undefined) cargo.brand = updatedData.brand;
         if (updatedData.description !== undefined)
           cargo.description = updatedData.description;
         cargo.utime = new Date();

@@ -4,8 +4,10 @@ import {Model} from './Model';
 export class Cargo extends Realm.Object {
   _id!: BSON.ObjectId;
   name!: string;
-  category!: string;
-  unit!: string;
+  category?: string;
+  unit?: string;
+  price?: number;
+  brand?: string;
   models!: Realm.List<Model>;
   description?: string;
   ctime?: Date;
@@ -18,7 +20,9 @@ export class Cargo extends Realm.Object {
       _id: 'objectId',
       name: 'string',
       category: 'string',
-      unit: 'string',
+      unit: 'string?',
+      price: 'double?',
+      brand: 'string?',
       models: 'Model[]',
       description: 'string?',
       ctime: 'date?',

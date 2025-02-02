@@ -12,7 +12,9 @@ import {pickerSelectStyles} from '../../styles';
 export default function AddCargo({navigation}: AddCargoProps) {
   const [newCargoName, setNewCargoName] = useState('');
   const [newCargoCategory, setNewCargoCategory] = useState('');
-  const [newCargoUnit, setNewCargoUnit] = useState('个');
+  const [newCargoUnit, setNewCargoUnit] = useState('');
+  const [newPrice, setNewPrice] = useState('');
+  const [newBrand, setNewBrand] = useState('');
   const [newCargoDescription, setNewCargoDescription] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -28,24 +30,14 @@ export default function AddCargo({navigation}: AddCargoProps) {
       return;
     }
 
-    // 校验类别是否选择
-    if (!newCargoCategory) {
-      Alert.alert('请选择货物类别');
-      return;
-    }
-
-    // 校验单位是否选择
-    if (!newCargoUnit) {
-      Alert.alert('请选择货物单位');
-      return;
-    }
-
     try {
       const newCargoId = createCargo({
         name: newCargoName,
         category: newCargoCategory,
         unit: newCargoUnit,
         description: newCargoDescription,
+        price: newPrice ? parseFloat(newPrice) : undefined,
+        brand: newBrand,
       });
       if (!newCargoId) {
         throw new Error('创建货物失败');
@@ -82,7 +74,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
 
       <FormItem inline label="货物单位">
         <RNPickerSelect
-          placeholder={{label: '请选择货物单位', value: ''}}
+          placeholder={{label: '请选择货物单位(可选)', value: ''}}
           value={newCargoUnit}
           onValueChange={setNewCargoUnit}
           useNativeAndroidPickerStyle={false}
@@ -96,8 +88,24 @@ export default function AddCargo({navigation}: AddCargoProps) {
 
       <FormItem
         inline
-        label="货物描述"
-        placeholder="请输入新的货物描述"
+        label="价格"
+        placeholder="请输入价格(可选)"
+        value={newPrice}
+        onChangeText={setNewPrice}
+      />
+
+      <FormItem
+        inline
+        label="品牌"
+        placeholder="请输入品牌(可选)"
+        value={newBrand}
+        onChangeText={setNewBrand}
+      />
+
+      <FormItem
+        inline
+        label="备注"
+        placeholder="请输入备注(可选)"
         value={newCargoDescription}
         onChangeText={setNewCargoDescription}
       />
