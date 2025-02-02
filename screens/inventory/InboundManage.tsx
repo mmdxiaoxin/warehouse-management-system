@@ -9,12 +9,18 @@ import {
   Text,
 } from '@rneui/themed';
 import React, {useState} from 'react';
-import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  SafeAreaView,
+  SectionList,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {BSON} from 'realm';
 import {useCargo} from '../../hooks/useCargo';
 import {InboundManageProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
-import {Alert} from 'react-native';
 
 export default function InboundManage({navigation}: InboundManageProps) {
   const {cargoList} = useCargo();
@@ -28,14 +34,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [index, setIndex] = useState(0);
-  const [inboundDetails, setInboundDetails] = useState<
-    {
-      _id: BSON.ObjectId;
-      cargoName: string;
-      modelName: string;
-      quantity: string;
-    }[]
-  >([]);
+  const [inboundDetails, setInboundDetails] = useState<any[]>([]);
   const [quantity, setQuantity] = useState('1');
 
   // 处理选择货品
@@ -98,11 +97,29 @@ export default function InboundManage({navigation}: InboundManageProps) {
     console.log('草稿已保存', inboundDetails);
   };
 
+  // 根据 category 分类货品
+  const categorizedCargoList = () => {
+    const categorized = cargoList.reduce((acc, cargo) => {
+      const category = cargo.category || '未分类'; // 处理没有 category 的情况
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(cargo);
+      return acc;
+    }, {} as Record<string, any[]>);
+
+    // 将分类数据转换为 SectionList 所需的格式
+    return Object.keys(categorized).map(category => ({
+      title: category,
+      data: categorized[category],
+    }));
+  };
+
   // 渲染货品部分
   const renderCargoList = () => (
-    <FlatList
-      data={cargoList.filtered(`name CONTAINS[c] "${searchQuery}"`) as any}
-      keyExtractor={item => item._id.toString()}
+    <SectionList
+      sections={categorizedCargoList()}
+      keyExtractor={(item, index) => item._id.toString() + index}
       renderItem={({item}) => (
         <ListItem bottomDivider onPress={() => handleSelectCargo(item._id)}>
           <Icon
@@ -123,6 +140,9 @@ export default function InboundManage({navigation}: InboundManageProps) {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
+      )}
+      renderSectionHeader={({section: {title}}) => (
+        <Text style={styles.sectionHeader}>{title}</Text>
       )}
     />
   );
@@ -158,6 +178,17 @@ export default function InboundManage({navigation}: InboundManageProps) {
               <ListItem.Chevron />
             </ListItem>
           )}
+          ListEmptyComponent={
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: 'center',
+                padding: 16,
+                color: colorStyle.textSecondary,
+              }}>
+              该货品暂无规格。
+            </Text>
+          }
         />
       ) : (
         <Text
@@ -292,10 +323,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  sectionTitle: {
+  sectionHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginTop: 10,
+    paddingLeft: 16,
+    backgroundColor: colorStyle.primary,
+    color: colorStyle.white,
   },
   mainContent: {
     flex: 7,
