@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
   },
   inlineContainer: {
     flexDirection: 'row',
+    alignItems: 'baseline',
     height: 50,
   },
   labelContainer: {

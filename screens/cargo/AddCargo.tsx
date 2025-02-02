@@ -61,6 +61,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
           placeholder={{label: '请选择货物类别', value: ''}}
           value={newCargoCategory}
           onValueChange={setNewCargoCategory}
+          useNativeAndroidPickerStyle={false}
           items={[
             {label: '门', value: '门'},
             {label: '地板', value: '地板'},

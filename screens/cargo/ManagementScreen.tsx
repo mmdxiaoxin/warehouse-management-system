@@ -81,6 +81,7 @@ export default function ManagementScreen({
           {/* 选择货物类别 */}
           <FormItem inline label="货物类别">
             <RNPickerSelect
+              useNativeAndroidPickerStyle={false}
               placeholder={{label: '请选择种类(可不选)', value: ''}}
               value={cargoCategory}
               onValueChange={setCargoCategory}
@@ -96,6 +97,7 @@ export default function ManagementScreen({
           {/* 选择货物 */}
           <FormItem inline label="货物选择">
             <RNPickerSelect
+              useNativeAndroidPickerStyle={false}
               placeholder={{label: '请选择货物', value: ''}}
               value={selectedCargo ? selectedCargo.toString() : ''}
               onValueChange={value => {
