@@ -4,6 +4,8 @@ import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
 import {useCargo} from '../../../hooks/useCargo';
 import {ModelManageProps} from '../../../routes/types';
+import {colorStyle} from '../../../styles';
+import {Divider} from '@rneui/base';
 
 export default function ModelManage({navigation}: ModelManageProps) {
   const {cargoList} = useCargo();
@@ -34,11 +36,30 @@ export default function ModelManage({navigation}: ModelManageProps) {
         style={styles.leftContainer}
         data={cargoList}
         keyExtractor={cargo => cargo._id.toHexString()}
+        ListHeaderComponent={() => (
+          <>
+            <Text style={styles.sectionTitle}>货品列表</Text>
+            <Divider width={1} />
+          </>
+        )}
         renderItem={({item}) => (
           <ListItem
             bottomDivider
             onPress={() => handleSelect(item._id.toHexString())}
             containerStyle={styles.cargoItem}>
+            <Icon
+              name={
+                selectedCargo?.toHexString() === item._id.toHexString()
+                  ? 'label-important'
+                  : 'label-important-outline'
+              }
+              type="material"
+              color={
+                selectedCargo?.toHexString() === item._id.toHexString()
+                  ? colorStyle.primary
+                  : colorStyle.textPrimary
+              }
+            />
             <ListItem.Content>
               <ListItem.Title
                 style={{
@@ -63,6 +84,12 @@ export default function ModelManage({navigation}: ModelManageProps) {
               )?.models
             : []
         }
+        ListHeaderComponent={() => (
+          <>
+            <Text style={styles.sectionTitle}>规格列表</Text>
+            <Divider width={1} />
+          </>
+        )}
         keyExtractor={item => item._id.toString()}
         renderItem={({item, index}) => (
           <ListItem key={index} containerStyle={styles.modelItem} bottomDivider>
@@ -104,6 +131,9 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     flex: 1,
+    backgroundColor: colorStyle.backgroundLight,
+    borderRightColor: colorStyle.borderLight,
+    borderRightWidth: 1,
   },
   rightContainer: {
     flex: 2,
@@ -111,7 +141,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    textAlign: 'center',
+    color: colorStyle.textSecondary,
+    backgroundColor: colorStyle.backgroundLight,
+    padding: 10,
   },
   cargoItem: {
     borderRadius: 8,
@@ -120,7 +153,7 @@ const styles = StyleSheet.create({
   modelItem: {
     backgroundColor: '#fff',
     borderRadius: 8,
-    marginBottom: 15,
+    margin: 10,
   },
   modelDetailsContainer: {
     padding: 10,
