@@ -1,129 +1,79 @@
-import {Button, Divider} from '@rneui/themed';
-import React, {useEffect, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import {useObject} from '@realm/react';
+import {Button} from '@rneui/themed';
+import React, {useState} from 'react';
+import {Alert, ScrollView, StyleSheet} from 'react-native';
 import {BSON} from 'realm';
-import CargoSpecInput, {CargoSpec} from '../../components/CargoSpecInput';
 import FormItem from '../../components/FormItem';
-import {useCargo} from '../../hooks/useCargo';
+import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
 import {useModel} from '../../hooks/useModel';
+import {Cargo} from '../../models/Cargo';
 import {AddModelProps} from '../../routes/types';
-import {fontStyle, pickerSelectStyles} from '../../styles';
 import {stringifyWithOrder} from '../../utils';
 
 export default function AddModel({navigation, route}: AddModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
-  // 使用 Realm 查询所有货物数据
-  const {cargoList} = useCargo();
+
+  const cargo = useObject(Cargo, cargoId);
   const {createModel} = useModel();
 
-  const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
-  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(cargoId); // 当前选择的货物
-  const [filteredCargoList, setFilteredCargoList] = useState<any[]>([]); // 存储筛选后的货物
-  const [spec, setSpec] = useState<CargoSpec>([]); // 货物规格
+  const [modelName, setModelName] = useState<string>(''); // 规格名称
+  const [modelValue, setModelValue] = useState<ModelValue>([]); // 规格值
+  const [description, setDescription] = useState<string>(''); // 规格备注
 
-  useEffect(() => {
-    if (!cargoCategory) {
-      setFilteredCargoList(Array.from(cargoList)); // 如果没有选择类别，显示所有货物
-    } else {
-      const filtered = cargoList.filtered(`category == "${cargoCategory}"`);
-      setFilteredCargoList(Array.from(filtered)); // 筛选出符合类别的货物
-    }
-  }, [cargoCategory, cargoList]);
-
-  // 入库逻辑
-  const handleAddToStore = () => {
-    if (!selectedCargo) {
-      Alert.alert('请选择货物');
+  const handleAdd = () => {
+    try {
+      if (!modelName) {
+        throw new Error('规格名称不能为空!');
+      }
+      const newModel = createModel(cargoId, {
+        name: modelName,
+        value: stringifyWithOrder(modelValue),
+        description,
+        quantity: 0,
+      });
+      if (!newModel) {
+        throw new Error('创建规格失败!');
+      }
+    } catch (error: any) {
+      Alert.alert('添加规格失败:', error.message);
       return;
     }
 
-    if (spec.length === 0) {
-      Alert.alert('请输入货物规格');
-      return;
-    }
-
-    const newValue = stringifyWithOrder(spec);
-
-    if (
-      cargoList
-        .find(cargo => cargo._id.equals(selectedCargo))
-        ?.models.find(item => item.value === newValue)
-    ) {
-      Alert.alert('型号重复', '您已经添加过相同的型号了!');
-      return;
-    }
-
-    // 增加新型号
-    const modelId = createModel(selectedCargo, {
-      quantity: 0,
-      value: newValue,
-    });
-
-    if (modelId) {
-      Alert.alert('型号添加成功', '您已成功添加了一个新型号', [
-        {
-          text: '继续添加',
-          onPress: () => {
-            setSelectedCargo(cargoId);
-            setSpec([]);
-          },
-        },
-        {
-          text: '返回仓管',
-          onPress: () => navigation.goBack(),
-        },
-      ]);
-    }
+    navigation.goBack();
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>添加新型号</Text>
-
-      {/* 选择货物类别 */}
-      <FormItem inline label="货物类别">
-        <RNPickerSelect
-          useNativeAndroidPickerStyle={false}
-          placeholder={{label: '请选择种类(可不选)', value: ''}}
-          value={cargoCategory}
-          onValueChange={setCargoCategory}
-          items={[
-            {label: '门', value: '门'},
-            {label: '地板', value: '地板'},
-            {label: '辅料', value: '辅料'},
-          ]}
-          style={pickerSelectStyles}
-        />
-      </FormItem>
-
       {/* 选择货物 */}
-      <FormItem inline label="货物选择">
-        <RNPickerSelect
-          useNativeAndroidPickerStyle={false}
-          placeholder={{label: '请选择货物', value: ''}}
-          value={selectedCargo}
-          onValueChange={value => {
-            setSelectedCargo(value);
-          }}
-          items={filteredCargoList.map(cargo => ({
-            label: cargo.name,
-            value: cargo._id,
-          }))}
-          style={pickerSelectStyles}
-        />
-      </FormItem>
+      <FormItem inline label="选中货品" disabled value={cargo?.name} />
 
-      <Divider width={1} style={{marginVertical: 10}} />
+      {/* 规格名称输入 */}
+      <FormItem
+        inline
+        label="规格名称"
+        placeholder="请输入规格名称"
+        value={modelName}
+        onChangeText={setModelName}
+      />
 
-      {/* 货物规格输入 */}
-      <CargoSpecInput specifications={spec} onChange={setSpec} />
+      {/* 规格描述输入 */}
+      <FormItem
+        label="备注"
+        placeholder="请输入备注(选填)"
+        value={description}
+        onChangeText={setDescription}
+        inline
+      />
+
+      {/* 规格值输入 */}
+      <ModelValueInput modelValue={modelValue} onChange={setModelValue} />
 
       {/* 确认添加按钮 */}
       <Button
         title="确认添加"
-        onPress={handleAddToStore}
-        disabled={spec.length === 0 || !selectedCargo}
+        onPress={handleAdd}
+        color={'primary'}
+        disabled={!modelName}
         buttonStyle={{marginVertical: 10}}
       />
 
@@ -142,10 +92,5 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-  },
-  title: {
-    ...fontStyle.heading1,
-    marginBottom: 20,
-    textAlign: 'center',
   },
 });

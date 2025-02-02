@@ -9,67 +9,59 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 import {colorStyle, fontStyle} from '../styles';
 
-interface CargoSpecItem {
+interface ModelValueItem {
   key: string;
   value: string;
 }
 
-export type CargoSpec = CargoSpecItem[];
+export type ModelValue = ModelValueItem[];
 
-interface CargoSpecInputProps {
-  specifications: CargoSpec;
-  onChange: (specs: CargoSpec) => void;
+interface ModelValueInputProps {
+  modelValue: ModelValue;
+  onChange: (specs: ModelValue) => void;
 }
 
-const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
-  specifications,
+const ModelValueInput: React.FC<ModelValueInputProps> = ({
+  modelValue,
   onChange,
 }) => {
   const [key, setKey] = useState<string>('');
   const [value, setValue] = useState<string>('');
-  const [unit, setUnit] = useState<string>(''); // 选择的单位
 
-  const handleAddSpec = () => {
+  const handleAdd = () => {
     // 校验 key 和 value 是否为空
-    if (!key || !value || !unit) {
+    if (!key || !value) {
       Alert.alert('错误', '规格名称、规格值和单位不能为空');
       return;
     }
 
     // 校验 key 是否重复
-    if (specifications.some(spec => spec.key === key)) {
+    if (modelValue.some(spec => spec.key === key)) {
       Alert.alert('错误', '规格名称不能重复');
       return;
     }
 
-    // 将单位添加到 value 中
-    const updatedValue = `${value} ${unit}`;
-
     // 添加新的规格
-    const newSpec = {key, value: updatedValue};
-    const updatedSpecs = [...specifications, newSpec];
+    const newSpec = {key, value};
+    const updatedSpecs = [...modelValue, newSpec];
     setKey('');
     setValue('');
-    setUnit('');
     onChange(updatedSpecs);
   };
 
   const handleRemoveSpec = (keyToRemove: string) => {
-    const updatedSpecs = specifications.filter(
-      spec => spec.key !== keyToRemove,
-    );
+    const updatedSpecs = modelValue.filter(spec => spec.key !== keyToRemove);
     onChange(updatedSpecs);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>输入货物规格</Text>
+      <Text style={styles.header}>{`输入规格详情: (选填)`}</Text>
 
       {/* 规格表格展示 */}
-      {specifications.length > 0 && (
+      {modelValue.length > 0 && (
         <View style={styles.table}>
           {/* 表头 */}
           <View style={styles.tableRow}>
@@ -88,12 +80,13 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
           </View>
 
           {/* 数据行 */}
-          {specifications.map((spec, index) => (
+          {modelValue.map((spec, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={[styles.tableCell, {flex: 2}]}>{spec.key}</Text>
               <Text style={[styles.tableCell, {flex: 2}]}>{spec.value}</Text>
               <View style={styles.tableCell}>
                 <Button
+                  buttonStyle={{borderRadius: 5}}
                   onPress={() => handleRemoveSpec(spec.key)}
                   color={'error'}>
                   删除
@@ -104,7 +97,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
         </View>
       )}
 
-      {specifications.length > 0 && (
+      {modelValue.length > 0 && (
         <Divider width={1} style={{marginVertical: 10}} />
       )}
 
@@ -126,34 +119,7 @@ const CargoSpecInput: React.FC<CargoSpecInputProps> = ({
         />
       </KeyboardAvoidingView>
 
-      {/* 单位选择器 */}
-      <View>
-        <RNPickerSelect
-          style={pickerSelectStyles}
-          placeholder={{label: '选择单位', value: ''}}
-          value={unit}
-          onValueChange={setUnit}
-          items={[
-            //重量
-            {label: 'kg', value: 'kg'},
-            {label: 'g', value: 'g'},
-            //长度
-            {label: 'm', value: 'm'},
-            {label: 'cm', value: 'cm'},
-            {label: 'mm', value: 'mm'},
-            //体积
-            {label: 'm³', value: 'm³'},
-            {label: 'dm³', value: 'dm³'},
-            {label: 'cm³', value: 'cm³'},
-            //面积
-            {label: 'm²', value: 'm²'},
-            {label: 'dm²', value: 'dm²'},
-            {label: 'cm²', value: 'cm²'},
-          ]}
-        />
-      </View>
-
-      <Button onPress={handleAddSpec} color={'success'}>
+      <Button onPress={handleAdd} color={'success'} disabled={!key || !value}>
         添加
       </Button>
     </View>
@@ -164,14 +130,13 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
     padding: 15,
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: colorStyle.borderLight,
-    marginBottom: 15,
+    borderRadius: 10,
+    marginBottom: 10,
     backgroundColor: colorStyle.backgroundLight,
   },
   header: {
-    ...fontStyle.subheading,
+    fontSize: 16,
+    fontWeight: 'bold',
     marginBottom: 15,
   },
   inputRow: {
@@ -217,27 +182,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 14,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-    width: '100%',
-  },
-  inputAndroid: {
-    fontSize: 14,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-    width: '100%',
-  },
-});
-
-export default CargoSpecInput;
+export default ModelValueInput;

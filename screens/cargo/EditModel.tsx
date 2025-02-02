@@ -3,7 +3,7 @@ import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
-import CargoSpecInput, {CargoSpec} from '../../components/CargoSpecInput';
+import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
 import {useModel} from '../../hooks/useModel';
 import {Cargo} from '../../models/Cargo';
 import {EditModelProps} from '../../routes/types';
@@ -18,7 +18,7 @@ export default function EditModel({navigation, route}: EditModelProps) {
   const model = cargo?.models.find(item => item._id.equals(cargoItemId));
   const {updateModel} = useModel();
 
-  const [spec, setSpec] = useState<CargoSpec>(
+  const [spec, setSpec] = useState<ModelValue>(
     parseWithOrder(model?.value || '') || [],
   );
 
@@ -53,7 +53,7 @@ export default function EditModel({navigation, route}: EditModelProps) {
       </View>
 
       {/* 货物规格输入 */}
-      <CargoSpecInput specifications={spec} onChange={setSpec} />
+      <ModelValueInput modelValue={spec} onChange={setSpec} />
 
       {/* 保存修改按钮 */}
       <Button

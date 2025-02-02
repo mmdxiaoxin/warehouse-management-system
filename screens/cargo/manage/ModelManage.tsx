@@ -1,18 +1,12 @@
+import {Button, Icon, ListItem} from '@rneui/themed';
 import React, {useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useCargo} from '../../../hooks/useCargo';
 import {Cargo} from '../../../models/Cargo';
 import {ModelManageProps} from '../../../routes/types';
 
 export default function ModelManage({navigation, route}: ModelManageProps) {
   const {cargoList} = useCargo();
-  // 用来存储选中的货品
   const [selectedCargo, setSelectedCargo] = useState<Cargo | null>(null);
 
   // 处理选中货品
@@ -25,37 +19,58 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.leftContainer}>
-        <Text style={styles.sectionTitle}>左部分选择货品</Text>
-        {cargoList.map(cargo => (
-          <TouchableOpacity
-            key={cargo._id.toHexString()}
-            onPress={() => handleSelectCargo(cargo._id.toHexString())}
-            style={styles.cargoItem}>
-            <Text style={styles.cargoName}>{cargo.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      {/* 左侧货品列表 - 使用 FlatList 替换 ScrollView */}
+      <FlatList
+        style={styles.leftContainer}
+        data={cargoList}
+        keyExtractor={cargo => cargo._id.toHexString()}
+        renderItem={({item}) => (
+          <ListItem
+            key={item._id.toHexString()}
+            bottomDivider
+            onPress={() => handleSelectCargo(item._id.toHexString())}
+            containerStyle={styles.cargoItem}>
+            <ListItem.Content>
+              <ListItem.Title
+                style={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                }}>
+                {item.name}
+              </ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+        )}
+      />
 
+      {/* 右侧规格展示 */}
       <ScrollView style={styles.rightContainer}>
         {selectedCargo ? (
           <>
             <Text style={styles.sectionTitle}>右部分展示规格</Text>
             {selectedCargo.models.length > 0 ? (
               selectedCargo.models.map((model, index) => (
-                <View key={index} style={styles.modelItem}>
-                  <Text style={styles.modelTitle}>规格 {index + 1}</Text>
-                  <Text style={styles.modelDetails}>
-                    <Text style={styles.boldText}>型号:</Text> {model.name}
-                  </Text>
-                  <Text style={styles.modelDetails}>
-                    <Text style={styles.boldText}>数量:</Text> {model.quantity}
-                  </Text>
-                  <Text style={styles.modelDetails}>
-                    <Text style={styles.boldText}>描述:</Text>{' '}
-                    {model.description}
-                  </Text>
-                </View>
+                <ListItem.Accordion
+                  key={index}
+                  containerStyle={styles.modelItem}
+                  bottomDivider
+                  content={
+                    <View style={styles.modelDetailsContainer}>
+                      <Text style={styles.modelDetails}>
+                        <Text style={styles.boldText}>型号:</Text> {model.name}
+                      </Text>
+                      <Text style={styles.modelDetails}>
+                        <Text style={styles.boldText}>数量:</Text>{' '}
+                        {model.quantity}
+                      </Text>
+                      <Text style={styles.modelDetails}>
+                        <Text style={styles.boldText}>描述:</Text>{' '}
+                        {model.description}
+                      </Text>
+                    </View>
+                  }
+                />
               ))
             ) : (
               <Text>该货品没有规格信息。</Text>
@@ -65,19 +80,36 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
           <Text>请选中一个货品查看规格。</Text>
         )}
       </ScrollView>
+
+      <Button
+        icon={<Icon name="add" size={30} color={'white'} />}
+        containerStyle={{
+          zIndex: 100,
+          position: 'absolute',
+          right: 20,
+          bottom: 20,
+          width: 60,
+          height: 60,
+        }}
+        buttonStyle={{width: 60, height: 60, borderRadius: 30}}
+        onPress={() => {
+          navigation.navigate('AddModel', {
+            cargoId: selectedCargo?._id.toHexString(),
+          });
+        }}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     flexDirection: 'row',
-    padding: 20,
     flex: 1,
   },
   leftContainer: {
     flex: 1,
-    marginRight: 20,
   },
   rightContainer: {
     flex: 2,
@@ -88,28 +120,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cargoItem: {
-    padding: 10,
-    backgroundColor: '#f0f0f0',
     borderRadius: 8,
-    marginBottom: 10,
-  },
-  cargoName: {
-    fontSize: 16,
+    backgroundColor: '#f9f9f9',
   },
   modelItem: {
-    padding: 10,
     backgroundColor: '#fff',
     borderRadius: 8,
     marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
   },
-  modelTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+  modelDetailsContainer: {
+    padding: 10,
   },
   modelDetails: {
     fontSize: 14,

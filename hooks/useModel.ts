@@ -29,6 +29,7 @@ export const useModel = () => {
           _id: newItemId,
           ...modelData,
           ctime: new Date(),
+          utime: new Date(),
         });
 
         // 将新创建的 Model 直接关联到 Cargo 的 items 列表
@@ -56,9 +57,10 @@ export const useModel = () => {
         );
         if (model) {
           if (modelData.value) model.value = modelData.value;
-          if (modelData.quantity !== undefined)
-            model.quantity = modelData.quantity;
-          cargo.utime = new Date(); // 更新时间
+          if (modelData.quantity) model.quantity = modelData.quantity;
+          if (modelData.name) model.name = modelData.name;
+          if (modelData.description) model.description = modelData.description;
+          model.utime = new Date();
         }
       }
     });
