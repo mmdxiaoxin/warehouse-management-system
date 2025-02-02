@@ -63,6 +63,13 @@ export default function AddCategory({navigation}: AddCategoryProps) {
         buttonStyle={{marginBottom: 10}}
         color="success"
       />
+
+      <Button
+        title="取消添加"
+        onPress={() => navigation.goBack()}
+        buttonStyle={{marginBottom: 10}}
+        color="warning"
+      />
     </ScrollView>
   );
 }

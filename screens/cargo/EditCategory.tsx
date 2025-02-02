@@ -18,10 +18,9 @@ export default function EditCategory({navigation, route}: EditCategoryProps) {
     category?.description || '',
   );
 
-  const {categories, createCategory} = useCategory(); // 使用 useCategory 钩子
+  const {categories, updateCategory} = useCategory(); // 使用 useCategory 钩子
 
-  // 处理添加类别
-  const handleAdd = () => {
+  const handleSave = () => {
     // 校验输入字段是否为空
     if (!newName.trim()) {
       Alert.alert('请输入类别名称');
@@ -29,21 +28,19 @@ export default function EditCategory({navigation, route}: EditCategoryProps) {
     }
 
     try {
-      categories.forEach(category => {
-        if (category.name === newName) {
-          throw new Error('类别已存在');
-        }
-      });
-
-      const newId = createCategory(newName, newDescription);
-      if (!newId) {
-        throw new Error('创建类别失败');
+      const found = categories.find(c => c.name === newName);
+      if (found && found._id.toString() !== categoryId.toString()) {
+        throw new Error('类别名称已存在');
       }
+
+      updateCategory(categoryId, {
+        name: newName,
+        description: newDescription,
+      });
     } catch (error: any) {
-      Alert.alert(`添加类别失败: ${error.message}!`);
+      Alert.alert(`修改失败: ${error.message}!`);
       return;
     }
-    Alert.alert('新类别添加成功!');
     navigation.goBack();
   };
   return (
@@ -66,10 +63,17 @@ export default function EditCategory({navigation, route}: EditCategoryProps) {
 
       {/* 确认添加按钮 */}
       <Button
-        title="确认添加"
-        onPress={handleAdd}
+        title="保存修改"
+        onPress={handleSave}
         buttonStyle={{marginBottom: 10}}
         color="success"
+      />
+
+      <Button
+        title="取消修改"
+        onPress={() => navigation.goBack()}
+        buttonStyle={{marginBottom: 10}}
+        color="warning"
       />
     </ScrollView>
   );
