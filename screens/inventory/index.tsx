@@ -18,7 +18,7 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
       </Text>
 
       <ListItem onPress={() => navigation.navigate('CargoInventory')}>
-        <Icon name="inbox" type="antdesign" color="grey" />
+        <Icon name="inbox" type="antdesign" color="#0cabce" />
         <ListItem.Content>
           <ListItem.Title>货品库存</ListItem.Title>
         </ListItem.Content>
@@ -28,7 +28,7 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
       <View style={{paddingVertical: 10}}></View>
 
       <ListItem onPress={() => navigation.navigate('OutboundManage')}>
-        <Icon name="logout" type="antdesign" color="grey" size={22} />
+        <Icon name="logout" type="antdesign" color="#e825f3" size={22} />
         <ListItem.Content>
           <ListItem.Title>出库管理</ListItem.Title>
         </ListItem.Content>
@@ -36,7 +36,7 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
       </ListItem>
 
       <ListItem onPress={() => navigation.navigate('InboundManage')}>
-        <Icon name="login" type="antdesign" color="grey" size={22} />
+        <Icon name="login" type="antdesign" color="#f32598" size={22} />
         <ListItem.Content>
           <ListItem.Title>入库管理</ListItem.Title>
         </ListItem.Content>
