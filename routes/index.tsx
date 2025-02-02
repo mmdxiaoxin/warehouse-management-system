@@ -22,7 +22,9 @@ import UnitManage from '../screens/cargo/manage/UnitManage';
 import InventoryScreen from '../screens/inventory';
 import CargoInventory from '../screens/inventory/CargoInventory';
 import InboundManage from '../screens/inventory/InboundManage';
+import InboundRecord from '../screens/inventory/InboundRecord';
 import OutboundManage from '../screens/inventory/OutboundManage';
+import OutboundRecord from '../screens/inventory/OutboundRecord';
 import {RootStackParamList, RootTabParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -77,7 +79,11 @@ const HomeTabs = () => {
   );
 };
 
-const renderHeaderLeft = (props: NativeStackHeaderLeftProps) => {
+const renderHeaderLeft = (
+  props: NativeStackHeaderLeftProps,
+  route?: keyof RootStackParamList,
+  screen?: keyof RootTabParamList,
+) => {
   const navigation = useNavigation<any>();
   if (props.canGoBack) {
     return (
@@ -86,7 +92,15 @@ const renderHeaderLeft = (props: NativeStackHeaderLeftProps) => {
         type="ionicon"
         size={24}
         onPress={() => {
-          navigation.goBack();
+          if (route) {
+            if (screen) {
+              navigation.navigate(route, {screen});
+            } else {
+              navigation.navigate(route);
+            }
+          } else {
+            navigation.goBack();
+          }
         }}
       />
     );
@@ -190,9 +204,29 @@ export default function AppNavigator() {
         options={{title: '货品库存'}}
       />
       <Stack.Screen
+        name="OutboundRecord"
+        component={OutboundRecord}
+        options={{
+          title: '出库记录',
+          headerLeft(props) {
+            return renderHeaderLeft(props, 'HomeTabs', 'Inventory');
+          },
+        }}
+      />
+      <Stack.Screen
         name="OutboundManage"
         component={OutboundManage}
         options={{title: '出库管理'}}
+      />
+      <Stack.Screen
+        name="InboundRecord"
+        component={InboundRecord}
+        options={{
+          title: '入库记录',
+          headerLeft(props) {
+            return renderHeaderLeft(props, 'HomeTabs', 'Inventory');
+          },
+        }}
       />
       <Stack.Screen
         name="InboundManage"
