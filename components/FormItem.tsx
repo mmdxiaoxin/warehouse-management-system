@@ -1,11 +1,10 @@
-import {Input} from '@rneui/themed';
+import {Input, InputProps} from '@rneui/themed';
 import React, {PropsWithChildren} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
-  TextInputProps,
   TextStyle,
   View,
   ViewStyle,
@@ -13,7 +12,7 @@ import {
 import {colorStyle} from '../styles';
 
 // 定义 props 接口
-interface SectionProps extends TextInputProps {
+interface SectionProps extends InputProps {
   label: string;
   separator?: React.ReactNode | string;
   labelStyle?: TextStyle;
@@ -21,7 +20,6 @@ interface SectionProps extends TextInputProps {
   inputStyle?: TextStyle;
   inline?: boolean;
   children?: React.ReactNode;
-  errorMessage?: string;
   style?: ViewStyle;
 }
 
@@ -53,7 +51,14 @@ const FormItem: React.FC<SectionProps> = ({
     <View style={[styles.labelContainer, labelContainerStyle]}>
       <Text style={[styles.label, labelStyle]}>{label}</Text>
       {inline && (
-        <Text style={[styles.label, {paddingStart: 5}]}>{separator}</Text>
+        // 确保 separator 渲染方式正确
+        <View style={[styles.separatorContainer, {paddingStart: 5}]}>
+          {typeof separator === 'string' ? (
+            <Text style={styles.separatorText}>{separator}</Text>
+          ) : (
+            separator
+          )}
+        </View>
       )}
     </View>
   );
@@ -104,6 +109,13 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
+  },
+  separatorContainer: {
+    flexDirection: 'row',
+  },
+  separatorText: {
+    fontSize: 16,
+    color: colorStyle.textPrimary,
   },
 });
 
