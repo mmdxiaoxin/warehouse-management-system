@@ -21,11 +21,7 @@ interface CargoItemProps {
   handleDeleteCargo: (cargoId: BSON.ObjectId) => void;
 }
 
-const CargoItem: React.FC<CargoItemProps> = ({
-  item,
-  handleEditCargo,
-  handleDeleteCargo,
-}) => {
+const CargoItem: React.FC<CargoItemProps> = ({item}) => {
   const modelsCount = item.models.length;
   const quantity = item.models.reduce(
     (acc: number, cur: any) => acc + cur.quantity,
@@ -36,15 +32,11 @@ const CargoItem: React.FC<CargoItemProps> = ({
 
   const toggleExpand = () => {
     Animated.timing(expandHeight, {
-      toValue: isExpanded ? 0 : 160, // 动态展开/收起
+      toValue: isExpanded ? 0 : 140, // 动态展开/收起
       duration: 300,
       useNativeDriver: false,
     }).start();
     setIsExpanded(prev => !prev);
-  };
-
-  const handleDelete = () => {
-    handleDeleteCargo(item._id);
   };
 
   return (
@@ -77,18 +69,6 @@ const CargoItem: React.FC<CargoItemProps> = ({
           <Text style={styles.cardText}>
             <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
             {item.unit}
-          </Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Icon
-            name="boxes"
-            size={15}
-            color={colorStyle.primary}
-            style={styles.icon}
-            type="font-awesome-5"
-          />
-          <Text style={styles.cardText}>
-            <Text style={styles.boldText}>规格数目:</Text> {modelsCount} 种
           </Text>
         </View>
         <Text style={styles.cardText}>
