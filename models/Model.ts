@@ -1,8 +1,10 @@
 import Realm, {BSON} from 'realm';
+import {Cargo} from './Cargo';
 
 export class Model extends Realm.Object {
   _id!: BSON.ObjectId;
   name!: string;
+  cargo!: Realm.Results<Cargo>;
   value?: string;
   description?: string;
   quantity!: number;

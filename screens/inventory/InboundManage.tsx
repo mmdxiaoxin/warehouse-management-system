@@ -151,7 +151,9 @@ export default function InboundManage({navigation}: InboundManageProps) {
                   }
                 />
                 <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>{item.quantity} 件</ListItem.Subtitle>
+                <ListItem.Subtitle>
+                  当前库存: {item.quantity} {item.cargo.map(c => c.unit)[0]}
+                </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
