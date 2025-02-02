@@ -30,12 +30,13 @@ export default function InboundManage({navigation}: InboundManageProps) {
   const [index, setIndex] = useState(0);
   const [inboundDetails, setInboundDetails] = useState<
     {
+      _id: BSON.ObjectId;
       cargoName: string;
       modelName: string;
       quantity: string;
     }[]
   >([]);
-  const [quantity, setQuantity] = useState(''); // 新增：数量状态
+  const [quantity, setQuantity] = useState('1');
 
   // 处理选择货品
   const handleSelectCargo = (cargoId: BSON.ObjectId) => {
@@ -75,6 +76,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
     setInboundDetails([
       ...inboundDetails,
       {
+        _id: new BSON.ObjectId(),
         cargoName: cargoName,
         modelName: modelName,
         quantity: quantity,
@@ -183,7 +185,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
   const renderInboundDetails = () => (
     <FlatList
       data={inboundDetails}
-      keyExtractor={(item, index) => index.toString()}
+      keyExtractor={item => item._id.toString()}
       renderItem={({item}) => (
         <ListItem bottomDivider>
           <Icon name="package-variant-closed" type="material-community" />
@@ -193,6 +195,21 @@ export default function InboundManage({navigation}: InboundManageProps) {
               {item.modelName} - {item.quantity} 件
             </ListItem.Subtitle>
           </ListItem.Content>
+          <Button
+            type="clear"
+            icon={
+              <Icon
+                name="delete"
+                type="material-community"
+                color={colorStyle.danger}
+              />
+            }
+            onPress={() =>
+              setInboundDetails(
+                inboundDetails.filter(i => !i._id.equals(item._id)),
+              )
+            }
+          />
         </ListItem>
       )}
     />
