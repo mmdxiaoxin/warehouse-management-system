@@ -2,10 +2,21 @@ import {Button, Icon} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
+import {Cargo} from '../models/Cargo';
 import {colorStyle, fontStyle} from '../styles';
 
 interface CargoItemProps {
-  item: any;
+  item: Pick<
+    Cargo,
+    | '_id'
+    | 'name'
+    | 'category'
+    | 'description'
+    | 'ctime'
+    | 'utime'
+    | 'unit'
+    | 'models'
+  >;
   handleEditCargo: (cargoId: BSON.ObjectId) => void;
   handleDeleteCargo: (cargoId: BSON.ObjectId) => void;
 }
@@ -15,8 +26,8 @@ const CargoSectionItem: React.FC<CargoItemProps> = ({
   handleEditCargo,
   handleDeleteCargo,
 }) => {
-  const modelsCount = item.items.length;
-  const quantity = item.items.reduce(
+  const modelsCount = item.models.length;
+  const quantity = item.models.reduce(
     (acc: number, cur: any) => acc + cur.quantity,
     0,
   );
