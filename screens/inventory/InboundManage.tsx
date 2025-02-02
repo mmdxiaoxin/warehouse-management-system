@@ -1,6 +1,7 @@
 import {
   Button,
   Icon,
+  Input,
   ListItem,
   SearchBar,
   Tab,
@@ -13,6 +14,7 @@ import {BSON} from 'realm';
 import {useCargo} from '../../hooks/useCargo';
 import {InboundManageProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
+import {Alert} from 'react-native';
 
 export default function InboundManage({navigation}: InboundManageProps) {
   const {cargoList} = useCargo();
@@ -26,7 +28,14 @@ export default function InboundManage({navigation}: InboundManageProps) {
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [index, setIndex] = useState(0);
-  const [inboundDetails, setInboundDetails] = useState<any[]>([]);
+  const [inboundDetails, setInboundDetails] = useState<
+    {
+      cargoName: string;
+      modelName: string;
+      quantity: string;
+    }[]
+  >([]);
+  const [quantity, setQuantity] = useState(''); // 新增：数量状态
 
   // 处理选择货品
   const handleSelectCargo = (cargoId: BSON.ObjectId) => {
@@ -41,23 +50,40 @@ export default function InboundManage({navigation}: InboundManageProps) {
 
   // 添加到入库明细
   const handleAddToInbound = () => {
-    if (selectedCargo && selectedModel) {
-      setInboundDetails([
-        ...inboundDetails,
-        {
-          cargo: cargoList.find(item => item._id.equals(selectedCargo))?.name,
-          model: cargoList
-            .find(item => item._id.equals(selectedCargo))
-            ?.models.find(item => item._id.equals(selectedModel))?.name,
-          quantity: cargoList
-            .find(item => item._id.equals(selectedCargo))
-            ?.models.find(item => item._id.equals(selectedModel))?.quantity,
-        },
-      ]);
-      setSelectedCargo(null);
-      setSelectedModel(null);
-      setIndex(2);
+    if (!selectedCargo || !selectedModel) {
+      Alert.alert('请选择货品和规格');
+      return;
     }
+
+    const cargoName = cargoList.find(item =>
+      item._id.equals(selectedCargo),
+    )?.name;
+    const modelName = cargoList
+      .find(item => item._id.equals(selectedCargo))
+      ?.models.find(item => item._id.equals(selectedModel))?.name;
+
+    if (!cargoName || !modelName) {
+      Alert.alert('货品或规格不存在');
+      return;
+    }
+
+    if (quantity.match(/^(?:0|(?:-?[1-9]\d*))$/) === null) {
+      Alert.alert('请输入正确的数量');
+      return;
+    }
+
+    setInboundDetails([
+      ...inboundDetails,
+      {
+        cargoName: cargoName,
+        modelName: modelName,
+        quantity: quantity,
+      },
+    ]);
+    setSelectedCargo(null);
+    setSelectedModel(null);
+    setQuantity('1'); // 重置数量
+    setIndex(2);
   };
 
   // 提交入库单
@@ -140,6 +166,16 @@ export default function InboundManage({navigation}: InboundManageProps) {
           请先选择货品。
         </Text>
       )}
+      {selectedModel && (
+        <Input
+          label="入库数量"
+          value={String(quantity)}
+          onChangeText={setQuantity}
+          keyboardType="numeric"
+          placeholder="请输入数量"
+          labelStyle={{marginTop: 16}}
+        />
+      )}
     </>
   );
 
@@ -152,9 +188,9 @@ export default function InboundManage({navigation}: InboundManageProps) {
         <ListItem bottomDivider>
           <Icon name="package-variant-closed" type="material-community" />
           <ListItem.Content>
-            <ListItem.Title>{item.cargo}</ListItem.Title>
+            <ListItem.Title>{item.cargoName}</ListItem.Title>
             <ListItem.Subtitle>
-              {item.model} - {item.quantity} 件
+              {item.modelName} - {item.quantity} 件
             </ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
@@ -209,7 +245,6 @@ export default function InboundManage({navigation}: InboundManageProps) {
 
       {/* 操作按钮 */}
       <View style={styles.buttonContainer}>
-        {/* 添加到入库明细按钮 */}
         <Button
           title="添加入库货品"
           onPress={handleAddToInbound}
