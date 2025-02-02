@@ -20,13 +20,17 @@ export default function CargoManage({navigation}: CargoManageProps) {
 
   const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
     const grouped: {title: string; data: any[]}[] = [];
+
+    // 处理空类别，默认显示为 "未分类"
     const categories = Array.from(
-      new Set(cargoList.map(cargo => cargo.category)),
+      new Set(cargoList.map(cargo => cargo.category || '未分类')), // 如果为空，归类为 "未分类"
     );
 
     categories.forEach(category => {
       const filteredCargo = cargoList.filter(
-        cargo => cargo.category === category,
+        cargo =>
+          cargo.category === category ||
+          (category === '未分类' && !cargo.category),
       );
       grouped.push({
         title: category,
@@ -82,8 +86,29 @@ export default function CargoManage({navigation}: CargoManageProps) {
   };
 
   // 处理 SpeedDial 按钮点击事件，跳转到 AddCargo 页面
-  const handleSpeedDialPress = () => {
-    navigation.navigate('AddCargo');
+  const handleAdd = (type: string) => {
+    switch (type) {
+      case 'cargo':
+        {
+          navigation.navigate('AddCargo');
+          setOpen(false);
+        }
+        break;
+      case 'category':
+        {
+          navigation.navigate('AddCategory');
+          setOpen(false);
+        }
+        break;
+      case 'unit':
+        {
+          navigation.navigate('AddUnit');
+          setOpen(false);
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -123,7 +148,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
         <SpeedDial.Action
           icon={{name: 'add', color: '#fff'}}
           title="新增货品"
-          onPress={() => navigation.navigate('AddCargo')}
+          onPress={() => handleAdd('cargo')}
         />
         <SpeedDial.Action
           icon={{
@@ -134,7 +159,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
             style: {marginLeft: 2, marginTop: 2},
           }}
           title="新增类别"
-          onPress={() => navigation.navigate('AddCategory')}
+          onPress={() => handleAdd('category')}
         />
         <SpeedDial.Action
           icon={{
@@ -144,7 +169,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
             size: 20,
           }}
           title="新增单位"
-          onPress={() => navigation.navigate('AddUnit')}
+          onPress={() => handleAdd('unit')}
         />
       </SpeedDial>
     </SafeAreaView>
