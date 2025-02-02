@@ -29,6 +29,10 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
     }
   };
 
+  const filteredCategories = categories.filter(category =>
+    category.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   return (
     <View style={styles.container}>
       <SearchBar
@@ -54,7 +58,7 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
       />
       <FlatList
         style={{marginTop: 10, marginBottom: 80}}
-        data={categories}
+        data={filteredCategories}
         keyExtractor={item => item._id.toString()}
         renderItem={({item}) => (
           <View style={{marginBottom: 10, backgroundColor: 'white'}}>
@@ -108,7 +112,7 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
               marginTop: 20,
               color: colorStyle.textSecondary,
             }}>
-            共{categories.length}条数据
+            共{filteredCategories.length}条数据
           </Text>
         }
       />
