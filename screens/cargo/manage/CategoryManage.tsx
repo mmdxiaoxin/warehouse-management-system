@@ -53,7 +53,7 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
         }}
       />
       <FlatList
-        style={{marginTop: 10}}
+        style={{marginTop: 10, marginBottom: 80}}
         data={categories}
         keyExtractor={item => item._id.toString()}
         renderItem={({item}) => (
@@ -99,6 +99,16 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
               color: colorStyle.textSecondary,
             }}>
             当前暂无数据
+          </Text>
+        }
+        ListFooterComponent={
+          <Text
+            style={{
+              textAlign: 'center',
+              marginTop: 20,
+              color: colorStyle.textSecondary,
+            }}>
+            共{categories.length}条数据
           </Text>
         }
       />
