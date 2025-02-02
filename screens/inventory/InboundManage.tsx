@@ -73,7 +73,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
   // 渲染货品部分
   const renderCargoList = () => (
     <FlatList
-      data={cargoList}
+      data={cargoList.filtered(`name CONTAINS[c] "${searchQuery}"`) as any}
       keyExtractor={item => item._id.toString()}
       renderItem={({item}) => (
         <ListItem bottomDivider onPress={() => handleSelectCargo(item._id)}>
@@ -130,7 +130,15 @@ export default function InboundManage({navigation}: InboundManageProps) {
           )}
         />
       ) : (
-        <Text>请先选择货品。</Text>
+        <Text
+          style={{
+            fontSize: 16,
+            textAlign: 'center',
+            padding: 16,
+            color: colorStyle.textSecondary,
+          }}>
+          请先选择货品。
+        </Text>
       )}
     </>
   );
@@ -158,7 +166,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
     <SafeAreaView style={styles.container}>
       {/* 搜索框 */}
       <SearchBar
-        placeholder="搜索货品"
+        placeholder="筛选货品"
         value={searchQuery}
         onChangeText={setSearchQuery}
         lightTheme
