@@ -40,6 +40,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
   // 处理选择货品
   const handleSelectCargo = (cargoId: BSON.ObjectId) => {
     setSelectedCargo(cargoId);
+    setSelectedModel(null); // 重置规格
     setIndex(1);
   };
 
