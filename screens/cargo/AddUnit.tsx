@@ -34,7 +34,6 @@ export default function AddUnit({navigation}: AddUnitProps) {
       Alert.alert(`添加单位失败: ${error.message}!`);
       return;
     }
-    Alert.alert('新单位添加成功!');
     navigation.goBack();
   };
   return (

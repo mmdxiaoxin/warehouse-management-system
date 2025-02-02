@@ -34,7 +34,6 @@ export default function AddCategory({navigation}: AddCategoryProps) {
       Alert.alert(`添加类别失败: ${error.message}!`);
       return;
     }
-    Alert.alert('新类别添加成功!');
     navigation.goBack();
   };
   return (
