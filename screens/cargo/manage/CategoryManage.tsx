@@ -95,25 +95,26 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
             </ListItem.Swipeable>
           </View>
         )}
-        ListEmptyComponent={
-          <Text
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-              color: colorStyle.textSecondary,
-            }}>
-            当前暂无数据
-          </Text>
-        }
         ListFooterComponent={
-          <Text
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-              color: colorStyle.textSecondary,
-            }}>
-            共{filteredCategories.length}条数据
-          </Text>
+          filteredCategories.length === 0 ? (
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colorStyle.textMuted,
+                marginTop: 20,
+              }}>
+              当前暂无数据
+            </Text>
+          ) : (
+            <Text
+              style={{
+                textAlign: 'center',
+                marginTop: 20,
+                color: colorStyle.textSecondary,
+              }}>
+              共{filteredCategories.length}条数据
+            </Text>
+          )
         }
       />
     </View>
