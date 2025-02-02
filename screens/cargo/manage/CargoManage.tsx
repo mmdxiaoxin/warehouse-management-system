@@ -171,6 +171,19 @@ export default function CargoManage({navigation}: CargoManageProps) {
           title="新增单位"
           onPress={() => handleAdd('unit')}
         />
+        <SpeedDial.Action
+          icon={{
+            name: 'cogs',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="规格管理"
+          onPress={() => {
+            navigation.navigate('ModelManage');
+            setOpen(false);
+          }}
+        />
       </SpeedDial>
     </SafeAreaView>
   );
