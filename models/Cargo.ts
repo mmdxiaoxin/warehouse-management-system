@@ -1,12 +1,12 @@
 import Realm, {BSON} from 'realm';
-import {CargoItem} from './CargoItem';
+import {Model} from './Model';
 
 export class Cargo extends Realm.Object {
   _id!: BSON.ObjectId;
   name!: string;
   category!: string;
   unit!: string;
-  items!: Realm.List<CargoItem>;
+  models!: Realm.List<Model>;
   description?: string;
   ctime?: Date;
   utime?: Date;
@@ -19,7 +19,7 @@ export class Cargo extends Realm.Object {
       name: 'string',
       category: 'string',
       unit: 'string',
-      items: 'CargoItem[]',
+      models: 'Model[]',
       description: 'string?',
       ctime: 'date?',
       utime: 'date?',

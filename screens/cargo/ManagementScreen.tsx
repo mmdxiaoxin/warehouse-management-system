@@ -6,7 +6,7 @@ import {BSON} from 'realm';
 import ModelFlatItem from '../../components/ModelFlatItem';
 import SectionInput from '../../components/SectionInput';
 import {useCargo} from '../../hooks/useCargo';
-import {useCargoItem} from '../../hooks/useCargoItem';
+import {useModel} from '../../hooks/useModel';
 import {CargoScreenProps} from '../../routes/types';
 import {pickerSelectStyles} from '../../styles';
 
@@ -24,7 +24,7 @@ export default function ManagementScreen({
   );
 
   const {cargoList} = useCargo();
-  const {deleteCargoItem, updateCargoItem} = useCargoItem();
+  const {deleteModel, updateModel} = useModel();
 
   const handleQuantityChange = (id: BSON.ObjectId, newQuantity: number) => {
     if (selectedCargo) {
@@ -32,7 +32,7 @@ export default function ManagementScreen({
         cargo._id.equals(selectedCargo),
       );
       if (currentCargo) {
-        updateCargoItem(currentCargo._id, id, {quantity: newQuantity});
+        updateModel(currentCargo._id, id, {quantity: newQuantity});
       }
     }
   };
@@ -63,7 +63,7 @@ export default function ManagementScreen({
             return;
           }
 
-          deleteCargoItem(selectedCargo, id);
+          deleteModel(selectedCargo, id);
         },
       },
     ]);
@@ -132,10 +132,10 @@ export default function ManagementScreen({
               {filterCargoByCategory()
                 .filter(cargo => cargo._id.equals(selectedCargo))
                 .map(cargo =>
-                  cargo.items.length > 0 ? (
+                  cargo.models.length > 0 ? (
                     <FlatList
                       key={cargo._id.toString()}
-                      data={cargo.items}
+                      data={cargo.models}
                       keyExtractor={item => item._id.toString()}
                       renderItem={({item}) => (
                         <ModelFlatItem

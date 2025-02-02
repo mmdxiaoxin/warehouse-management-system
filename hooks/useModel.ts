@@ -1,20 +1,17 @@
 import {useQuery, useRealm} from '@realm/react';
 import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
-import {CargoItem} from '../models/CargoItem';
+import {Model} from '../models/Model';
 
-export type CargoItemData = Pick<CargoItem, 'models' | 'quantity'>;
+export type ModelData = Pick<Model, 'value' | 'quantity'>;
 
-export const useCargoItem = () => {
+export const useModel = () => {
   const realm = useRealm();
-  // 查询所有的 CargoItem 数据
-  const cargoItemList = useQuery(CargoItem);
+  // 查询所有的 Model 数据
+  const modelList = useQuery(Model);
 
-  // 创建新的 CargoItem
-  const createCargoItem = (
-    cargoId: BSON.ObjectId,
-    cargoItemData: CargoItemData,
-  ) => {
+  // 创建新的 Model
+  const createModel = (cargoId: BSON.ObjectId, cargoItemData: ModelData) => {
     try {
       const newItemId = new BSON.ObjectId();
       realm.write(() => {
@@ -24,15 +21,15 @@ export const useCargoItem = () => {
           return;
         }
 
-        // 创建新的 CargoItem
-        const newCargoItem = realm.create(CargoItem, {
+        // 创建新的 Model
+        const newModel = realm.create(Model, {
           _id: newItemId,
           ...cargoItemData,
           ctime: new Date(),
         });
 
-        // 将新创建的 CargoItem 直接关联到 Cargo 的 items 列表
-        cargo.items.push(newCargoItem);
+        // 将新创建的 Model 直接关联到 Cargo 的 items 列表
+        cargo.models.push(newModel);
       });
       return newItemId;
     } catch (error) {
@@ -41,26 +38,26 @@ export const useCargoItem = () => {
     }
   };
 
-  // 更新货物中的某个 CargoItem
-  const updateCargoItem = (
+  // 更新货物中的某个 Model
+  const updateModel = (
     cargoId: BSON.ObjectId,
     itemId: BSON.ObjectId,
     cargoItemData: {
-      models?: string;
+      value?: string;
       quantity?: number;
     },
   ) => {
     realm.write(() => {
       const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
       if (cargo) {
-        // 查找要更新的 CargoItem
-        const cargoItem = cargo.items.find(
+        // 查找要更新的 Model
+        const model = cargo.models.find(
           item => item._id.toString() === itemId.toString(),
         );
-        if (cargoItem) {
-          if (cargoItemData.models) cargoItem.models = cargoItemData.models;
+        if (model) {
+          if (cargoItemData.value) model.value = cargoItemData.value;
           if (cargoItemData.quantity !== undefined)
-            cargoItem.quantity = cargoItemData.quantity;
+            model.quantity = cargoItemData.quantity;
           cargo.utime = new Date(); // 更新时间
         }
       }
@@ -68,17 +65,17 @@ export const useCargoItem = () => {
   };
 
   // 删除CargoItem
-  const deleteCargoItem = (cargoId: BSON.ObjectId, itemId: BSON.ObjectId) => {
+  const deleteModel = (cargoId: BSON.ObjectId, modelId: BSON.ObjectId) => {
     try {
       realm.write(() => {
         const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
         if (cargo) {
-          const cargoItemToDelete = cargo.items.find(
-            item => item._id.toString() === itemId.toString(),
+          const cargoItemToDelete = cargo.models.find(
+            item => item._id.toString() === modelId.toString(),
           );
           if (cargoItemToDelete) {
             realm.delete(cargoItemToDelete);
-            console.log('CargoItem deleted:', cargoItemToDelete);
+            console.log('Model deleted:', cargoItemToDelete);
           }
         }
       });
@@ -89,9 +86,9 @@ export const useCargoItem = () => {
   };
 
   return {
-    cargoItemList,
-    createCargoItem,
-    updateCargoItem,
-    deleteCargoItem,
+    modelList,
+    createModel,
+    updateModel,
+    deleteModel,
   };
 };

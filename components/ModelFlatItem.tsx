@@ -8,7 +8,7 @@ import {parseWithOrder} from '../utils';
 interface ModelFlatItemProps {
   item: {
     _id: BSON.ObjectId;
-    models: string;
+    value: string;
     quantity: number;
   };
   onQuantityChange: (id: BSON.ObjectId, quantity: number) => void;
@@ -33,7 +33,7 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
     // 安全解析 JSON
     const parseModels = () => {
       try {
-        const parsed: ModelsParsed = parseWithOrder(item.models);
+        const parsed: ModelsParsed = parseWithOrder(item.value);
         // 确保解析后的数据是一个数组
 
         if (Array.isArray(parsed)) {
@@ -48,7 +48,7 @@ const ModelFlatItem: React.FC<ModelFlatItemProps> = ({
     };
 
     parseModels();
-  }, [item.models]);
+  }, [item.value]);
 
   const [quantity, setQuantity] = useState(item.quantity.toString()); // 管理输入的数量
   const [error, setError] = useState<string>(''); // 错误信息

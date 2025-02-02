@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
 import CargoSpecInput, {CargoSpec} from '../../components/CargoSpecInput';
-import {useCargoItem} from '../../hooks/useCargoItem';
+import {useModel} from '../../hooks/useModel';
 import {Cargo} from '../../models/Cargo';
 import {EditModelProps} from '../../routes/types';
 import {colorStyle, fontStyle} from '../../styles';
@@ -15,28 +15,28 @@ export default function EditModel({navigation, route}: EditModelProps) {
   const cargoItemId = new BSON.ObjectId(route.params?.cargoItemId);
 
   const cargo = useObject(Cargo, cargoId);
-  const cargoItem = cargo?.items.find(item => item._id.equals(cargoItemId));
-  const {updateCargoItem} = useCargoItem();
+  const model = cargo?.models.find(item => item._id.equals(cargoItemId));
+  const {updateModel} = useModel();
 
   const [spec, setSpec] = useState<CargoSpec>(
-    parseWithOrder(cargoItem?.models || '') || [],
+    parseWithOrder(model?.value || '') || [],
   );
 
   // 保存型号规格
   const handleSaveModels = () => {
-    if (!cargo || !cargoItem) {
+    if (!cargo || !model) {
       Alert.alert('错误', '未找到货物或型号');
       return;
     }
 
-    const newModels = stringifyWithOrder(spec);
-    if (cargo.items.find(item => item.models === newModels)) {
+    const newValue = stringifyWithOrder(spec);
+    if (cargo.models.find(item => item.value === newValue)) {
       Alert.alert('型号重复', '当前已有相同的型号!');
       return;
     }
 
-    updateCargoItem(cargo._id, cargoItem._id, {
-      models: newModels,
+    updateModel(cargo._id, model._id, {
+      value: newValue,
     });
     navigation.goBack();
   };

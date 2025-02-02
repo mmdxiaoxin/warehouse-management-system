@@ -6,7 +6,7 @@ import {BSON} from 'realm';
 import CargoSpecInput, {CargoSpec} from '../../components/CargoSpecInput';
 import SectionInput from '../../components/SectionInput';
 import {useCargo} from '../../hooks/useCargo';
-import {useCargoItem} from '../../hooks/useCargoItem';
+import {useModel} from '../../hooks/useModel';
 import {AddModelProps} from '../../routes/types';
 import {fontStyle, pickerSelectStyles} from '../../styles';
 import {stringifyWithOrder} from '../../utils';
@@ -15,7 +15,7 @@ export default function AddModel({navigation, route}: AddModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
   // 使用 Realm 查询所有货物数据
   const {cargoList} = useCargo();
-  const {createCargoItem} = useCargoItem();
+  const {createModel} = useModel();
 
   const [cargoCategory, setCargoCategory] = useState<string>(''); // 当前选择的货物类别
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId>(cargoId); // 当前选择的货物
@@ -43,21 +43,21 @@ export default function AddModel({navigation, route}: AddModelProps) {
       return;
     }
 
-    const newModels = stringifyWithOrder(spec);
+    const newValue = stringifyWithOrder(spec);
 
     if (
       cargoList
         .find(cargo => cargo._id.equals(selectedCargo))
-        ?.items.find(item => item.models === newModels)
+        ?.models.find(item => item.value === newValue)
     ) {
       Alert.alert('型号重复', '您已经添加过相同的型号了!');
       return;
     }
 
     // 增加新型号
-    const modelId = createCargoItem(selectedCargo, {
+    const modelId = createModel(selectedCargo, {
       quantity: 0,
-      models: newModels,
+      value: newValue,
     });
 
     if (modelId) {
