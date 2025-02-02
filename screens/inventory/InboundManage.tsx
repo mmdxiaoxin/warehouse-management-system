@@ -169,17 +169,17 @@ export default function InboundManage({navigation}: InboundManageProps) {
         <Tab.Item
           title="选择货品"
           titleStyle={{fontSize: 12}}
-          icon={{name: 'timer', type: 'ionicon'}}
+          icon={{name: 'archive', type: 'material'}}
         />
         <Tab.Item
           title="选择规格"
           titleStyle={{fontSize: 12}}
-          icon={{name: 'heart', type: 'ionicon'}}
+          icon={{name: 'layers', type: 'material'}}
         />
         <Tab.Item
           title="入库明细"
           titleStyle={{fontSize: 12}}
-          icon={{name: 'cart', type: 'ionicon'}}
+          icon={{name: 'clipboard-list', type: 'font-awesome-5'}}
         />
       </Tab>
 
