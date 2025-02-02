@@ -2,7 +2,7 @@ import {Divider, SearchBar} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import {BSON} from 'realm';
-import CargoSectionItem from '../../components/CargoSectionItem';
+import CargoItem from '../../components/CargoItem';
 import {useCargo} from '../../hooks/useCargo';
 import {Cargo} from '../../models/Cargo'; // 导入Cargo模型
 import {CargoInventoryProps} from '../../routes/types';
@@ -93,7 +93,7 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
         sections={groupedCargo}
         keyExtractor={item => String(item._id)}
         renderItem={({item}) => (
-          <CargoSectionItem
+          <CargoItem
             item={item}
             handleEditCargo={handleEditCargo}
             handleDeleteCargo={handleDeleteCargo}
