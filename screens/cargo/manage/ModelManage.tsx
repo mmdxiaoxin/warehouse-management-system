@@ -6,9 +6,13 @@ import {useCargo} from '../../../hooks/useCargo';
 import {ModelManageProps} from '../../../routes/types';
 import {colorStyle} from '../../../styles';
 import {Divider} from '@rneui/base';
+import ModelItem from '../../../components/ModelItem';
+import {useModel} from '../../../hooks/useModel';
 
 export default function ModelManage({navigation}: ModelManageProps) {
   const {cargoList} = useCargo();
+  const {deleteModel} = useModel();
+
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
     null,
   );
@@ -35,6 +39,25 @@ export default function ModelManage({navigation}: ModelManageProps) {
         cargoId: selectedCargo.toHexString(),
         modelId: modelId.toHexString(),
       });
+    } else {
+      Alert.alert('请先选择一个货品!');
+    }
+  };
+
+  const handleDelete = (modelId: BSON.ObjectId) => {
+    if (selectedCargo) {
+      Alert.alert('确定删除该规格?', '', [
+        {
+          text: '取消',
+          style: 'cancel',
+        },
+        {
+          text: '删除',
+          onPress: () => {
+            deleteModel(selectedCargo, modelId);
+          },
+        },
+      ]);
     } else {
       Alert.alert('请先选择一个货品!');
     }
@@ -102,23 +125,24 @@ export default function ModelManage({navigation}: ModelManageProps) {
           </>
         )}
         keyExtractor={item => item._id.toString()}
-        renderItem={({item, index}) => (
-          <ListItem
-            key={index}
-            containerStyle={styles.modelItem}
-            bottomDivider
-            onPress={() => handleEdit(item._id)}>
-            <ListItem.Content style={styles.modelDetails}>
-              <ListItem.Title style={styles.boldText}>
-                {`型号: ${item.name}`}
-              </ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
+        renderItem={({item}) => (
+          <ModelItem
+            item={item}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
         )}
-        ListEmptyComponent={() => (
-          <Text style={styles.modelDetails}>该货品没有规格信息。</Text>
-        )}
+        ListEmptyComponent={() =>
+          selectedCargo ? (
+            <Text style={[styles.modelDetails, {padding: 10}]}>
+              该货品没有规格信息。
+            </Text>
+          ) : (
+            <Text style={[styles.modelDetails, {padding: 10}]}>
+              请先选择一个货品。
+            </Text>
+          )
+        }
       />
 
       {/* 添加新规格按钮 */}
@@ -166,19 +190,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#f9f9f9',
   },
-  modelItem: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    margin: 10,
-  },
   modelDetailsContainer: {
     padding: 10,
   },
   modelDetails: {
     fontSize: 14,
     marginBottom: 5,
-  },
-  boldText: {
-    fontWeight: 'bold',
+    textAlign: 'center',
+    color: colorStyle.textSecondary,
   },
 });

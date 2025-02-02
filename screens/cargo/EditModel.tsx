@@ -101,7 +101,7 @@ export default function EditModel({navigation, route}: EditModelProps) {
 
       {/* 取消按钮 */}
       <Button
-        title="取消添加"
+        title="取消编辑"
         onPress={() => navigation.goBack()}
         color="warning"
         buttonStyle={{marginBottom: 40}}

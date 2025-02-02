@@ -66,18 +66,17 @@ export const useModel = () => {
     });
   };
 
-  // 删除CargoItem
+  // 删除 Model
   const deleteModel = (cargoId: BSON.ObjectId, modelId: BSON.ObjectId) => {
     try {
       realm.write(() => {
         const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
         if (cargo) {
-          const cargoItemToDelete = cargo.models.find(
+          const modelToDelete = cargo.models.find(
             item => item._id.toString() === modelId.toString(),
           );
-          if (cargoItemToDelete) {
-            realm.delete(cargoItemToDelete);
-            console.log('Model deleted:', cargoItemToDelete);
+          if (modelToDelete) {
+            realm.delete(modelToDelete);
           }
         }
       });
