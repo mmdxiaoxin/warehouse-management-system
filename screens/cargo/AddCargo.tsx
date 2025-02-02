@@ -1,6 +1,6 @@
-import {Button} from '@rneui/themed';
+import {Button, SpeedDial} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import FormItem from '../../components/FormItem'; // 假设Section组件已经在项目中
 import {useCargo} from '../../hooks/useCargo';
@@ -14,6 +14,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
   const [newCargoCategory, setNewCargoCategory] = useState('');
   const [newCargoUnit, setNewCargoUnit] = useState('个');
   const [newCargoDescription, setNewCargoDescription] = useState('');
+  const [open, setOpen] = useState(false);
 
   const {createCargo} = useCargo();
   const {categories} = useCategory();
@@ -56,7 +57,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <FormItem
         inline
         label="货物名称"
@@ -116,7 +117,36 @@ export default function AddCargo({navigation}: AddCargoProps) {
         buttonStyle={{marginBottom: 40}}
         color="warning"
       />
-    </ScrollView>
+
+      <SpeedDial
+        isOpen={open}
+        icon={{name: 'plus', color: '#fff', type: 'antdesign'}}
+        openIcon={{name: 'close', color: '#fff'}}
+        onOpen={() => setOpen(!open)}
+        onClose={() => setOpen(!open)}>
+        <SpeedDial.Action
+          icon={{
+            name: 'folder-open',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+            style: {marginLeft: 2, marginTop: 2},
+          }}
+          title="新增类别"
+          onPress={() => navigation.navigate('AddCategory')}
+        />
+        <SpeedDial.Action
+          icon={{
+            name: 'balance-scale',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="新增单位"
+          onPress={() => navigation.navigate('AddUnit')}
+        />
+      </SpeedDial>
+    </View>
   );
 }
 

@@ -1,7 +1,7 @@
 import {useObject} from '@realm/react';
-import {Button} from '@rneui/themed';
+import {Button, SpeedDial} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
@@ -10,7 +10,7 @@ import {useCategory} from '../../hooks/useCategory';
 import {useUnit} from '../../hooks/useUnit';
 import {Cargo} from '../../models/Cargo';
 import {EditCargoProps} from '../../routes/types';
-import {fontStyle, pickerSelectStyles} from '../../styles';
+import {pickerSelectStyles} from '../../styles';
 
 export default function EditCargo({navigation, route}: EditCargoProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
@@ -29,6 +29,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
   const [newCargoDescription, setNewCargoDescription] = useState(
     foundCargo?.description || '',
   );
+  const [open, setOpen] = useState(false);
 
   // 校验输入数据
   const handleSaveCargo = async () => {
@@ -70,7 +71,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       {/* 货物名称 */}
       <FormItem
         inline
@@ -133,7 +134,36 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         color="warning"
         buttonStyle={{marginBottom: 10}}
       />
-    </ScrollView>
+
+      <SpeedDial
+        isOpen={open}
+        icon={{name: 'plus', color: '#fff', type: 'antdesign'}}
+        openIcon={{name: 'close', color: '#fff'}}
+        onOpen={() => setOpen(!open)}
+        onClose={() => setOpen(!open)}>
+        <SpeedDial.Action
+          icon={{
+            name: 'folder-open',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+            style: {marginLeft: 2, marginTop: 2},
+          }}
+          title="新增类别"
+          onPress={() => navigation.navigate('AddCategory')}
+        />
+        <SpeedDial.Action
+          icon={{
+            name: 'balance-scale',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="新增单位"
+          onPress={() => navigation.navigate('AddUnit')}
+        />
+      </SpeedDial>
+    </View>
   );
 }
 
