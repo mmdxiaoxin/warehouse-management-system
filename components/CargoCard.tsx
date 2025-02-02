@@ -5,7 +5,7 @@ import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
 import {colorStyle, fontStyle} from '../styles';
 
-interface CargoItemProps {
+interface CargoCardProps {
   item: Pick<
     Cargo,
     | '_id'
@@ -17,14 +17,14 @@ interface CargoItemProps {
     | 'unit'
     | 'models'
   >;
-  handleEditCargo: (cargoId: BSON.ObjectId) => void;
-  handleDeleteCargo: (cargoId: BSON.ObjectId) => void;
+  handleEdit: (cargoId: BSON.ObjectId) => void;
+  handleDelete: (cargoId: BSON.ObjectId) => void;
 }
 
-const CargoItem: React.FC<CargoItemProps> = ({
+const CargoCard: React.FC<CargoCardProps> = ({
   item,
-  handleEditCargo,
-  handleDeleteCargo,
+  handleEdit,
+  handleDelete,
 }) => {
   const modelsCount = item.models.length;
   const quantity = item.models.reduce(
@@ -41,10 +41,6 @@ const CargoItem: React.FC<CargoItemProps> = ({
       useNativeDriver: false,
     }).start();
     setIsExpanded(prev => !prev);
-  };
-
-  const handleDelete = () => {
-    handleDeleteCargo(item._id);
   };
 
   return (
@@ -110,6 +106,33 @@ const CargoItem: React.FC<CargoItemProps> = ({
           style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
           <Text style={styles.boldText}>剩余库存:</Text> {quantity} {item.unit}
         </Text>
+
+        {/* 保持按钮位置固定 */}
+        <View style={styles.toolBar}>
+          <Button
+            icon={{
+              name: 'edit',
+              size: 18,
+              color: '#fff',
+              type: 'antdesign',
+            }}
+            buttonStyle={{
+              backgroundColor: colorStyle.primary,
+              borderRadius: 5,
+            }}
+            onPress={() => handleEdit(item._id)}>
+            编辑
+          </Button>
+          <Button
+            icon={{name: 'delete', size: 18, color: '#fff', type: 'antdesign'}}
+            buttonStyle={{
+              backgroundColor: colorStyle.danger,
+              borderRadius: 5,
+            }}
+            onPress={() => handleDelete(item._id)}>
+            删除
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -183,4 +206,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CargoItem;
+export default CargoCard;

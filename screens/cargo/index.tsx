@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {Icon, ListItem, Text} from '@rneui/themed';
 import {CargoScreenProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
+import {Alert} from 'react-native';
 
 export default function CargoScreen({navigation}: CargoScreenProps) {
   return (
@@ -24,7 +25,12 @@ export default function CargoScreen({navigation}: CargoScreenProps) {
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem onPress={() => navigation.navigate('CargoManage')}>
+      <ListItem
+        onPress={() => {
+          // TODO: 跳转到货品分类
+          // navigation.navigate('CargoManage');
+          Alert.alert('提示', '功能开发中，敬请期待！');
+        }}>
         <Icon name="category" type="material" color="grey" />
         <ListItem.Content>
           <ListItem.Title>货品分类</ListItem.Title>

@@ -2,7 +2,7 @@ import {Divider, SearchBar, SpeedDial} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import {BSON} from 'realm';
-import CargoItem from '../../../components/CargoItem';
+import CargoCard from '../../../components/CargoCard';
 import {useCargo} from '../../../hooks/useCargo';
 import {Cargo} from '../../../models/Cargo'; // 导入Cargo模型
 import {CargoManageProps} from '../../../routes/types';
@@ -50,7 +50,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
     }
   }, [cargoList, searchQuery]);
 
-  const handleDeleteCargo = (cargoId: BSON.ObjectId) => {
+  const handleDelete = (cargoId: BSON.ObjectId) => {
     Alert.alert('确认删除', '您确定要删除这个货物吗？', [
       {
         text: '取消',
@@ -76,7 +76,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
     ]);
   };
 
-  const handleEditCargo = (cargoId: BSON.ObjectId) => {
+  const handleEdit = (cargoId: BSON.ObjectId) => {
     try {
       navigation.navigate('EditCargo', {cargoId: cargoId.toHexString()});
     } catch (error) {
@@ -123,10 +123,10 @@ export default function CargoManage({navigation}: CargoManageProps) {
         sections={groupedCargo}
         keyExtractor={item => String(item._id)}
         renderItem={({item}) => (
-          <CargoItem
+          <CargoCard
             item={item}
-            handleEditCargo={handleEditCargo}
-            handleDeleteCargo={handleDeleteCargo}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
           />
         )}
         renderSectionHeader={({section: {title}}) => (
