@@ -1,25 +1,40 @@
 import {Input} from '@rneui/themed';
-import React from 'react';
+import React, {PropsWithChildren} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TextInputProps,
+  TextStyle,
   View,
+  ViewStyle,
 } from 'react-native';
 import {colorStyle} from '../styles';
 
+// 定义 props 接口
 interface SectionProps extends TextInputProps {
-  label: string; // 标签
-  separator?: React.ReactNode | string; // 分隔符
-  labelStyle?: object; // 标签样式
-  labelContainerStyle?: object; // 标签容器样式
-  inputStyle?: object; // 输入框样式
-  inline?: boolean; // 标签和输入框是否在同一行
-  children?: React.ReactNode; // 自定义输入组件
-  errorMessage?: string; // 错误信息
+  label: string;
+  separator?: React.ReactNode | string;
+  labelStyle?: TextStyle;
+  labelContainerStyle?: ViewStyle;
+  inputStyle?: TextStyle;
+  inline?: boolean;
+  children?: React.ReactNode;
+  errorMessage?: string;
+  style?: ViewStyle;
 }
+
+// 抽取一个可复用的 `KeyboardAvoiding` 组件
+const KeyboardAvoidingWrapper: React.FC<
+  PropsWithChildren<{inline: boolean; style?: ViewStyle}>
+> = ({inline, style, children}) => (
+  <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={[styles.container, inline && styles.inlineContainer, style]}>
+    {children}
+  </KeyboardAvoidingView>
+);
 
 const FormItem: React.FC<SectionProps> = ({
   label,
@@ -33,36 +48,37 @@ const FormItem: React.FC<SectionProps> = ({
   style,
   ...rest
 }) => {
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={[
-        styles.container,
-        inline && styles.inlineContainer,
-        !children && {alignItems: 'baseline'},
-        style,
-      ]}>
-      {/* 标签 */}
-      <View style={[styles.labelContainer, labelContainerStyle]}>
-        <Text style={[styles.label, labelStyle]}>{label}</Text>
-        {inline && (
-          <Text style={[styles.label, {paddingStart: 5}]}>{separator}</Text>
-        )}
-      </View>
-
-      {/* 输入框或自定义组件 */}
-      {children ? (
-        children
-      ) : (
-        <Input
-          {...rest}
-          placeholder={label}
-          containerStyle={{flex: 1}}
-          inputStyle={[styles.input, inputStyle]}
-          errorStyle={{color: colorStyle.danger}}
-        />
+  // 渲染标签部分
+  const renderLabel = () => (
+    <View style={[styles.labelContainer, labelContainerStyle]}>
+      <Text style={[styles.label, labelStyle]}>{label}</Text>
+      {inline && (
+        <Text style={[styles.label, {paddingStart: 5}]}>{separator}</Text>
       )}
-    </KeyboardAvoidingView>
+    </View>
+  );
+
+  // 渲染输入框或自定义组件
+  const renderInput = () => {
+    if (children) {
+      return children;
+    }
+    return (
+      <Input
+        {...rest}
+        placeholder={label}
+        containerStyle={{flex: 1}}
+        inputStyle={[styles.input, inputStyle]}
+        errorStyle={{color: colorStyle.danger}}
+      />
+    );
+  };
+
+  return (
+    <KeyboardAvoidingWrapper inline={inline} style={style}>
+      {renderLabel()}
+      {renderInput()}
+    </KeyboardAvoidingWrapper>
   );
 };
 
