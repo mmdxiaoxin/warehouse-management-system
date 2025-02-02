@@ -117,7 +117,8 @@ export default function CargoManage({navigation}: CargoManageProps) {
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        platform="android"
+        lightTheme
+        round
       />
       <SectionList
         sections={groupedCargo}

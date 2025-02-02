@@ -90,7 +90,8 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        platform="android"
+        lightTheme
+        round
       />
 
       <SectionList
