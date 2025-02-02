@@ -66,6 +66,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
       <FlatList
         data={cargoList}
         keyExtractor={item => item._id.toString()}
+        style={styles.scrollableList}
         renderItem={({item}) => (
           <ListItem bottomDivider onPress={() => handleSelectCargo(item._id)}>
             <Icon
@@ -99,6 +100,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         <FlatList
           data={cargoList.find(item => item._id.equals(selectedCargo))?.models}
           keyExtractor={item => item._id.toString()}
+          style={styles.scrollableList}
           renderItem={({item}) => (
             <ListItem bottomDivider onPress={() => handleSelectModel(item._id)}>
               <ListItem.Content>
@@ -162,38 +164,26 @@ export default function InboundManage({navigation}: InboundManageProps) {
       />
 
       {/* 主内容区域 */}
-      <FlatList
-        data={[1]} // 创建一个空数据数组，作为占位符
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={() => (
-          <View style={{flex: 1}}>
-            <View style={styles.mainContent}>
-              {renderCargoList()}
-              {renderModelList()}
-            </View>
-            <Button
-              title="添加入库货品"
-              onPress={handleAddToInbound}
-              color={'primary'}
-            />
-            {renderInboundDetails()}
-          </View>
-        )}
-        ListFooterComponent={
-          <View style={styles.buttonContainer}>
-            <Button
-              title="提交入库单"
-              onPress={handleSubmit}
-              color={'success'}
-            />
-            <Button
-              title="保存草稿"
-              onPress={handleSaveDraft}
-              color={'error'}
-            />
-          </View>
-        }
+      <View style={styles.mainContent}>
+        {renderCargoList()}
+        {renderModelList()}
+      </View>
+
+      {/* 添加到入库明细按钮 */}
+      <Button
+        title="添加入库货品"
+        onPress={handleAddToInbound}
+        color={'primary'}
       />
+
+      {/* 入库明细部分 */}
+      {renderInboundDetails()}
+
+      {/* 操作按钮 */}
+      <View style={styles.buttonContainer}>
+        <Button title="提交入库单" onPress={handleSubmit} color={'success'} />
+        <Button title="保存草稿" onPress={handleSaveDraft} color={'error'} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -209,7 +199,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   mainContent: {
-    flex: 1,
     flexDirection: 'row',
     marginBottom: 10,
   },
@@ -225,5 +214,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
+  },
+  scrollableList: {
+    maxHeight: 500, // 限制最大高度
   },
 });
