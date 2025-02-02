@@ -4,7 +4,6 @@ import {Alert, ScrollView, StyleSheet} from 'react-native';
 import FormItem from '../../components/FormItem';
 import {useCategory} from '../../hooks/useCategory';
 import {AddCategoryProps} from '../../routes/types';
-import {fontStyle} from '../../styles';
 
 export default function AddCategory({navigation}: AddCategoryProps) {
   const [newName, setNewName] = useState('');
@@ -78,10 +77,5 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-  },
-  title: {
-    ...fontStyle.heading1,
-    marginBottom: 20,
-    textAlign: 'center',
   },
 });

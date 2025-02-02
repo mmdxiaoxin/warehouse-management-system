@@ -10,6 +10,7 @@ import AddUnit from '../screens/cargo/AddUnit';
 import EditCargo from '../screens/cargo/EditCargo';
 import EditCategory from '../screens/cargo/EditCategory';
 import EditModel from '../screens/cargo/EditModel';
+import EditUnit from '../screens/cargo/EditUnit';
 import CargoManage from '../screens/cargo/manage/CargoManage';
 import CategoryManage from '../screens/cargo/manage/CategoryManage';
 import ModelManage from '../screens/cargo/manage/ModelManage';
@@ -110,6 +111,11 @@ export default function AppNavigator() {
         name="AddUnit"
         component={AddUnit}
         options={{title: '新增单位'}}
+      />
+      <Stack.Screen
+        name="EditUnit"
+        component={EditUnit}
+        options={{title: '编辑单位'}}
       />
       <Stack.Screen
         name="EditModel"

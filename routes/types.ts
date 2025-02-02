@@ -18,6 +18,7 @@ export type RootStackParamList = {
   AddUnit: undefined;
   EditCargo: {cargoId: string};
   EditCategory: {categoryId: string};
+  EditUnit: {unitId: string};
   EditModel: {cargoId: string; cargoItemId: string};
   CargoManage: undefined;
   CategoryManage: undefined;
@@ -52,6 +53,10 @@ export type EditCargoProps = NativeStackScreenProps<
 export type EditCategoryProps = NativeStackScreenProps<
   RootStackParamList,
   'EditCategory'
+>;
+export type EditUnitProps = NativeStackScreenProps<
+  RootStackParamList,
+  'EditUnit'
 >;
 export type EditModelProps = NativeStackScreenProps<
   RootStackParamList,

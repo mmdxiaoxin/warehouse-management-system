@@ -1,18 +1,23 @@
+import {useObject} from '@realm/react';
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import {useUnit} from '../../hooks/useUnit';
-import {AddUnitProps} from '../../routes/types';
+import {Unit} from '../../models/Unit';
+import {EditUnitProps} from '../../routes/types';
 
-export default function AddUnit({navigation}: AddUnitProps) {
-  const [newName, setNewName] = useState('');
-  const [newDescription, setNewDescription] = useState('');
+export default function EditUnit({navigation, route}: EditUnitProps) {
+  const unitId = new BSON.ObjectId(route.params?.unitId);
+  const unit = useObject(Unit, unitId);
 
-  const {units, createUnit} = useUnit();
+  const [newName, setNewName] = useState(unit?.name || '');
+  const [newDescription, setNewDescription] = useState(unit?.description || '');
 
-  // 处理添加单位
-  const handleAdd = () => {
+  const {units, updateUnit} = useUnit();
+
+  const handleSave = () => {
     // 校验输入字段是否为空
     if (!newName.trim()) {
       Alert.alert('请输入单位名称');
@@ -20,21 +25,19 @@ export default function AddUnit({navigation}: AddUnitProps) {
     }
 
     try {
-      units.forEach(unit => {
-        if (unit.name === newName) {
-          throw new Error('单位已存在');
-        }
-      });
-
-      const newId = createUnit(newName, newDescription);
-      if (!newId) {
-        throw new Error('创建单位失败');
+      const found = units.find(c => c.name === newName);
+      if (found && found._id.toString() !== unitId.toString()) {
+        throw new Error('单位名称已存在');
       }
+
+      updateUnit(unitId, {
+        name: newName,
+        description: newDescription,
+      });
     } catch (error: any) {
-      Alert.alert(`添加单位失败: ${error.message}!`);
+      Alert.alert(`修改失败: ${error.message}!`);
       return;
     }
-    Alert.alert('新单位添加成功!');
     navigation.goBack();
   };
   return (
@@ -57,14 +60,14 @@ export default function AddUnit({navigation}: AddUnitProps) {
 
       {/* 确认添加按钮 */}
       <Button
-        title="确认添加"
-        onPress={handleAdd}
+        title="保存修改"
+        onPress={handleSave}
         buttonStyle={{marginBottom: 10}}
         color="success"
       />
 
       <Button
-        title="取消添加"
+        title="取消修改"
         onPress={() => navigation.goBack()}
         buttonStyle={{marginBottom: 10}}
         color="warning"

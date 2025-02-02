@@ -8,13 +8,14 @@ export const useUnit = () => {
   const units = useQuery(Unit);
 
   // 创建新的 Unit
-  const createUnit = (name: string) => {
+  const createUnit = (name: string, description: string) => {
     try {
       const newId = new BSON.ObjectId();
       realm.write(() => {
         realm.create(Unit.schema.name, {
           _id: newId,
           name,
+          description,
           ctime: new Date(),
           utime: new Date(),
         });
@@ -29,7 +30,7 @@ export const useUnit = () => {
   // 更新货物中的某个 Unit
   const updateUnit = (
     id: BSON.ObjectId,
-    category: {
+    unit: {
       name: string;
       description?: string;
     },
@@ -39,7 +40,10 @@ export const useUnit = () => {
         const unitToUpdate = realm.objectForPrimaryKey(Unit, id);
         if (unitToUpdate) {
           // 更新 Unit
-          unitToUpdate.name = category.name;
+          unitToUpdate.name = unit.name;
+          if (unit.description) {
+            unitToUpdate.description = unit.description;
+          }
           unitToUpdate.utime = new Date();
         }
       });
