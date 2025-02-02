@@ -4,7 +4,7 @@ import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import CargoSpecInput, {CargoSpec} from '../../components/CargoSpecInput';
-import SectionInput from '../../components/SectionInput';
+import FormItem from '../../components/FormItem';
 import {useCargo} from '../../hooks/useCargo';
 import {useModel} from '../../hooks/useModel';
 import {AddModelProps} from '../../routes/types';
@@ -82,7 +82,7 @@ export default function AddModel({navigation, route}: AddModelProps) {
       <Text style={styles.title}>添加新型号</Text>
 
       {/* 选择货物类别 */}
-      <SectionInput label="货物类别">
+      <FormItem inline label="货物类别">
         <RNPickerSelect
           placeholder={{label: '请选择种类(可不选)', value: ''}}
           value={cargoCategory}
@@ -94,10 +94,10 @@ export default function AddModel({navigation, route}: AddModelProps) {
           ]}
           style={pickerSelectStyles}
         />
-      </SectionInput>
+      </FormItem>
 
       {/* 选择货物 */}
-      <SectionInput label="货物选择">
+      <FormItem inline label="货物选择">
         <RNPickerSelect
           placeholder={{label: '请选择货物', value: ''}}
           value={selectedCargo}
@@ -110,7 +110,7 @@ export default function AddModel({navigation, route}: AddModelProps) {
           }))}
           style={pickerSelectStyles}
         />
-      </SectionInput>
+      </FormItem>
 
       <Divider width={1} style={{marginVertical: 10}} />
 

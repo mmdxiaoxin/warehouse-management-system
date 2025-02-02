@@ -118,7 +118,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name="CategoryManage"
         component={CategoryManage}
-        options={{title: '种类管理'}}
+        options={{title: '类别管理'}}
       />
       <Stack.Screen
         name="UnitManage"

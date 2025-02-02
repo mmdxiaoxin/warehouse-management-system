@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import SectionInput from '../../components/SectionInput';
+import FormItem from '../../components/FormItem';
 import {useCargo} from '../../hooks/useCargo';
 import {Cargo} from '../../models/Cargo';
 import {EditCargoProps} from '../../routes/types';
@@ -65,7 +65,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       <Text style={styles.title}>编辑货物</Text>
 
       {/* 货物名称 */}
-      <SectionInput
+      <FormItem
+        inline
         label="货物名称"
         value={newCargoName}
         onChangeText={setNewCargoName}
@@ -73,7 +74,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       />
 
       {/* 货物类别 */}
-      <SectionInput label="货物类别">
+      <FormItem inline label="货物类别">
         <RNPickerSelect
           value={newCargoCategory}
           onValueChange={setNewCargoCategory}
@@ -84,10 +85,11 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
           ]}
           style={pickerSelectStyles}
         />
-      </SectionInput>
+      </FormItem>
 
       {/* 货物单位 */}
-      <SectionInput
+      <FormItem
+        inline
         label="货物单位"
         value={newCargoUnit}
         onChangeText={setNewCargoUnit}
@@ -95,7 +97,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       />
 
       {/* 货物描述 */}
-      <SectionInput
+      <FormItem
+        inline
         label="货物描述"
         value={newCargoDescription}
         onChangeText={setNewCargoDescription}

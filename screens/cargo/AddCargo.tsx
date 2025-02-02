@@ -1,11 +1,11 @@
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text} from 'react-native';
+import {Alert, ScrollView, StyleSheet} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import SectionInput from '../../components/SectionInput'; // 假设Section组件已经在项目中
+import FormItem from '../../components/FormItem'; // 假设Section组件已经在项目中
 import {useCargo} from '../../hooks/useCargo';
 import {AddCargoProps} from '../../routes/types';
-import {fontStyle, pickerSelectStyles} from '../../styles';
+import {pickerSelectStyles} from '../../styles';
 
 export default function AddCargo({navigation}: AddCargoProps) {
   const [newCargoName, setNewCargoName] = useState('');
@@ -48,14 +48,15 @@ export default function AddCargo({navigation}: AddCargoProps) {
 
   return (
     <ScrollView style={styles.container}>
-      <SectionInput
+      <FormItem
+        inline
         label="货物名称"
         placeholder="请输入新的货物名称"
         value={newCargoName}
         onChangeText={setNewCargoName}
       />
 
-      <SectionInput label="货物类别">
+      <FormItem inline label="货物类别">
         <RNPickerSelect
           placeholder={{label: '请选择货物类别', value: ''}}
           value={newCargoCategory}
@@ -67,16 +68,18 @@ export default function AddCargo({navigation}: AddCargoProps) {
           ]}
           style={pickerSelectStyles}
         />
-      </SectionInput>
+      </FormItem>
 
-      <SectionInput
+      <FormItem
+        inline
         label="货物单位"
         placeholder="请输入货物单位"
         value={newCargoUnit}
         onChangeText={setNewCargoUnit}
       />
 
-      <SectionInput
+      <FormItem
+        inline
         label="货物描述"
         placeholder="请输入新的货物描述"
         value={newCargoDescription}

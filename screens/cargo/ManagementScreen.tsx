@@ -4,7 +4,7 @@ import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import ModelFlatItem from '../../components/ModelFlatItem';
-import SectionInput from '../../components/SectionInput';
+import FormItem from '../../components/FormItem';
 import {useCargo} from '../../hooks/useCargo';
 import {useModel} from '../../hooks/useModel';
 import {CargoScreenProps} from '../../routes/types';
@@ -14,14 +14,8 @@ export default function ManagementScreen({
   navigation,
   route,
 }: CargoScreenProps) {
-  const cargoId = route.params?.cargoId
-    ? new BSON.ObjectId(route.params.cargoId)
-    : null;
-
   const [cargoCategory, setCargoCategory] = useState<string>('');
-  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
-    cargoId,
-  );
+  const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>();
 
   const {cargoList} = useCargo();
   const {deleteModel, updateModel} = useModel();
@@ -85,7 +79,7 @@ export default function ManagementScreen({
       ListHeaderComponent={
         <>
           {/* 选择货物类别 */}
-          <SectionInput label="货物类别">
+          <FormItem inline label="货物类别">
             <RNPickerSelect
               placeholder={{label: '请选择种类(可不选)', value: ''}}
               value={cargoCategory}
@@ -97,10 +91,10 @@ export default function ManagementScreen({
               ]}
               style={pickerSelectStyles}
             />
-          </SectionInput>
+          </FormItem>
 
           {/* 选择货物 */}
-          <SectionInput label="货物选择">
+          <FormItem inline label="货物选择">
             <RNPickerSelect
               placeholder={{label: '请选择货物', value: ''}}
               value={selectedCargo ? selectedCargo.toString() : ''}
@@ -114,7 +108,7 @@ export default function ManagementScreen({
               }))}
               style={pickerSelectStyles}
             />
-          </SectionInput>
+          </FormItem>
 
           {/* 添加新货物按钮 */}
           <Button
