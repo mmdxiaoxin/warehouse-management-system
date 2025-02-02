@@ -1,18 +1,14 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {OutboundManagementProps} from '../../routes/types';
+import {InboundManageProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
 
-export default function OutboundManagement({
-  navigation,
-}: OutboundManagementProps) {
+export default function InboundManage({navigation}: InboundManageProps) {
   return (
     <SafeAreaView style={styles.container}>
-      <SafeAreaView style={styles.container}>
-        <View>
-          <Text style={styles.sectionHeader}>出库管理</Text>
-        </View>
-      </SafeAreaView>
+      <View>
+        <Text style={styles.sectionHeader}>入库管理</Text>
+      </View>
     </SafeAreaView>
   );
 }

@@ -23,8 +23,8 @@ export type RootStackParamList = {
   UnitManage: undefined;
   ModelManage: undefined;
   CargoInventory: undefined;
-  OutboundManagement: undefined;
-  InboundManagement: undefined;
+  OutboundManage: undefined;
+  InboundManage: undefined;
 };
 
 // 为 AddCargo, AddModel, EditCargo 提供正确的类型
@@ -72,13 +72,13 @@ export type CargoInventoryProps = NativeStackScreenProps<
   RootStackParamList,
   'CargoInventory'
 >;
-export type OutboundManagementProps = NativeStackScreenProps<
+export type OutboundManageProps = NativeStackScreenProps<
   RootStackParamList,
-  'OutboundManagement'
+  'OutboundManage'
 >;
-export type InboundManagementProps = NativeStackScreenProps<
+export type InboundManageProps = NativeStackScreenProps<
   RootStackParamList,
-  'InboundManagement'
+  'InboundManage'
 >;
 
 // 为 Tab 屏幕定义 props 类型，结合 BottomTabScreenProps 和 NativeStackScreenProps

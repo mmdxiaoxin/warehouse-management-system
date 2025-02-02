@@ -15,8 +15,8 @@ import ModelManage from '../screens/cargo/manage/ModelManage';
 import UnitManage from '../screens/cargo/manage/UnitManage';
 import InventoryScreen from '../screens/inventory';
 import CargoInventory from '../screens/inventory/CargoInventory';
-import InboundManagement from '../screens/inventory/InboundManagement';
-import OutboundManagement from '../screens/inventory/OutboundManagement';
+import InboundManage from '../screens/inventory/InboundManage';
+import OutboundManage from '../screens/inventory/OutboundManage';
 import {RootStackParamList, RootTabParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -136,13 +136,13 @@ export default function AppNavigator() {
         options={{title: '货品库存'}}
       />
       <Stack.Screen
-        name="OutboundManagement"
-        component={OutboundManagement}
+        name="OutboundManage"
+        component={OutboundManage}
         options={{title: '出库管理'}}
       />
       <Stack.Screen
-        name="InboundManagement"
-        component={InboundManagement}
+        name="InboundManage"
+        component={InboundManage}
         options={{title: '入库管理'}}
       />
     </Stack.Navigator>
