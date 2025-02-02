@@ -1,71 +1,107 @@
 import {useObject} from '@realm/react';
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet} from 'react-native';
 import {BSON} from 'realm';
+import FormItem from '../../components/FormItem';
 import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
 import {useModel} from '../../hooks/useModel';
 import {Cargo} from '../../models/Cargo';
+import {Model} from '../../models/Model';
 import {EditModelProps} from '../../routes/types';
-import {colorStyle, fontStyle} from '../../styles';
 import {parseWithOrder, stringifyWithOrder} from '../../utils';
 
 export default function EditModel({navigation, route}: EditModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
-  const cargoItemId = new BSON.ObjectId(route.params?.cargoItemId);
+  const modelId = new BSON.ObjectId(route.params?.modelId);
 
   const cargo = useObject(Cargo, cargoId);
-  const model = cargo?.models.find(item => item._id.equals(cargoItemId));
-  const {updateModel} = useModel();
+  const model = useObject(Model, modelId);
 
-  const [spec, setSpec] = useState<ModelValue>(
-    parseWithOrder(model?.value || '') || [],
-  );
+  const {modelList, updateModel} = useModel();
 
-  // 保存型号规格
-  const handleSaveModels = () => {
-    if (!cargo || !model) {
-      Alert.alert('错误', '未找到货物或型号');
+  const [modelName, setModelName] = useState<string>(model?.name || ''); // 规格名称
+  const [modelValue, setModelValue] = useState<ModelValue>(
+    parseWithOrder(model?.value || ''),
+  ); // 规格值
+  const [description, setDescription] = useState<string>(
+    model?.description || '',
+  ); // 规格备注
+
+  const handleSave = () => {
+    try {
+      if (!modelName) {
+        throw new Error('规格名称不能为空!');
+      }
+
+      if (!model) {
+        throw new Error('规格不存在!');
+      }
+
+      if (!cargo) {
+        throw new Error('货品不存在!');
+      }
+
+      modelList.forEach(item => {
+        if (item._id.toHexString() !== modelId.toHexString()) {
+          if (item.name === modelName) {
+            throw new Error('规格名称已存在!');
+          }
+        }
+      });
+
+      updateModel(cargoId, modelId, {
+        name: modelName,
+        value: stringifyWithOrder(modelValue),
+        description,
+        quantity: 0,
+      });
+    } catch (error: any) {
+      Alert.alert('修改规格失败:', error.message);
       return;
     }
 
-    const newValue = stringifyWithOrder(spec);
-    if (cargo.models.find(item => item.value === newValue)) {
-      Alert.alert('型号重复', '当前已有相同的型号!');
-      return;
-    }
-
-    updateModel(cargo._id, model._id, {
-      value: newValue,
-    });
     navigation.goBack();
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>编辑型号规格</Text>
+      {/* 选择货物 */}
+      <FormItem inline label="选中货品" disabled value={cargo?.name} />
 
-      {/* 货物属性展示卡片 */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>{cargo?.name}</Text>
-        <Text style={styles.cardCategory}>类别: {cargo?.category}</Text>
-        <Text style={styles.cardDescription}>描述: {cargo?.description}</Text>
-      </View>
+      {/* 规格名称输入 */}
+      <FormItem
+        inline
+        label="规格名称"
+        placeholder="请输入规格名称"
+        value={modelName}
+        onChangeText={setModelName}
+      />
 
-      {/* 货物规格输入 */}
-      <ModelValueInput modelValue={spec} onChange={setSpec} />
+      {/* 规格描述输入 */}
+      <FormItem
+        label="备注"
+        placeholder="请输入备注(选填)"
+        value={description}
+        onChangeText={setDescription}
+        inline
+      />
 
-      {/* 保存修改按钮 */}
+      {/* 规格值输入 */}
+      <ModelValueInput modelValue={modelValue} onChange={setModelValue} />
+
+      {/* 确认添加按钮 */}
       <Button
         title="保存修改"
-        onPress={handleSaveModels}
-        disabled={spec.length === 0}
+        onPress={handleSave}
+        color={'success'}
+        disabled={!modelName}
         buttonStyle={{marginVertical: 10}}
       />
 
       {/* 取消按钮 */}
       <Button
-        title="取消编辑"
+        title="取消添加"
         onPress={() => navigation.goBack()}
         color="warning"
         buttonStyle={{marginBottom: 40}}
@@ -78,40 +114,5 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-  },
-  title: {
-    ...fontStyle.heading1,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-
-  // 卡片样式
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5, // Android阴影
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colorStyle.textPrimary,
-    marginBottom: 5,
-  },
-  cardCategory: {
-    fontSize: 14,
-    color: colorStyle.textSecondary,
-    marginBottom: 5,
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: colorStyle.textSecondary,
   },
 });

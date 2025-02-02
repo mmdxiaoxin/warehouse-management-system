@@ -29,6 +29,17 @@ export default function ModelManage({navigation}: ModelManageProps) {
     }
   };
 
+  const handleEdit = (modelId: BSON.ObjectId) => {
+    if (selectedCargo) {
+      navigation.navigate('EditModel', {
+        cargoId: selectedCargo.toHexString(),
+        modelId: modelId.toHexString(),
+      });
+    } else {
+      Alert.alert('请先选择一个货品!');
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* 左侧货品列表 */}
@@ -92,12 +103,17 @@ export default function ModelManage({navigation}: ModelManageProps) {
         )}
         keyExtractor={item => item._id.toString()}
         renderItem={({item, index}) => (
-          <ListItem key={index} containerStyle={styles.modelItem} bottomDivider>
+          <ListItem
+            key={index}
+            containerStyle={styles.modelItem}
+            bottomDivider
+            onPress={() => handleEdit(item._id)}>
             <ListItem.Content style={styles.modelDetails}>
               <ListItem.Title style={styles.boldText}>
                 {`型号: ${item.name}`}
               </ListItem.Title>
             </ListItem.Content>
+            <ListItem.Chevron />
           </ListItem>
         )}
         ListEmptyComponent={() => (

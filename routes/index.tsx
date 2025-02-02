@@ -162,7 +162,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name="EditModel"
         component={EditModel}
-        options={{headerShown: false}}
+        options={{title: '编辑规格'}}
       />
       <Stack.Screen
         name="CargoManage"
