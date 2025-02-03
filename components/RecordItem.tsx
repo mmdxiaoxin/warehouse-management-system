@@ -1,4 +1,4 @@
-import {Icon, ListItem} from '@rneui/themed';
+import {Button, Icon, ListItem} from '@rneui/themed';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Record, RecordDetail, RecordDetailModel} from '../models/Record';
@@ -47,8 +47,12 @@ const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
               {item.utime.toLocaleTimeString()}
             </Text>
 
-            <Text style={styles.recordStatus}>
-              {item.status ? '状态: 已完成' : '状态: 待完成'}
+            <Text
+              style={[
+                styles.recordStatus,
+                {color: item.status ? colorStyle.success : colorStyle.warning},
+              ]}>
+              {item.status ? '状态: 已完成' : '状态: 待确认'}
             </Text>
           </View>
         </ListItem.Content>
@@ -80,6 +84,9 @@ const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
           ))}
         </View>
       ))}
+      {!item.status && (
+        <Button title="确认提交入库表单" onPress={() => {}} color={'success'} />
+      )}
     </ListItem.Accordion>
   );
 };
@@ -97,12 +104,13 @@ const styles = StyleSheet.create({
   },
   recordStatus: {
     fontSize: 14,
+    marginTop: 8,
     color: colorStyle.textSecondary,
   },
   recordInfoText: {
     fontSize: 14,
-    color: colorStyle.textPrimary,
-    marginVertical: 2,
+    color: colorStyle.textSecondary,
+    marginVertical: 4,
   },
   accordion: {
     backgroundColor: '#ffffff',
