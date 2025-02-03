@@ -27,7 +27,6 @@ export default function InboundManage({navigation}: InboundManageProps) {
   const [searchQuery, setSearchQuery] = useState(''); // 搜索框内容
   const [index, setIndex] = useState(0); // Tab 索引
   const [inboundDetails, setInboundDetails] = useState<Details>({}); // 入库明细
-  const [expandedCargoIds, setExpandedCargoIds] = useState<string[]>([]); // 展开的货品 ID
   const [quantity, setQuantity] = useState('1'); // 入库数量
 
   // 处理选择货品
@@ -207,15 +206,6 @@ export default function InboundManage({navigation}: InboundManageProps) {
     );
   };
 
-  // 切换展开/折叠
-  const toggleAccordion = (cargoId: string) => {
-    setExpandedCargoIds(prevState =>
-      prevState.includes(cargoId)
-        ? prevState.filter(id => id !== cargoId)
-        : [...prevState, cargoId],
-    );
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       {/* 搜索框 */}
@@ -276,11 +266,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
           </>
         </TabView.Item>
         <TabView.Item style={styles.tabContainer}>
-          <DetailList
-            inboundDetails={inboundDetails}
-            expandedCargoIds={expandedCargoIds}
-            toggleAccordion={toggleAccordion}
-          />
+          <DetailList inboundDetails={inboundDetails} />
         </TabView.Item>
       </TabView>
 
