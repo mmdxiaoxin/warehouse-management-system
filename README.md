@@ -18,6 +18,7 @@
 - **`react-native-picker-select`** - 另一个用于创建选择器（Picker）组件的库，提供更丰富的功能。
 - **`react-native-safe-area-context`** - 用于确保组件在屏幕的安全区域内显示，避免被刘海屏、圆角等遮挡。
 - **`react-native-screens`** - 提供优化的屏幕切换和导航功能。
+- **`@rneui/base`** & **`@rneui/themed `**  React Native Element核心库，提供UI组件
 
 ### 2. **开发依赖**
 
@@ -38,15 +39,13 @@
 
 - **首页**：
 
-<img src=".\README.assets\Screenshot_2025-02-01-15-25-39-65_e196c049ed23442.jpg" alt="Screenshot_2025-02-01-15-25-39-65_e196c049ed23442" style="zoom:25%;" />
+
 
 - **仓库管理页**：
 
-<img src=".\README.assets\Screenshot_2025-02-01-15-25-54-65_e196c049ed23442.jpg" alt="Screenshot_2025-02-01-15-25-54-65_e196c049ed23442" style="zoom:25%;" />
+
 
 - **库存管理页**：
-
-<img src=".\README.assets\Screenshot_2025-02-01-15-25-58-33_e196c049ed23442.jpg" alt="Screenshot_2025-02-01-15-25-58-33_e196c049ed23442" style="zoom:25%;" />
 
 
 
