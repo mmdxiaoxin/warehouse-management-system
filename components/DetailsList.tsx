@@ -52,7 +52,7 @@ const DetailsList: React.FC<DetailsListProps> = ({
           containerStyle={[styles.opButton]}
           onPress={() => {
             const newQuantity = String(Number(model.quantity) - 1);
-            if (Number(newQuantity) < 0) {
+            if (Number(newQuantity) < 1) {
               return;
             }
             onUpdated?.(model.modelId, newQuantity);
