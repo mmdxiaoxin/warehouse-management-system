@@ -63,6 +63,7 @@ export default function UnitManage({navigation}: UnitManageProps) {
         renderItem={({item}) => (
           <View style={{marginBottom: 10, backgroundColor: 'white'}}>
             <ListItem.Swipeable
+              minSlideWidth={60}
               leftWidth={100}
               leftContent={
                 <Button
