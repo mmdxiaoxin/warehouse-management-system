@@ -1,4 +1,4 @@
-import {Button, SearchBar, Tab, TabView} from '@rneui/themed';
+import {Button, Input, SearchBar, Tab, TabView} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
 import {BSON} from 'realm';
@@ -9,7 +9,6 @@ import {useCargo} from '../../hooks/useCargo';
 import {useRecord} from '../../hooks/useRecord';
 import {RecordDetail} from '../../models/Record';
 import {InboundManageProps} from '../../routes/types';
-import {colorStyle} from '../../styles';
 
 export default function InboundManage({navigation}: InboundManageProps) {
   const {cargoList} = useCargo();
@@ -209,21 +208,28 @@ export default function InboundManage({navigation}: InboundManageProps) {
         containerStyle={styles.mainContent}>
         <TabView.Item style={styles.tabContainer}>
           <CargoList
-            cargoList={cargoList}
             selectedCargo={selectedCargo}
-            handleSelectCargo={handleSelectCargo}
+            onCargoSelect={handleSelectCargo}
           />
         </TabView.Item>
         <TabView.Item style={styles.tabContainer}>
-          <ModelList
-            cargoList={cargoList}
-            selectedCargo={selectedCargo}
-            selectedModel={selectedModel}
-            handleSelectModel={handleSelectModel}
-            unit={unit}
-            quantity={quantity}
-            setQuantity={setQuantity}
-          />
+          <>
+            <ModelList
+              selectedCargo={selectedCargo}
+              selectedModel={selectedModel}
+              onModelSelect={handleSelectModel}
+            />
+            {selectedModel && (
+              <Input
+                label="入库数量"
+                value={quantity}
+                onChangeText={setQuantity}
+                keyboardType="numeric"
+                placeholder="请输入数量"
+                labelStyle={{marginTop: 16}}
+              />
+            )}
+          </>
         </TabView.Item>
         <TabView.Item style={styles.tabContainer}>
           <DetailList
@@ -264,19 +270,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-  },
-  sectionHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-    paddingLeft: 16,
-    backgroundColor: colorStyle.primary,
-    color: colorStyle.white,
-  },
-  cargoTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingLeft: 16,
   },
   mainContent: {
     flex: 7,

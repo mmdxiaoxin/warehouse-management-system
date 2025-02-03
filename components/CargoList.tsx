@@ -1,21 +1,20 @@
 import {Icon, ListItem, Text} from '@rneui/themed';
 import React from 'react';
 import {SectionList} from 'react-native';
-import {BSON, Results} from 'realm';
-import {Cargo} from '../models/Cargo';
+import {BSON} from 'realm';
+import {useCargo} from '../hooks/useCargo';
 import {colorStyle} from '../styles';
 
 interface CargoListProps {
-  cargoList: Results<Cargo>;
   selectedCargo: BSON.ObjectId | null;
-  handleSelectCargo: (cargoId: BSON.ObjectId) => void;
+  onCargoSelect: (cargoId: BSON.ObjectId) => void;
 }
 
 const CargoList: React.FC<CargoListProps> = ({
-  cargoList,
   selectedCargo,
-  handleSelectCargo,
+  onCargoSelect,
 }) => {
+  const {cargoList} = useCargo();
   const categorizedCargoList = () => {
     const categorized = cargoList.reduce((acc, cargo) => {
       const category = cargo.category || '未分类'; // 处理没有 category 的情况
@@ -37,7 +36,7 @@ const CargoList: React.FC<CargoListProps> = ({
       sections={categorizedCargoList()}
       keyExtractor={(item, index) => item._id.toString() + index}
       renderItem={({item}) => (
-        <ListItem bottomDivider onPress={() => handleSelectCargo(item._id)}>
+        <ListItem bottomDivider onPress={() => onCargoSelect(item._id)}>
           <Icon
             name={
               selectedCargo?.toHexString() === item._id.toHexString()
