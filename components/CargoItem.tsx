@@ -54,7 +54,7 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
             }}
             onPress={toggleExpand}></Button>
         </View>
-        <Text style={styles.cardCategory}>{item.category}</Text>
+        <Text style={styles.cardCategory}>{item.category?.name}</Text>
       </View>
 
       <Animated.View style={[styles.cardBody, {height: expandHeight}]}>
@@ -68,7 +68,7 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
           />
           <Text style={styles.cardText}>
             <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
-            {item.unit}
+            {item.unit?.name}
           </Text>
         </View>
         <Text style={styles.cardText}>
@@ -88,7 +88,8 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
       <View style={styles.cardFooter}>
         <Text
           style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
-          <Text style={styles.boldText}>剩余库存:</Text> {quantity} {item.unit}
+          <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
+          {item.unit?.name}
         </Text>
       </View>
     </View>

@@ -19,7 +19,7 @@ const CargoList: React.FC<CargoListProps> = ({
   const {cargoList} = useCargo();
   const categorizedCargoList = () => {
     const categorized = cargoList.reduce((acc, cargo) => {
-      const category = cargo.category || '未分类'; // 处理没有 category 的情况
+      const category = cargo.category?.name || '未分类'; // 处理没有 category 的情况
       if (!acc[category]) {
         acc[category] = [];
       }

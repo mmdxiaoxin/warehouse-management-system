@@ -23,13 +23,13 @@ export default function CargoManage({navigation}: CargoManageProps) {
 
     // 处理空类别，默认显示为 "未分类"
     const categories = Array.from(
-      new Set(cargoList.map(cargo => cargo.category || '未分类')), // 如果为空，归类为 "未分类"
+      new Set(cargoList.map(cargo => cargo.category?.name || '未分类')), // 如果为空，归类为 "未分类"
     );
 
     categories.forEach(category => {
       const filteredCargo = cargoList.filter(
         cargo =>
-          cargo.category === category ||
+          cargo.category?.name === category ||
           (category === '未分类' && !cargo.category),
       );
       grouped.push({

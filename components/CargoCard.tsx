@@ -75,7 +75,7 @@ const CargoCard: React.FC<CargoCardProps> = ({
             onPress={toggleExpand}
           />
         </View>
-        <Text style={styles.cardCategory}>{item.category}</Text>
+        <Text style={styles.cardCategory}>{item.category?.name}</Text>
       </View>
 
       <Animated.View style={[styles.cardBody, {height: expandHeight}]}>
@@ -99,7 +99,7 @@ const CargoCard: React.FC<CargoCardProps> = ({
         )}
         {item.unit && (
           <Text style={styles.cardText}>
-            <Text style={styles.boldText}>单位:</Text> {item.unit}
+            <Text style={styles.boldText}>单位:</Text> {item.unit.name}
           </Text>
         )}
         {item.description && (

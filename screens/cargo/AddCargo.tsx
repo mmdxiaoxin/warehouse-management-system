@@ -8,14 +8,18 @@ import {useCategory} from '../../hooks/useCategory';
 import {useUnit} from '../../hooks/useUnit';
 import {AddCargoProps} from '../../routes/types';
 import {pickerSelectStyles} from '../../styles';
+import {BSON} from 'realm';
 
 export default function AddCargo({navigation}: AddCargoProps) {
-  const [newCargoName, setNewCargoName] = useState('');
-  const [newCargoCategory, setNewCargoCategory] = useState('');
-  const [newCargoUnit, setNewCargoUnit] = useState('');
+  const [newName, setNewCargoName] = useState('');
+  const [newCategory, setNewCargoCategory] = useState<
+    BSON.ObjectId | undefined
+  >();
+  const [newUnit, setNewCargoUnit] = useState<BSON.ObjectId | undefined>();
   const [newPrice, setNewPrice] = useState('');
   const [newBrand, setNewBrand] = useState('');
-  const [newCargoDescription, setNewCargoDescription] = useState('');
+  const [newDescription, setNewCargoDescription] = useState('');
+
   const [open, setOpen] = useState(false);
 
   const {createCargo} = useCargo();
@@ -25,17 +29,17 @@ export default function AddCargo({navigation}: AddCargoProps) {
   // 处理添加货物
   const handleAdd = async () => {
     // 校验输入字段是否为空
-    if (!newCargoName.trim()) {
+    if (!newName.trim()) {
       Alert.alert('请输入货物名称');
       return;
     }
 
     try {
       const newCargoId = createCargo({
-        name: newCargoName,
-        category: newCargoCategory,
-        unit: newCargoUnit,
-        description: newCargoDescription,
+        name: newName,
+        category: newCategory,
+        unit: newUnit,
+        description: newDescription,
         price: newPrice ? parseFloat(newPrice) : undefined,
         brand: newBrand,
       });
@@ -54,19 +58,19 @@ export default function AddCargo({navigation}: AddCargoProps) {
         inline
         label="货物名称"
         placeholder="请输入新的货物名称"
-        value={newCargoName}
+        value={newName}
         onChangeText={setNewCargoName}
       />
 
       <FormItem inline label="货物类别">
         <RNPickerSelect
           placeholder={{label: '请选择货物类别', value: ''}}
-          value={newCargoCategory}
+          value={newCategory}
           onValueChange={setNewCargoCategory}
           useNativeAndroidPickerStyle={false}
           items={categories.map(category => ({
             label: category.name,
-            value: category.name,
+            value: category._id,
           }))}
           style={pickerSelectStyles}
         />
@@ -75,12 +79,12 @@ export default function AddCargo({navigation}: AddCargoProps) {
       <FormItem inline label="货物单位">
         <RNPickerSelect
           placeholder={{label: '请选择货物单位(可选)', value: ''}}
-          value={newCargoUnit}
+          value={newUnit}
           onValueChange={setNewCargoUnit}
           useNativeAndroidPickerStyle={false}
           items={units.map(unit => ({
             label: unit.name,
-            value: unit.name,
+            value: unit._id,
           }))}
           style={pickerSelectStyles}
         />
@@ -106,7 +110,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
         inline
         label="备注"
         placeholder="请输入备注(可选)"
-        value={newCargoDescription}
+        value={newDescription}
         onChangeText={setNewCargoDescription}
       />
 

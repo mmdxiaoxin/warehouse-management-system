@@ -50,7 +50,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
 
     const cargo = cargoList.find(item => item._id.equals(selectedCargo));
     const cargoName = cargo?.name;
-    const unit = cargo?.unit || '件';
+    const unit = cargo?.unit?.name || '件';
     const modelName = cargo?.models.find(model =>
       model._id.equals(selectedModel),
     )?.name;

@@ -60,7 +60,7 @@ const ModelList: React.FC<ModelListProps> = ({
               />
               <ListItem.Title>{item.name}</ListItem.Title>
               <ListItem.Subtitle>
-                当前库存: {item.quantity} {cargo?.unit || '件'}
+                当前库存: {item.quantity} {cargo?.unit?.name || '件'}
               </ListItem.Subtitle>
             </ListItem.Content>
             <ListItem.Chevron />

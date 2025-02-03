@@ -22,15 +22,18 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
   const foundCargo = useObject(Cargo, cargoId);
 
   const [newCargoName, setNewCargoName] = useState(foundCargo?.name || '');
-  const [newCargoCategory, setNewCargoCategory] = useState(
-    foundCargo?.category || '',
+  const [newCargoCategory, setNewCargoCategory] = useState<
+    BSON.ObjectId | undefined
+  >(foundCargo?.category?._id);
+  const [newCargoUnit, setNewCargoUnit] = useState<BSON.ObjectId | undefined>(
+    foundCargo?.unit?._id,
   );
-  const [newCargoUnit, setNewCargoUnit] = useState(foundCargo?.unit || '');
   const [newCargoDescription, setNewCargoDescription] = useState(
     foundCargo?.description || '',
   );
   const [newPrice, setNewPrice] = useState(foundCargo?.price?.toString() || '');
   const [newBrand, setNewBrand] = useState(foundCargo?.brand || '');
+
   const [open, setOpen] = useState(false);
 
   // 校验输入数据
@@ -83,7 +86,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
           onValueChange={setNewCargoCategory}
           items={categories.map(category => ({
             label: category.name,
-            value: category.name,
+            value: category._id,
           }))}
           style={pickerSelectStyles}
         />
@@ -98,7 +101,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
           useNativeAndroidPickerStyle={false}
           items={units.map(unit => ({
             label: unit.name,
-            value: unit.name,
+            value: unit._id,
           }))}
           style={pickerSelectStyles}
         />
