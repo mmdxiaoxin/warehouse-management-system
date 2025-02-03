@@ -21,7 +21,7 @@ export default function InboundRecord({navigation}: InboundRecordProps) {
       {/* 固定搜索框 */}
       <View style={styles.header}>
         <SearchBar
-          placeholder="筛选记录"
+          placeholder="筛选记录(按入库单号)"
           value={searchQuery}
           onChangeText={setSearchQuery}
           lightTheme
@@ -33,7 +33,12 @@ export default function InboundRecord({navigation}: InboundRecordProps) {
       <FlatList
         style={styles.list}
         keyExtractor={item => item._id.toString()}
-        data={getRecordsByType('inbound')}
+        data={getRecordsByType('inbound').filter(record =>
+          record._id
+            .toString()
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()),
+        )}
         renderItem={({item}) => <RecordItem item={item} />}
         ListEmptyComponent={
           <View style={styles.empty}>
