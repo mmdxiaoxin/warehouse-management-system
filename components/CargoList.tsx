@@ -1,11 +1,12 @@
 import {Icon, ListItem, Text} from '@rneui/themed';
 import React from 'react';
-import {SectionList} from 'react-native';
+import {SectionList, SectionListProps} from 'react-native';
 import {BSON} from 'realm';
 import {useCargo} from '../hooks/useCargo';
+import {Cargo} from '../models/Cargo';
 import {colorStyle} from '../styles';
 
-interface CargoListProps {
+interface CargoListProps extends Omit<SectionListProps<Cargo>, 'sections'> {
   selectedCargo: BSON.ObjectId | null;
   onCargoSelect: (cargoId: BSON.ObjectId) => void;
 }
@@ -13,6 +14,7 @@ interface CargoListProps {
 const CargoList: React.FC<CargoListProps> = ({
   selectedCargo,
   onCargoSelect,
+  ...props
 }) => {
   const {cargoList} = useCargo();
   const categorizedCargoList = () => {
@@ -33,6 +35,7 @@ const CargoList: React.FC<CargoListProps> = ({
 
   return (
     <SectionList
+      {...props}
       sections={categorizedCargoList()}
       keyExtractor={(item, index) => item._id.toString() + index}
       renderItem={({item}) => (

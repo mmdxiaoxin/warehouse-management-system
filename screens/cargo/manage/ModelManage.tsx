@@ -1,13 +1,14 @@
-import {Button, Icon, ListItem, SearchBar} from '@rneui/themed';
+import {Divider} from '@rneui/base';
+import {Button, Icon, SearchBar} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
+import CargoList from '../../../components/CargoList';
+import ModelItem from '../../../components/ModelItem';
 import {useCargo} from '../../../hooks/useCargo';
+import {useModel} from '../../../hooks/useModel';
 import {ModelManageProps} from '../../../routes/types';
 import {colorStyle} from '../../../styles';
-import {Divider} from '@rneui/base';
-import ModelItem from '../../../components/ModelItem';
-import {useModel} from '../../../hooks/useModel';
 
 export default function ModelManage({navigation, route}: ModelManageProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
@@ -77,47 +78,18 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
       />
       <View style={styles.modelContainer}>
         {/* 左侧货品列表 */}
-        <FlatList
-          style={styles.leftContainer}
-          data={cargoList.filtered('name CONTAINS $0', searchQuery)}
-          keyExtractor={cargo => cargo._id.toHexString()}
-          ListHeaderComponent={() => (
-            <>
-              <Text style={styles.sectionTitle}>货品列表</Text>
-              <Divider width={1} />
-            </>
-          )}
-          renderItem={({item}) => (
-            <ListItem
-              bottomDivider
-              onPress={() => handleSelect(item._id.toHexString())}
-              containerStyle={styles.cargoItem}>
-              <Icon
-                name={
-                  selectedCargo?.toHexString() === item._id.toHexString()
-                    ? 'label-important'
-                    : 'label-important-outline'
-                }
-                type="material"
-                color={
-                  selectedCargo?.toHexString() === item._id.toHexString()
-                    ? colorStyle.primary
-                    : colorStyle.textPrimary
-                }
-              />
-              <ListItem.Content>
-                <ListItem.Title
-                  style={{
-                    fontSize: 16,
-                    fontWeight: '600',
-                  }}>
-                  {item.name}
-                </ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-          )}
-        />
+        <View style={styles.leftContainer}>
+          <CargoList
+            selectedCargo={selectedCargo}
+            onCargoSelect={cargoId => handleSelect(cargoId.toHexString())}
+            ListHeaderComponent={() => (
+              <>
+                <Text style={styles.sectionTitle}>货品列表</Text>
+                <Divider width={1} />
+              </>
+            )}
+          />
+        </View>
 
         {/* 右侧规格展示 */}
         <FlatList
