@@ -7,6 +7,7 @@ import CargoList from '../../components/CargoList';
 import DetailList, {Details} from '../../components/DetailsList';
 import ModelList from '../../components/ModelList';
 import {useCargo} from '../../hooks/useCargo';
+import {useRecord} from '../../hooks/useRecord';
 import {Cargo} from '../../models/Cargo';
 import {RecordDetail} from '../../models/Record';
 import {InboundManageProps} from '../../routes/types';
@@ -14,6 +15,7 @@ import {InboundManageProps} from '../../routes/types';
 export default function InboundManage({navigation}: InboundManageProps) {
   const realm = useRealm();
   const {cargoList} = useCargo();
+  const {createRecord} = useRecord();
 
   // 状态管理：当前选中的货品和规格
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
@@ -116,86 +118,93 @@ export default function InboundManage({navigation}: InboundManageProps) {
   };
 
   const handleSubmit = (status: boolean) => {
-    Alert.alert('确认提交', '您确定要提交入库表单吗？', [
-      {
-        text: '取消',
-        style: 'cancel',
-      },
-      {
-        text: '确定',
-        onPress: async () => {
-          try {
-            // 1. 准备提交的记录详情
-            const type = 'inbound';
-            const detail: RecordDetail[] = Object.keys(inboundDetails).map(
-              cargoId => {
-                const {cargoName, models, unit} = inboundDetails[cargoId];
-                return {
-                  cargoId: new BSON.ObjectId(cargoId),
-                  cargoName,
-                  cargoModels: models.map(model => ({
-                    modelId: model.modelId,
-                    modelName: model.modelName,
-                    quantity: Number(model.quantity),
-                  })),
-                  unit,
-                };
-              },
-            ) as RecordDetail[];
-
-            // 2. 开始事务，提交入库记录并更新规格数量
-            const newId = realm.write(() => {
-              // 2.1 创建入库记录
-              const newRecord = realm.create('Record', {
-                _id: new BSON.ObjectId(),
-                type,
-                status,
-                detail,
-                ctime: new Date(),
-                utime: new Date(),
-              });
-
-              // 2.2 更新货品规格的数量
-              detail.forEach(({cargoId, cargoModels}) => {
-                const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
-                if (!cargo) {
-                  throw new Error('货品不存在');
-                }
-
-                // 遍历每个货品的规格，并更新数量
-                cargoModels.forEach(({modelId, quantity}) => {
-                  const foundModel = cargo.models.find(model =>
-                    model._id.equals(modelId),
-                  );
-                  if (foundModel) {
-                    foundModel.quantity += quantity; // 累加数量
-                    foundModel.utime = new Date(); // 更新时间
-                  }
-                });
-              });
-
-              return newRecord._id;
-            });
-
-            if (!newId) {
-              throw new Error('数据库操作失败');
-            }
-
-            Alert.alert('提交成功', '入库表单已提交成功。');
-            setInboundDetails({}); // 清空入库明细
-            navigation.goBack();
-          } catch (error) {
-            console.error('提交入库表单失败：', error);
-            Alert.alert('提交失败', '提交表单时发生错误: ' + error);
-          }
+    Alert.alert(
+      '确认提交',
+      `您确定要${status ? '提交入库表单' : '保存为草稿'}吗？`,
+      [
+        {
+          text: '取消',
+          style: 'cancel',
         },
-      },
-    ]);
-  };
+        {
+          text: '确定',
+          onPress: async () => {
+            try {
+              // 1. 准备提交的记录详情
+              const type = 'inbound';
+              const detail: RecordDetail[] = Object.keys(inboundDetails).map(
+                cargoId => {
+                  const {cargoName, models, unit} = inboundDetails[cargoId];
+                  return {
+                    cargoId: new BSON.ObjectId(cargoId),
+                    cargoName,
+                    cargoModels: models.map(model => ({
+                      modelId: model.modelId,
+                      modelName: model.modelName,
+                      quantity: Number(model.quantity),
+                    })),
+                    unit,
+                  };
+                },
+              ) as RecordDetail[];
 
-  // 保存为草稿
-  const handleSaveDraft = () => {
-    console.log('草稿已保存', inboundDetails);
+              if (status) {
+                // 2. 开始事务，提交入库记录并更新规格数量
+                const newId = realm.write(() => {
+                  // 2.1 创建入库记录
+                  const newRecord = realm.create('Record', {
+                    _id: new BSON.ObjectId(),
+                    type,
+                    status,
+                    detail,
+                    ctime: new Date(),
+                    utime: new Date(),
+                  });
+
+                  // 2.2 更新货品规格的数量
+                  detail.forEach(({cargoId, cargoModels}) => {
+                    const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
+                    if (!cargo) {
+                      throw new Error('货品不存在');
+                    }
+
+                    // 遍历每个货品的规格，并更新数量
+                    cargoModels.forEach(({modelId, quantity}) => {
+                      const foundModel = cargo.models.find(model =>
+                        model._id.equals(modelId),
+                      );
+                      if (foundModel) {
+                        foundModel.quantity += quantity; // 累加数量
+                        foundModel.utime = new Date(); // 更新时间
+                      }
+                    });
+                  });
+
+                  return newRecord._id;
+                });
+
+                if (!newId) {
+                  throw new Error('数据库操作失败');
+                }
+              } else {
+                // 3. 保存为草稿
+                const newId = createRecord({type, status, detail});
+                if (!newId) {
+                  throw new Error('数据库操作失败');
+                }
+              }
+
+              Alert.alert('提交成功', '入库表单已提交成功。');
+              setInboundDetails({}); // 清空入库明细
+              navigation.goBack();
+            } catch (error) {
+              console.error('提交入库表单失败：', error);
+              Alert.alert('提交失败', '提交表单时发生错误: ' + error);
+            }
+          },
+        },
+      ],
+    );
   };
 
   // 切换展开/折叠
@@ -291,7 +300,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         />
         <Button
           title="保存草稿"
-          onPress={handleSaveDraft}
+          onPress={() => handleSubmit(false)}
           color={'error'}
           disabled={Object.keys(inboundDetails).length === 0}
         />
