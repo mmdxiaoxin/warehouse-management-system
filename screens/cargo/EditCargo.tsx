@@ -1,7 +1,7 @@
 import {useObject} from '@realm/react';
-import {Button, SpeedDial} from '@rneui/themed';
+import {Button, SpeedDial, Text} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
@@ -143,6 +143,15 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         color="warning"
         buttonStyle={{marginBottom: 10}}
       />
+
+      <Text
+        style={{
+          color: 'gray',
+          textAlign: 'center',
+          marginTop: 20,
+        }}>
+        提示：点击右下角的加号可以添加货物类别、单位、规格等信息
+      </Text>
 
       <SpeedDial
         isOpen={open}
