@@ -1,3 +1,4 @@
+import {useRealm} from '@realm/react';
 import {Button, Input, SearchBar, Tab, TabView} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
@@ -6,13 +7,13 @@ import CargoList from '../../components/CargoList';
 import DetailList, {Details} from '../../components/DetailsList';
 import ModelList from '../../components/ModelList';
 import {useCargo} from '../../hooks/useCargo';
-import {useRecord} from '../../hooks/useRecord';
+import {Cargo} from '../../models/Cargo';
 import {RecordDetail} from '../../models/Record';
 import {InboundManageProps} from '../../routes/types';
 
 export default function InboundManage({navigation}: InboundManageProps) {
+  const realm = useRealm();
   const {cargoList} = useCargo();
-  const {createRecord} = useRecord();
 
   // 状态管理：当前选中的货品和规格
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
@@ -114,7 +115,6 @@ export default function InboundManage({navigation}: InboundManageProps) {
     setIndex(2);
   };
 
-  // 提交入库单
   const handleSubmit = (status: boolean) => {
     Alert.alert('确认提交', '您确定要提交入库表单吗？', [
       {
@@ -125,6 +125,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         text: '确定',
         onPress: async () => {
           try {
+            // 1. 准备提交的记录详情
             const type = 'inbound';
             const detail: RecordDetail[] = Object.keys(inboundDetails).map(
               cargoId => {
@@ -141,10 +142,45 @@ export default function InboundManage({navigation}: InboundManageProps) {
                 };
               },
             ) as RecordDetail[];
-            const newId = createRecord({type, status, detail});
+
+            // 2. 开始事务，提交入库记录并更新规格数量
+            const newId = realm.write(() => {
+              // 2.1 创建入库记录
+              const newRecord = realm.create('Record', {
+                _id: new BSON.ObjectId(),
+                type,
+                status,
+                detail,
+                ctime: new Date(),
+                utime: new Date(),
+              });
+
+              // 2.2 更新货品规格的数量
+              detail.forEach(({cargoId, cargoModels}) => {
+                const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
+                if (!cargo) {
+                  throw new Error('货品不存在');
+                }
+
+                // 遍历每个货品的规格，并更新数量
+                cargoModels.forEach(({modelId, quantity}) => {
+                  const foundModel = cargo.models.find(model =>
+                    model._id.equals(modelId),
+                  );
+                  if (foundModel) {
+                    foundModel.quantity += quantity; // 累加数量
+                    foundModel.utime = new Date(); // 更新时间
+                  }
+                });
+              });
+
+              return newRecord._id;
+            });
+
             if (!newId) {
               throw new Error('数据库操作失败');
             }
+
             Alert.alert('提交成功', '入库表单已提交成功。');
             setInboundDetails({}); // 清空入库明细
             navigation.goBack();
