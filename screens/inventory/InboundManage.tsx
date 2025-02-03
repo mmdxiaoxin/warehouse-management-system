@@ -26,12 +26,10 @@ export default function InboundManage({navigation}: InboundManageProps) {
   const [inboundDetails, setInboundDetails] = useState<Details>({}); // 入库明细
   const [expandedCargoIds, setExpandedCargoIds] = useState<string[]>([]); // 展开的货品 ID
   const [quantity, setQuantity] = useState('1'); // 入库数量
-  const [unit, setUnit] = useState(''); // 货品单位
 
   // 处理选择货品
   const handleSelectCargo = (cargoId: BSON.ObjectId) => {
     setSelectedCargo(cargoId);
-    setUnit(cargoList.find(item => item._id.equals(cargoId))?.unit || '件');
     setSelectedModel(null); // 重置规格
     setIndex(1);
   };
@@ -48,12 +46,12 @@ export default function InboundManage({navigation}: InboundManageProps) {
       return;
     }
 
-    const cargoName = cargoList.find(item =>
-      item._id.equals(selectedCargo),
+    const cargo = cargoList.find(item => item._id.equals(selectedCargo));
+    const cargoName = cargo?.name;
+    const unit = cargo?.unit || '件';
+    const modelName = cargo?.models.find(model =>
+      model._id.equals(selectedModel),
     )?.name;
-    const modelName = cargoList
-      .find(item => item._id.equals(selectedCargo))
-      ?.models.find(item => item._id.equals(selectedModel))?.name;
 
     if (!cargoName || !modelName) {
       Alert.alert('货品或规格不存在');
@@ -95,6 +93,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         // 如果该货品不存在，则创建新的货品节点
         updatedDetails[selectedCargo.toHexString()] = {
           cargoName,
+          unit,
           models: [
             {
               modelId: selectedModel,
@@ -129,7 +128,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
             const type = 'inbound';
             const detail: RecordDetail[] = Object.keys(inboundDetails).map(
               cargoId => {
-                const {cargoName, models} = inboundDetails[cargoId];
+                const {cargoName, models, unit} = inboundDetails[cargoId];
                 return {
                   cargoId: new BSON.ObjectId(cargoId),
                   cargoName,
@@ -236,7 +235,6 @@ export default function InboundManage({navigation}: InboundManageProps) {
             inboundDetails={inboundDetails}
             expandedCargoIds={expandedCargoIds}
             toggleAccordion={toggleAccordion}
-            unit={unit}
           />
         </TabView.Item>
       </TabView>

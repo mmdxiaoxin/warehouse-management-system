@@ -7,22 +7,21 @@ export type Details = Record<
   string,
   {
     cargoName: string;
+    unit: string;
     models: {modelId: BSON.ObjectId; modelName: string; quantity: string}[];
   }
 >;
 
-interface InboundDetailsProps {
+interface DetailsListProps {
   inboundDetails: Details;
   expandedCargoIds: string[];
   toggleAccordion: (cargoId: string) => void;
-  unit: string;
 }
 
-const DetailsList: React.FC<InboundDetailsProps> = ({
+const DetailsList: React.FC<DetailsListProps> = ({
   inboundDetails,
   expandedCargoIds,
   toggleAccordion,
-  unit,
 }) => (
   <FlatList
     data={Object.values(inboundDetails)}
@@ -50,7 +49,7 @@ const DetailsList: React.FC<InboundDetailsProps> = ({
             <ListItem.Content>
               <ListItem.Title>{model.modelName}</ListItem.Title>
               <ListItem.Subtitle>
-                数量: {model.quantity} {unit}
+                数量: {model.quantity} {item.unit}
               </ListItem.Subtitle>
             </ListItem.Content>
           </ListItem>
