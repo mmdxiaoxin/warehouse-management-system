@@ -1,7 +1,6 @@
 import {Button, Icon} from '@rneui/themed';
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
-import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
 import {colorStyle, fontStyle} from '../styles';
 
@@ -16,13 +15,11 @@ interface CargoItemProps {
     | 'utime'
     | 'unit'
     | 'models'
+    | 'price'
   >;
-  handleEditCargo: (cargoId: BSON.ObjectId) => void;
-  handleDeleteCargo: (cargoId: BSON.ObjectId) => void;
 }
 
 const CargoItem: React.FC<CargoItemProps> = ({item}) => {
-  const modelsCount = item.models.length;
   const quantity = item.models.reduce(
     (acc: number, cur: any) => acc + cur.quantity,
     0,
@@ -30,17 +27,35 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [expandHeight] = useState(new Animated.Value(0));
 
+  const cardHeight = useMemo(() => {
+    const baseHeight = 120;
+    const modelsHeight = item.models.length * 70;
+    return baseHeight + modelsHeight;
+  }, [item.models.length]);
+
+  // 扩展状态变化时触发动画
   const toggleExpand = () => {
     Animated.timing(expandHeight, {
-      toValue: isExpanded ? 0 : 140, // 动态展开/收起
+      toValue: isExpanded ? 0 : cardHeight,
       duration: 300,
       useNativeDriver: false,
     }).start();
     setIsExpanded(prev => !prev);
   };
 
+  useEffect(() => {
+    if (isExpanded) {
+      Animated.timing(expandHeight, {
+        toValue: cardHeight,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [cardHeight, isExpanded]);
+
   return (
     <View style={styles.card}>
+      {/* Header */}
       <View style={styles.cardHeader}>
         <View style={styles.headerContent}>
           <Text style={styles.cardTitle}>{item.name}</Text>
@@ -52,11 +67,13 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
               type: 'font-awesome-5',
               color: colorStyle.primary,
             }}
-            onPress={toggleExpand}></Button>
+            onPress={toggleExpand}
+          />
         </View>
         <Text style={styles.cardCategory}>{item.category?.name}</Text>
       </View>
 
+      {/* Body */}
       <Animated.View style={[styles.cardBody, {height: expandHeight}]}>
         <View style={styles.infoRow}>
           <Icon
@@ -71,9 +88,27 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
             {item.unit?.name}
           </Text>
         </View>
-        <Text style={styles.cardText}>
-          <Text style={styles.boldText}>货物描述:</Text> {item.description}
-        </Text>
+
+        {/* 规格以及数量 */}
+        <View style={styles.modelsContainer}>
+          {item.models.length > 0 ? (
+            item.models.map(model => (
+              <View key={model._id.toHexString()} style={styles.modelItem}>
+                <Text style={styles.modelTitle}>规格: {model.name}</Text>
+                <Text style={styles.modelText}>
+                  <Text style={styles.boldText}>数量:</Text> {model.quantity}{' '}
+                  {item.unit?.name}
+                </Text>
+              </View>
+            ))
+          ) : (
+            <Text style={[styles.cardText, {textAlign: 'center'}]}>
+              当前货物无规格信息
+            </Text>
+          )}
+        </View>
+
+        {/* 时间戳部分 */}
         <Text style={styles.cardText}>
           <Text style={styles.boldText}>创建时间:</Text>{' '}
           {item.ctime ? new Date(item.ctime).toLocaleString() : '错误!'}
@@ -84,7 +119,7 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
         </Text>
       </Animated.View>
 
-      {/* 只在未展开时显示剩余库存 */}
+      {/* 页脚 */}
       <View style={styles.cardFooter}>
         <Text
           style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
@@ -104,9 +139,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 12},
-    shadowOpacity: 0.15, // 降低透明度，形成柔和的阴影效果
-    shadowRadius: 10, // 增加模糊半径，使阴影自然
-    elevation: 5, // 适配 Android 设备的阴影
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
     padding: 20,
   },
   cardHeader: {
@@ -155,12 +190,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  toolBar: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    flex: 1,
-    gap: 10,
+  modelsContainer: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  modelItem: {
+    marginBottom: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: colorStyle.neutral100,
+    borderRadius: 8,
+    borderColor: colorStyle.neutral300,
+    borderWidth: 1,
+  },
+  modelTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colorStyle.primary,
+  },
+  modelText: {
+    fontSize: 14,
+    color: '#555',
   },
 });
 
