@@ -1,13 +1,14 @@
 import {useObject} from '@realm/react';
-import {Button} from '@rneui/themed';
+import {Button, Text} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {Alert, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
 import {useModel} from '../../hooks/useModel';
 import {Cargo} from '../../models/Cargo';
 import {AddModelProps} from '../../routes/types';
+import {colorStyle} from '../../styles';
 import {stringifyWithOrder} from '../../utils';
 
 export default function AddModel({navigation, route}: AddModelProps) {
@@ -41,6 +42,22 @@ export default function AddModel({navigation, route}: AddModelProps) {
 
     navigation.goBack();
   };
+
+  if (!cargo) {
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: colorStyle.backgroundLight,
+        }}>
+        <Text h4 h4Style={{color: colorStyle.textMuted}}>
+          请先选择货品，然后点击按钮填加！
+        </Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
