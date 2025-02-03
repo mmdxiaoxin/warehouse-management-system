@@ -40,11 +40,12 @@ export default function InboundManage({navigation}: InboundManageProps) {
   const [selectedModel, setSelectedModel] = useState<BSON.ObjectId | null>(
     null,
   );
-  const [searchQuery, setSearchQuery] = useState('');
-  const [index, setIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState(''); // 搜索框内容
+  const [index, setIndex] = useState(0); // Tab 索引
   const [inboundDetails, setInboundDetails] = useState<InboundDetails>({}); // 入库明细
-  const [quantity, setQuantity] = useState('1');
-  const [unit, setUnit] = useState('');
+  const [expandedCargoIds, setExpandedCargoIds] = useState<string[]>([]); // 展开的货品 ID
+  const [quantity, setQuantity] = useState('1'); // 入库数量
+  const [unit, setUnit] = useState(''); // 货品单位
 
   // 处理选择货品
   const handleSelectCargo = (cargoId: BSON.ObjectId) => {
@@ -244,29 +245,43 @@ export default function InboundManage({navigation}: InboundManageProps) {
     </>
   );
 
+  // 切换展开/折叠
+  const toggleAccordion = (cargoId: string) => {
+    setExpandedCargoIds(prevState =>
+      prevState.includes(cargoId)
+        ? prevState.filter(id => id !== cargoId)
+        : [...prevState, cargoId],
+    );
+  };
+
   // 渲染入库明细部分
   const renderInboundDetails = () => (
     <FlatList
       data={Object.values(inboundDetails)}
       keyExtractor={item => item.cargoName}
       renderItem={({item}) => (
-        <View>
-          <Text style={styles.cargoTitle}>{item.cargoName}</Text>
-          <FlatList
-            data={item.models}
-            keyExtractor={model => model.modelId.toString()}
-            renderItem={({item}) => (
-              <ListItem bottomDivider>
-                <ListItem.Content>
-                  <ListItem.Title>{item.modelName}</ListItem.Title>
-                  <ListItem.Subtitle>
-                    数量: {item.quantity} {unit}
-                  </ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-            )}
-          />
-        </View>
+        <ListItem.Accordion
+          key={item.cargoName}
+          content={
+            <ListItem.Content>
+              <ListItem.Title style={styles.cargoTitle}>
+                {item.cargoName}
+              </ListItem.Title>
+            </ListItem.Content>
+          }
+          isExpanded={expandedCargoIds.includes(item.cargoName)}
+          onPress={() => toggleAccordion(item.cargoName)}>
+          {item.models.map(model => (
+            <ListItem key={model.modelId.toString()} bottomDivider>
+              <ListItem.Content>
+                <ListItem.Title>{model.modelName}</ListItem.Title>
+                <ListItem.Subtitle>
+                  数量: {model.quantity} {unit}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+          ))}
+        </ListItem.Accordion>
       )}
     />
   );
