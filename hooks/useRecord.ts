@@ -2,7 +2,7 @@ import {useQuery, useRealm} from '@realm/react';
 import {BSON} from 'realm';
 import {Record} from '../models/Record';
 
-export type RecordData = Pick<Record, 'detail' | 'status' | 'type'>;
+export type RecordData = Partial<Pick<Record, 'detail' | 'status' | 'type'>>;
 
 // 使用 Realm 数据模型
 export const useRecord = () => {
@@ -40,11 +40,14 @@ export const useRecord = () => {
       realm.write(() => {
         const recordToUpdate = realm.objectForPrimaryKey(Record, id);
         if (recordToUpdate) {
-          // 更新 record
-          recordToUpdate.type = recordData.type;
-          recordToUpdate.detail = recordData.detail;
-          recordToUpdate.status = recordData.status;
-          recordToUpdate.utime = new Date();
+          // 更新 record，如果对应字段存在
+          if (recordData.type !== undefined)
+            recordToUpdate.type = recordData.type;
+          if (recordData.detail !== undefined)
+            recordToUpdate.detail = recordData.detail;
+          if (recordData.status !== undefined)
+            recordToUpdate.status = recordData.status;
+          recordToUpdate.utime = new Date(); // 更新修改时间
         }
       });
     } catch (error) {
@@ -70,12 +73,12 @@ export const useRecord = () => {
 
   // 获取指定类型的记录（例如：`inbound`、`outbound` 等）
   const getRecordsByType = (type: 'inbound' | 'outbound' | 'transfer') => {
-    return records.filtered(`type == "${type}"`).sorted('ctime', true);
+    return records.filtered(`type == "${type}"`).sorted('utime', true);
   };
 
   // 获取指定状态的记录（例如：已完成或未完成的记录）
   const getRecordsByStatus = (status: boolean) => {
-    return records.filtered(`status == ${status}`).sorted('ctime', true);
+    return records.filtered(`status == ${status}`).sorted('utime', true);
   };
 
   // 获取指定类型和状态的记录
@@ -85,7 +88,7 @@ export const useRecord = () => {
   ) => {
     return records
       .filtered(`type == "${type}" AND status == ${status}`)
-      .sorted('ctime', true);
+      .sorted('utime', true);
   };
 
   return {

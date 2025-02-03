@@ -1,15 +1,23 @@
 import {Button, Icon, ListItem} from '@rneui/themed';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {BSON} from 'realm';
 import {Record, RecordDetail, RecordDetailModel} from '../models/Record';
 import {colorStyle} from '../styles';
 
 interface RecordItemProps {
   item: Pick<Record, '_id' | 'detail' | 'status' | 'type' | 'ctime' | 'utime'>;
   showType?: boolean;
+  onSubmitted?: (_id: BSON.ObjectID) => void;
+  onDeleted?: (_id: BSON.ObjectID) => void;
 }
 
-const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
+const RecordItem: React.FC<RecordItemProps> = ({
+  item,
+  showType,
+  onDeleted,
+  onSubmitted,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const quantity = item.detail.reduce(
     (acc, detail) =>
@@ -54,6 +62,11 @@ const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
               {item.ctime.toLocaleTimeString()}
             </Text>
 
+            <Text style={styles.recordInfoText}>
+              提交日期: {item.utime.toLocaleDateString()}{' '}
+              {item.utime.toLocaleTimeString()}
+            </Text>
+
             <Text
               style={[
                 styles.recordStatus,
@@ -92,11 +105,22 @@ const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
         </View>
       ))}
       {!item.status && (
-        <Button
-          title={`确认提交${getRecordType(item.type)}表单`}
-          onPress={() => {}}
-          color={'success'}
-        />
+        <>
+          <Button
+            title={`提交${getRecordType(item.type)}表单`}
+            onPress={() => {
+              onSubmitted?.(item._id);
+            }}
+            color={'success'}
+          />
+          <Button
+            title={`删除当前草稿`}
+            onPress={() => {
+              onDeleted?.(item._id);
+            }}
+            color={'error'}
+          />
+        </>
       )}
     </ListItem.Accordion>
   );
