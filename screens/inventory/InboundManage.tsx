@@ -175,6 +175,17 @@ export default function InboundManage({navigation}: InboundManageProps) {
       renderSectionHeader={({section: {title}}) => (
         <Text style={styles.sectionHeader}>{title}</Text>
       )}
+      ListEmptyComponent={
+        <Text
+          style={{
+            fontSize: 16,
+            textAlign: 'center',
+            padding: 16,
+            color: colorStyle.textSecondary,
+          }}>
+          当前暂无货品。
+        </Text>
+      }
     />
   );
 
@@ -273,6 +284,11 @@ export default function InboundManage({navigation}: InboundManageProps) {
           onPress={() => toggleAccordion(item.cargoName)}>
           {item.models.map(model => (
             <ListItem key={model.modelId.toString()} bottomDivider>
+              <Icon
+                name="package-variant-closed"
+                type="material-community"
+                color={'grey'}
+              />
               <ListItem.Content>
                 <ListItem.Title>{model.modelName}</ListItem.Title>
                 <ListItem.Subtitle>
