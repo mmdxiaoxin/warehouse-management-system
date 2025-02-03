@@ -7,13 +7,11 @@ import {useCargo} from '../../../hooks/useCargo';
 import {Cargo} from '../../../models/Cargo'; // 导入Cargo模型
 import {CargoManageProps} from '../../../routes/types';
 import {colorStyle} from '../../../styles';
+import {ToastAndroid} from 'react-native';
 
 export default function CargoManage({navigation}: CargoManageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [open, setOpen] = useState(false);
-  const [groupedCargo, setGroupedCargo] = useState<
-    {title: string; data: any[]}[]
-  >([]);
 
   // 使用 Realm 查询所有的货物数据
   const {cargoList, deleteCargo} = useCargo();
@@ -41,15 +39,6 @@ export default function CargoManage({navigation}: CargoManageProps) {
     return grouped;
   };
 
-  useEffect(() => {
-    if (cargoList && cargoList.length > 0) {
-      const grouped = groupByCategory(
-        cargoList.filtered('name CONTAINS $0', searchQuery),
-      );
-      setGroupedCargo(grouped);
-    }
-  }, [cargoList, searchQuery]);
-
   const handleDelete = (cargoId: BSON.ObjectId) => {
     Alert.alert('确认删除', '您确定要删除这个货物吗？', [
       {
@@ -61,12 +50,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
         onPress: async () => {
           try {
             deleteCargo(cargoId);
-            const updatedCargoList = cargoList.filtered(
-              'name CONTAINS $0',
-              searchQuery,
-            );
-            const grouped = groupByCategory(updatedCargoList);
-            setGroupedCargo(grouped);
+            ToastAndroid.show('货物删除成功', ToastAndroid.SHORT);
           } catch (error) {
             console.error('删除货物时出错：', error);
             Alert.alert('删除失败', '删除货物时发生错误，请稍后再试。');
@@ -121,7 +105,9 @@ export default function CargoManage({navigation}: CargoManageProps) {
         round
       />
       <SectionList
-        sections={groupedCargo}
+        sections={groupByCategory(
+          cargoList.filtered('name CONTAINS $0', searchQuery),
+        )}
         keyExtractor={item => String(item._id)}
         renderItem={({item}) => (
           <CargoCard
