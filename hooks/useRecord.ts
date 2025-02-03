@@ -70,12 +70,12 @@ export const useRecord = () => {
 
   // 获取指定类型的记录（例如：`inbound`、`outbound` 等）
   const getRecordsByType = (type: 'inbound' | 'outbound' | 'transfer') => {
-    return records.filtered(`type == "${type}"`);
+    return records.filtered(`type == "${type}"`).sorted('ctime', true);
   };
 
   // 获取指定状态的记录（例如：已完成或未完成的记录）
   const getRecordsByStatus = (status: boolean) => {
-    return records.filtered(`status == ${status}`);
+    return records.filtered(`status == ${status}`).sorted('ctime', true);
   };
 
   // 获取指定类型和状态的记录
@@ -83,7 +83,9 @@ export const useRecord = () => {
     type: 'inbound' | 'outbound' | 'transfer',
     status: boolean,
   ) => {
-    return records.filtered(`type == "${type}" AND status == ${status}`);
+    return records
+      .filtered(`type == "${type}" AND status == ${status}`)
+      .sorted('ctime', true);
   };
 
   return {
