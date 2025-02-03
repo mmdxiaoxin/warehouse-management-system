@@ -19,6 +19,8 @@ import {
 } from 'react-native';
 import {BSON} from 'realm';
 import {useCargo} from '../../hooks/useCargo';
+import {useRecord} from '../../hooks/useRecord';
+import {RecordDetail, RecordDetailModel} from '../../models/Record';
 import {InboundManageProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
 
@@ -32,6 +34,7 @@ type InboundDetails = Record<
 
 export default function InboundManage({navigation}: InboundManageProps) {
   const {cargoList} = useCargo();
+  const {createRecord} = useRecord();
 
   // 状态管理：当前选中的货品和规格
   const [selectedCargo, setSelectedCargo] = useState<BSON.ObjectId | null>(
@@ -135,8 +138,46 @@ export default function InboundManage({navigation}: InboundManageProps) {
   };
 
   // 提交入库单
-  const handleSubmit = () => {
-    console.log('入库单已提交', inboundDetails);
+  const handleSubmit = (status: boolean) => {
+    Alert.alert('确认提交', '您确定要提交入库表单吗？', [
+      {
+        text: '取消',
+        style: 'cancel',
+      },
+      {
+        text: '确定',
+        onPress: async () => {
+          try {
+            const type = 'inbound';
+            const detail: RecordDetail[] = Object.keys(inboundDetails).map(
+              cargoId => {
+                const {cargoName, models} = inboundDetails[cargoId];
+                return {
+                  cargoId: new BSON.ObjectId(cargoId),
+                  cargoName,
+                  cargoModels: models.map(model => ({
+                    modelId: model.modelId,
+                    modelName: model.modelName,
+                    quantity: Number(model.quantity),
+                  })),
+                  unit,
+                };
+              },
+            ) as RecordDetail[];
+            const newId = createRecord({type, status, detail});
+            if (!newId) {
+              throw new Error('数据库操作失败');
+            }
+            Alert.alert('提交成功', '入库表单已提交成功。');
+            setInboundDetails({}); // 清空入库明细
+            navigation.goBack();
+          } catch (error) {
+            console.error('提交入库表单失败：', error);
+            Alert.alert('提交失败', '提交表单时发生错误: ' + error);
+          }
+        },
+      },
+    ]);
   };
 
   // 保存为草稿
@@ -373,7 +414,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         />
         <Button
           title="提交入库单"
-          onPress={handleSubmit}
+          onPress={() => handleSubmit(true)}
           color={'success'}
           disabled={Object.keys(inboundDetails).length === 0}
         />
