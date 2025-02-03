@@ -22,18 +22,24 @@ export const useCargo = () => {
     try {
       const newCargoId = new BSON.ObjectId();
       realm.write(() => {
-        const category = realm.objectForPrimaryKey(
-          Category,
-          cargoData.category,
-        );
-        const unit = realm.objectForPrimaryKey(Unit, cargoData.unit);
-        realm.create(Cargo.schema.name, {
+        let category = undefined;
+        if (cargoData.category) {
+          category = realm.objectForPrimaryKey(Category, cargoData.category);
+        }
+        let unit = undefined;
+        if (cargoData.unit) {
+          unit = realm.objectForPrimaryKey(Unit, cargoData.unit);
+        }
+        const newCargo = {
           _id: newCargoId,
           ...cargoData,
           category,
           unit,
           ctime: new Date(),
           utime: new Date(),
+        };
+        realm.create(Cargo.schema.name, {
+          ...newCargo,
         });
       });
       return newCargoId;
