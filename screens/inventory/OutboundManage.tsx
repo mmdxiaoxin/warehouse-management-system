@@ -365,5 +365,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 16,
     gap: 10,
+    marginBottom: 40,
   },
 });

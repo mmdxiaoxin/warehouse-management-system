@@ -120,7 +120,10 @@ const CargoCard: React.FC<CargoCardProps> = ({
       {/* 只在未展开时显示剩余库存 */}
       <View style={styles.cardFooter}>
         <Text
-          style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
+          style={[
+            styles.cardText,
+            {display: isExpanded ? 'none' : 'flex', flex: 1},
+          ]}>
           <Icon
             name="boxes"
             size={15}
@@ -136,7 +139,7 @@ const CargoCard: React.FC<CargoCardProps> = ({
           <Button
             icon={{
               name: 'edit',
-              size: 18,
+              size: 14,
               color: '#fff',
               type: 'antdesign',
             }}
@@ -145,16 +148,16 @@ const CargoCard: React.FC<CargoCardProps> = ({
               borderRadius: 5,
             }}
             onPress={() => handleEdit(item._id)}>
-            编辑
+            <Text style={{fontSize: 14, color: 'white'}}>编辑</Text>
           </Button>
           <Button
-            icon={{name: 'delete', size: 18, color: '#fff', type: 'antdesign'}}
+            icon={{name: 'delete', size: 14, color: '#fff', type: 'antdesign'}}
             buttonStyle={{
               backgroundColor: colorStyle.danger,
               borderRadius: 5,
             }}
             onPress={() => handleDelete(item._id)}>
-            删除
+            <Text style={{fontSize: 14, color: 'white'}}>删除</Text>
           </Button>
         </View>
       </View>
@@ -225,7 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
-    gap: 10,
+    gap: 6,
   },
 });
 

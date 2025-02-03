@@ -71,6 +71,7 @@ const CargoList: React.FC<CargoListProps> = ({
             paddingLeft: 16,
             backgroundColor: colorStyle.primary,
             color: colorStyle.white,
+            paddingVertical: 4,
           }}>
           {title}
         </Text>
