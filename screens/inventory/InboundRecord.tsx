@@ -1,6 +1,12 @@
-import {Button, SearchBar} from '@rneui/themed';
+import {Button, SearchBar, Text} from '@rneui/themed';
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import RecordItem from '../../components/RecordItem';
 import {useRecord} from '../../hooks/useRecord';
 import {InboundRecordProps} from '../../routes/types';
@@ -8,42 +14,74 @@ import {colorStyle} from '../../styles';
 
 export default function InboundRecord({navigation}: InboundRecordProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const {records} = useRecord();
+  const {getRecordsByType} = useRecord();
+
   return (
-    <FlatList
-      style={styles.container}
-      keyExtractor={item => item._id.toString()}
-      data={records}
-      ListHeaderComponent={
-        <View>
-          {/* 搜索框 */}
-          <SearchBar
-            placeholder="筛选记录"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            lightTheme
-            round
-          />
+    <View style={styles.container}>
+      {/* 固定搜索框 */}
+      <View style={styles.header}>
+        <SearchBar
+          placeholder="筛选记录"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          lightTheme
+          round
+        />
+      </View>
+
+      {/* 记录列表 */}
+      <FlatList
+        style={styles.list}
+        keyExtractor={item => item._id.toString()}
+        data={getRecordsByType('inbound')}
+        renderItem={({item}) => <RecordItem item={item} />}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <Text>没有记录</Text>
+          </View>
+        }
+      />
+
+      {/* 固定按钮 */}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.footer}>
           <Button
             title="开始入库"
             onPress={() => navigation.navigate('InboundManage')}
             buttonStyle={styles.startButton}
           />
         </View>
-      }
-      renderItem={({item}) => <RecordItem item={item} />}
-    />
+      </TouchableWithoutFeedback>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#f5f5f5',
+  },
+  header: {
+    paddingTop: 10,
+    paddingHorizontal: 16,
+  },
+  list: {
+    flex: 1,
+    marginBottom: 80,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
   },
   startButton: {
     backgroundColor: colorStyle.primary,
-    marginBottom: 16,
+  },
+  empty: {
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
