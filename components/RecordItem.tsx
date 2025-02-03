@@ -11,6 +11,11 @@ interface RecordItemProps {
 
 const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
   const [expanded, setExpanded] = useState(false);
+  const quantity = item.detail.reduce(
+    (acc, detail) =>
+      acc + detail.cargoModels.reduce((acc, model) => acc + model.quantity, 0),
+    0,
+  );
 
   // 汉化记录类型
   const getRecordType = (type: 'inbound' | 'outbound' | 'transfer') => {
@@ -35,16 +40,18 @@ const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
             {showType && (
               <Text style={styles.recordTitle}>{getRecordType(item.type)}</Text>
             )}
+
             <Text style={styles.recordInfoText}>
               单号: {item._id.toString()}
             </Text>
+
+            <Text style={styles.recordInfoText}>
+              {getRecordType(item.type)}总计: {quantity}
+            </Text>
+
             <Text style={styles.recordInfoText}>
               创建日期: {item.ctime.toLocaleDateString()}{' '}
               {item.ctime.toLocaleTimeString()}
-            </Text>
-            <Text style={styles.recordInfoText}>
-              修改日期: {item.utime.toLocaleDateString()}{' '}
-              {item.utime.toLocaleTimeString()}
             </Text>
 
             <Text
@@ -85,7 +92,11 @@ const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
         </View>
       ))}
       {!item.status && (
-        <Button title="确认提交入库表单" onPress={() => {}} color={'success'} />
+        <Button
+          title={`确认提交${getRecordType(item.type)}表单`}
+          onPress={() => {}}
+          color={'success'}
+        />
       )}
     </ListItem.Accordion>
   );
