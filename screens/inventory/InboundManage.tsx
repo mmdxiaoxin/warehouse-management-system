@@ -79,6 +79,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
       return;
     }
 
+    // 验证数量是否为有效的数字
     if (quantity.match(/^(?:0|(?:-?[1-9]\d*))$/) === null) {
       Alert.alert('请输入正确的数量');
       return;
@@ -87,13 +88,28 @@ export default function InboundManage({navigation}: InboundManageProps) {
     setInboundDetails(prevState => {
       const updatedDetails = {...prevState};
 
-      // 如果该货品已存在，则添加规格到该货品
+      // 如果该货品已存在
       if (updatedDetails[selectedCargo.toHexString()]) {
-        updatedDetails[selectedCargo.toHexString()].models.push({
-          modelId: selectedModel,
-          modelName,
-          quantity,
-        });
+        const existingItem = updatedDetails[selectedCargo.toHexString()];
+
+        // 查找相同规格是否存在
+        const existingModel = existingItem.models.find(model =>
+          model.modelId.equals(selectedModel),
+        );
+
+        if (existingModel) {
+          // 如果存在，则更新数量（确保将 quantity 转换为数字后进行累加）
+          existingModel.quantity = (
+            Number(existingModel.quantity) + Number(quantity)
+          ).toString();
+        } else {
+          // 如果规格不存在，则添加新的规格
+          existingItem.models.push({
+            modelId: selectedModel,
+            modelName,
+            quantity,
+          });
+        }
       } else {
         // 如果该货品不存在，则创建新的货品节点
         updatedDetails[selectedCargo.toHexString()] = {
