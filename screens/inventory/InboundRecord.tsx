@@ -5,6 +5,7 @@ import {BSON} from 'realm';
 import {Record, RecordDetail, RecordDetailModel} from '../../models/Record';
 import {InboundRecordProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
+import RecordItem from '../../components/RecordItem';
 
 // 假设我们有一些示例记录数据
 const sampleRecords: Record[] = [
@@ -42,45 +43,7 @@ export default function InboundRecord({navigation}: InboundRecordProps) {
           buttonStyle={styles.startButton}
         />
       }
-      renderItem={({item}) => (
-        <View style={styles.recordContainer}>
-          <ListItem.Accordion
-            content={
-              <View style={styles.recordHeader}>
-                <Text
-                  style={styles.recordTitle}>{`记录类型: ${item.type}`}</Text>
-                <Text style={styles.recordStatus}>
-                  {item.status ? '状态: 已完成' : '状态: 待完成'}
-                </Text>
-              </View>
-            }
-            isExpanded={false}
-            containerStyle={styles.accordion}>
-            {item.detail.map((detail: RecordDetail) => (
-              <View
-                key={detail.cargoId.toString()}
-                style={styles.detailContainer}>
-                <Text style={styles.cargoName}>{detail.cargoName}</Text>
-                {detail.cargoModels.map((model: RecordDetailModel) => (
-                  <ListItem key={model.modelId.toString()} bottomDivider>
-                    <ListItem.Content>
-                      <Text style={styles.modelName}>{model.modelName}</Text>
-                      <Text style={styles.modelQuantity}>
-                        数量: {model.quantity} {detail.unit}
-                      </Text>
-                    </ListItem.Content>
-                    <Icon
-                      name="info"
-                      type="material"
-                      color={colorStyle.primary}
-                    />
-                  </ListItem>
-                ))}
-              </View>
-            ))}
-          </ListItem.Accordion>
-        </View>
-      )}
+      renderItem={({item}) => <RecordItem item={item} />}
     />
   );
 }
@@ -94,44 +57,5 @@ const styles = StyleSheet.create({
   startButton: {
     backgroundColor: colorStyle.primary,
     marginBottom: 16,
-  },
-  recordContainer: {
-    marginBottom: 16,
-  },
-  recordHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  recordTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colorStyle.textPrimary,
-  },
-  recordStatus: {
-    fontSize: 14,
-    color: colorStyle.textSecondary,
-  },
-  accordion: {
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    padding: 8,
-  },
-  detailContainer: {
-    paddingLeft: 16,
-    paddingVertical: 8,
-  },
-  cargoName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colorStyle.textPrimary,
-  },
-  modelName: {
-    fontSize: 14,
-    color: colorStyle.textPrimary,
-  },
-  modelQuantity: {
-    fontSize: 14,
-    color: colorStyle.textSecondary,
   },
 });
