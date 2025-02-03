@@ -93,7 +93,7 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
 
         {/* 规格以及数量 */}
         <View style={styles.modelsContainer}>
-          {item.models.length > 0 ? (
+          {item.models.some(model => model.quantity > 0) ? (
             item.models
               .filter(model => model.quantity > 0)
               .map(model => (
@@ -112,7 +112,7 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
               ))
           ) : (
             <Text style={[styles.cardText, {textAlign: 'center'}]}>
-              当前货物无规格信息
+              {`当前货物无库存记录`}
             </Text>
           )}
         </View>
