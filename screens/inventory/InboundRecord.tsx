@@ -72,7 +72,9 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
+    marginTop: 10,
     marginBottom: 80,
+    paddingHorizontal: 16,
   },
   footer: {
     position: 'absolute',

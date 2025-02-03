@@ -60,7 +60,10 @@ const RecordItem: React.FC<RecordItemProps> = ({item, showType}) => {
         <View key={detail.cargoId.toString()} style={styles.detailContainer}>
           <Text style={styles.cargoName}>{detail.cargoName}</Text>
           {detail.cargoModels.map((model: RecordDetailModel) => (
-            <ListItem key={model.modelId.toString()} bottomDivider>
+            <ListItem
+              containerStyle={styles.modelItem}
+              key={model.modelId.toString()}
+              bottomDivider>
               <Icon
                 name="package-variant-closed"
                 type="material-community"
@@ -108,12 +111,16 @@ const styles = StyleSheet.create({
   detailContainer: {
     paddingLeft: 16,
     paddingVertical: 8,
-    backgroundColor: colorStyle.neutral100,
+    backgroundColor: colorStyle.neutral200,
     borderRadius: 8,
+  },
+  modelItem: {
+    backgroundColor: colorStyle.neutral300,
   },
   cargoName: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 8,
     color: colorStyle.textPrimary,
   },
   modelName: {

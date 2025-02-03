@@ -2,6 +2,7 @@ import {Icon, ListItem} from '@rneui/themed';
 import React from 'react';
 import {FlatList} from 'react-native';
 import {BSON} from 'realm';
+import {colorStyle} from '../styles';
 
 export type Details = Record<
   string,
@@ -29,6 +30,8 @@ const DetailsList: React.FC<DetailsListProps> = ({
     renderItem={({item}) => (
       <ListItem.Accordion
         key={item.cargoName}
+        containerStyle={{backgroundColor: colorStyle.neutral200}}
+        bottomDivider
         content={
           <ListItem.Content>
             <ListItem.Title
@@ -37,7 +40,7 @@ const DetailsList: React.FC<DetailsListProps> = ({
             </ListItem.Title>
           </ListItem.Content>
         }
-        isExpanded={expandedCargoIds.includes(item.cargoName)}
+        isExpanded={!expandedCargoIds.includes(item.cargoName)}
         onPress={() => toggleAccordion(item.cargoName)}>
         {item.models.map(model => (
           <ListItem key={model.modelId.toString()} bottomDivider>
