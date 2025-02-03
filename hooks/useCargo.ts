@@ -1,11 +1,15 @@
-import {useRealm, useQuery} from '@realm/react';
-import {Cargo} from '../models/Cargo';
+import {useQuery, useRealm} from '@realm/react';
 import {BSON} from 'realm';
+import {Cargo} from '../models/Cargo';
+import {Category} from '../models/Category';
+import {Unit} from '../models/Unit';
 
-export type CargoData = Pick<
-  Cargo,
-  'name' | 'category' | 'unit' | 'description'
->;
+export type CargoData = Partial<
+  Pick<Cargo, 'name' | 'price' | 'brand' | 'description'>
+> & {
+  category?: BSON.ObjectId;
+  unit?: BSON.ObjectId;
+};
 
 export const useCargo = () => {
   const realm = useRealm();
@@ -18,9 +22,16 @@ export const useCargo = () => {
     try {
       const newCargoId = new BSON.ObjectId();
       realm.write(() => {
-        realm.create(Cargo, {
+        const category = realm.objectForPrimaryKey(
+          Category,
+          cargoData.category,
+        );
+        const unit = realm.objectForPrimaryKey(Unit, cargoData.unit);
+        realm.create(Cargo.schema.name, {
           _id: newCargoId,
           ...cargoData,
+          category,
+          unit,
           ctime: new Date(),
           utime: new Date(),
         });
@@ -33,24 +44,30 @@ export const useCargo = () => {
   };
 
   // 更新 Cargo
-  const updateCargo = (
-    cargoId: BSON.ObjectId,
-    updatedData: {
-      name?: string;
-      category?: string;
-      unit?: string;
-      description?: string;
-    },
-  ) => {
+  const updateCargo = (cargoId: BSON.ObjectId, updatedData: CargoData) => {
     realm.write(() => {
       const cargo = realm.objectForPrimaryKey(Cargo, cargoId);
       if (cargo) {
         if (updatedData.name !== undefined) cargo.name = updatedData.name;
-        if (updatedData.category !== undefined)
-          cargo.category = updatedData.category;
-        if (updatedData.unit !== undefined) cargo.unit = updatedData.unit;
+        if (updatedData.price !== undefined) cargo.price = updatedData.price;
+        if (updatedData.brand !== undefined) cargo.brand = updatedData.brand;
         if (updatedData.description !== undefined)
           cargo.description = updatedData.description;
+        if (updatedData.category !== undefined) {
+          const category = realm.objectForPrimaryKey(
+            Category,
+            updatedData.category,
+          );
+          if (category) {
+            cargo.category = category;
+          }
+        }
+        if (updatedData.unit !== undefined) {
+          const unit = realm.objectForPrimaryKey(Unit, updatedData.unit);
+          if (unit) {
+            cargo.unit = unit;
+          }
+        }
         cargo.utime = new Date();
       }
     });
@@ -62,8 +79,8 @@ export const useCargo = () => {
       realm.write(() => {
         const cargoToDelete = realm.objectForPrimaryKey(Cargo, cargoId);
         if (cargoToDelete) {
-          // 删除关联的所有 CargoItem
-          realm.delete(cargoToDelete.items); // 删除 items 中的所有 CargoItem
+          // 删除关联的所有 Model
+          realm.delete(cargoToDelete.models); // 删除 items 中的所有 Model
 
           // 删除 Cargo 本身
           realm.delete(cargoToDelete);

@@ -5,7 +5,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 // 根 Tab 参数类型
 export type RootTabParamList = {
   Home: undefined;
-  Management: undefined | {cargoId: string};
+  Cargo: undefined;
   Inventory: undefined;
 };
 
@@ -14,8 +14,21 @@ export type RootStackParamList = {
   HomeTabs: NavigatorScreenParams<RootTabParamList>;
   AddCargo: undefined;
   AddModel: {cargoId: string} | undefined;
+  AddCategory: undefined;
+  AddUnit: undefined;
   EditCargo: {cargoId: string};
-  EditModel: {cargoId: string; cargoItemId: string};
+  EditCategory: {categoryId: string};
+  EditUnit: {unitId: string};
+  EditModel: {cargoId: string; modelId: string};
+  CargoManage: undefined;
+  CategoryManage: undefined;
+  UnitManage: undefined;
+  ModelManage: {cargoId: string} | undefined;
+  CargoInventory: undefined;
+  OutboundManage: undefined;
+  OutboundRecord: undefined;
+  InboundManage: undefined;
+  InboundRecord: undefined;
 };
 
 // 为 AddCargo, AddModel, EditCargo 提供正确的类型
@@ -27,22 +40,71 @@ export type AddModelProps = NativeStackScreenProps<
   RootStackParamList,
   'AddModel'
 >;
+export type AddCategoryProps = NativeStackScreenProps<
+  RootStackParamList,
+  'AddCategory'
+>;
+export type AddUnitProps = NativeStackScreenProps<
+  RootStackParamList,
+  'AddUnit'
+>;
 export type EditCargoProps = NativeStackScreenProps<
   RootStackParamList,
   'EditCargo'
+>;
+export type EditCategoryProps = NativeStackScreenProps<
+  RootStackParamList,
+  'EditCategory'
+>;
+export type EditUnitProps = NativeStackScreenProps<
+  RootStackParamList,
+  'EditUnit'
 >;
 export type EditModelProps = NativeStackScreenProps<
   RootStackParamList,
   'EditModel'
 >;
+export type CargoManageProps = NativeStackScreenProps<
+  RootStackParamList,
+  'CargoManage'
+>;
+export type CategoryManageProps = NativeStackScreenProps<
+  RootStackParamList,
+  'CategoryManage'
+>;
+export type UnitManageProps = NativeStackScreenProps<
+  RootStackParamList,
+  'UnitManage'
+>;
+export type ModelManageProps = NativeStackScreenProps<
+  RootStackParamList,
+  'ModelManage'
+>;
+export type CargoInventoryProps = NativeStackScreenProps<
+  RootStackParamList,
+  'CargoInventory'
+>;
+export type OutboundManageProps = NativeStackScreenProps<
+  RootStackParamList,
+  'OutboundManage'
+>;
+export type OutboundRecordProps = NativeStackScreenProps<
+  RootStackParamList,
+  'OutboundRecord'
+>;
+export type InboundManageProps = NativeStackScreenProps<
+  RootStackParamList,
+  'InboundManage'
+>;
+export type InboundRecordProps = NativeStackScreenProps<
+  RootStackParamList,
+  'InboundRecord'
+>;
 
 // 为 Tab 屏幕定义 props 类型，结合 BottomTabScreenProps 和 NativeStackScreenProps
 export type HomeScreenProps = BottomTabScreenProps<RootTabParamList, 'Home'> &
   NativeStackScreenProps<RootStackParamList>;
-export type ManagementScreenProps = BottomTabScreenProps<
-  RootTabParamList,
-  'Management'
-> &
+export type CargoScreenProps = BottomTabScreenProps<RootTabParamList, 'Cargo'> &
   NativeStackScreenProps<RootStackParamList>;
 export type InventoryScreenProps = BottomTabScreenProps<
   RootTabParamList,

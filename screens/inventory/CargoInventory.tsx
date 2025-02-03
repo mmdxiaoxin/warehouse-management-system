@@ -1,21 +1,14 @@
+import {Divider, SearchBar} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {
-  Alert,
-  SafeAreaView,
-  SectionList,
-  StyleSheet,
-  Text,
-  TextInput,
-} from 'react-native';
+import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import {BSON} from 'realm';
-import CargoSectionItem from '../components/CargoSectionItem';
-import Divider from '../components/Divider';
-import {useCargo} from '../hooks/useCargo';
-import {Cargo} from '../models/Cargo'; // 导入Cargo模型
-import {InventoryScreenProps} from '../routes/types';
-import {colorStyle} from '../styles';
+import CargoItem from '../../components/CargoItem';
+import {useCargo} from '../../hooks/useCargo';
+import {Cargo} from '../../models/Cargo'; // 导入Cargo模型
+import {CargoInventoryProps} from '../../routes/types';
+import {colorStyle} from '../../styles';
 
-export default function InventoryScreen({navigation}: InventoryScreenProps) {
+export default function CargoInventory({navigation}: CargoInventoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [groupedCargo, setGroupedCargo] = useState<
     {title: string; data: any[]}[]
@@ -26,13 +19,17 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
 
   const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
     const grouped: {title: string; data: any[]}[] = [];
+
+    // 处理空类别，默认显示为 "未分类"
     const categories = Array.from(
-      new Set(cargoList.map(cargo => cargo.category)),
+      new Set(cargoList.map(cargo => cargo.category?.name || '未分类')), // 如果为空，归类为 "未分类"
     );
 
     categories.forEach(category => {
       const filteredCargo = cargoList.filter(
-        cargo => cargo.category === category,
+        cargo =>
+          cargo.category?.name === category ||
+          (category === '未分类' && !cargo.category),
       );
       grouped.push({
         title: category,
@@ -89,18 +86,19 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
+      <SearchBar
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
+        lightTheme
+        round
       />
 
       <SectionList
         sections={groupedCargo}
         keyExtractor={item => String(item._id)}
         renderItem={({item}) => (
-          <CargoSectionItem
+          <CargoItem
             item={item}
             handleEditCargo={handleEditCargo}
             handleDeleteCargo={handleDeleteCargo}
@@ -109,7 +107,7 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
         renderSectionHeader={({section: {title}}) => (
           <>
             <Text style={styles.sectionHeader}>{title}</Text>
-            <Divider />
+            <Divider width={1} style={{marginVertical: 10}} />
           </>
         )}
         ListEmptyComponent={
@@ -125,16 +123,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f5f5f5',
-  },
-  searchInput: {
-    height: 45,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    fontSize: 16,
-    backgroundColor: '#fff',
   },
   sectionHeader: {
     fontSize: 22,

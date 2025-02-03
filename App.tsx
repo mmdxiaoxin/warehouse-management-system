@@ -1,13 +1,23 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {RealmProvider} from '@realm/react';
 import React from 'react';
-import {Cargo} from './models/Cargo';
-import {CargoItem} from './models/CargoItem';
+import {Cargo, Category, Model, Record, Unit} from './models';
+import {RecordDetail, RecordDetailModel} from './models/Record';
+
 import AppNavigator from './routes';
 
 function App(): React.JSX.Element {
   return (
-    <RealmProvider schema={[Cargo, CargoItem]}>
+    <RealmProvider
+      schema={[
+        Cargo,
+        Model,
+        Unit,
+        Category,
+        Record,
+        RecordDetail,
+        RecordDetailModel,
+      ]}>
       <NavigationContainer>
         <AppNavigator />
       </NavigationContainer>

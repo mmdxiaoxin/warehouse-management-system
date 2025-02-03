@@ -1,13 +1,18 @@
 {
   "cSpell.words": [
+    "antdesign",
     "appstore",
     "fontawesome",
+    "ionicon",
+    "rneui",
     "RNFS",
+    "Swipeable",
     "TRUEPREDICATE",
     "utime",
     "uuidv",
     "Yangzi"
   ],
   "java.compile.nullAnalysis.mode": "automatic",
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
