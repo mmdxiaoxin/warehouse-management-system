@@ -128,6 +128,13 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
       <View style={styles.cardFooter}>
         <Text
           style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
+          <Icon
+            name="box"
+            size={15}
+            color={colorStyle.primary}
+            style={styles.icon}
+            type="font-awesome-5"
+          />
           <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
           {item.unit?.name}
         </Text>
@@ -174,7 +181,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cardText: {
-    ...fontStyle.bodySmall,
     fontSize: 14,
     marginBottom: 8,
     color: '#555',
@@ -185,7 +191,6 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 8,
   },
   icon: {
@@ -194,6 +199,7 @@ const styles = StyleSheet.create({
   cardFooter: {
     flexDirection: 'row',
     alignItems: 'center',
+    position: 'relative',
   },
   modelsContainer: {
     marginTop: 10,

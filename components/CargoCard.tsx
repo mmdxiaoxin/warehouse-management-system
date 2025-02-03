@@ -121,6 +121,13 @@ const CargoCard: React.FC<CargoCardProps> = ({
       <View style={styles.cardFooter}>
         <Text
           style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
+          <Icon
+            name="boxes"
+            size={15}
+            color={colorStyle.primary}
+            style={styles.icon}
+            type="font-awesome-5"
+          />
           <Text style={styles.boldText}>规格数目:</Text> {modelsCount} 种
         </Text>
 
@@ -204,7 +211,6 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 8,
   },
   icon: {
