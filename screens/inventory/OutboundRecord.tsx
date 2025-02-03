@@ -61,7 +61,7 @@ export default function OutboundRecord({navigation}: OutboundRecordProps) {
                       foundModel.utime = new Date(); // 更新时间
                     } else {
                       throw new Error(
-                        `库存不足，无法出库 ${foundModel.name}, 当前库存余量: ${foundModel.quantity}`,
+                        `《${foundModel.name}》库存不足 , 当前库存余量: ${foundModel.quantity}, 出库数量: ${model.quantity}`,
                       );
                     }
                   }
@@ -72,7 +72,7 @@ export default function OutboundRecord({navigation}: OutboundRecordProps) {
             Alert.alert('提交成功', '出库表单已提交成功。');
           } catch (error: any) {
             console.error('提交出库表单失败：', error);
-            Alert.alert('提交失败', '提交表单时发生错误: ' + error.message);
+            Alert.alert('提交失败', '提交表单时发生错误\n: ' + error.message);
           }
         },
       },

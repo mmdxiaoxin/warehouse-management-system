@@ -175,7 +175,9 @@ export default function OutboundManage({navigation}: OutboundManageProps) {
                       if (foundModel) {
                         // 检查库存是否足够
                         if (foundModel.quantity < quantity) {
-                          throw new Error('库存不足，无法出库');
+                          throw new Error(
+                            `《${foundModel.name}》库存不足, 当前库存余量: ${foundModel.quantity}, 出库数量: ${quantity}`,
+                          );
                         }
 
                         // 减去出库数量
@@ -202,9 +204,9 @@ export default function OutboundManage({navigation}: OutboundManageProps) {
               Alert.alert('提交成功', '出库表单已提交成功。');
               setOutboundDetails({}); // 清空出库明细
               navigation.goBack();
-            } catch (error) {
+            } catch (error: any) {
               console.error('提交出库表单失败：', error);
-              Alert.alert('提交失败', '提交表单时发生错误: ' + error);
+              Alert.alert('提交失败', '提交表单时发生错误: ' + error.message);
             }
           },
         },
