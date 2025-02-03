@@ -1,5 +1,5 @@
 import {Button, Icon} from '@rneui/themed';
-import React, {useState} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
@@ -16,6 +16,7 @@ interface CargoCardProps {
     | 'utime'
     | 'unit'
     | 'models'
+    | 'price'
   >;
   handleEdit: (cargoId: BSON.ObjectId) => void;
   handleDelete: (cargoId: BSON.ObjectId) => void;
@@ -27,21 +28,36 @@ const CargoCard: React.FC<CargoCardProps> = ({
   handleDelete,
 }) => {
   const modelsCount = item.models.length;
-  const quantity = item.models.reduce(
-    (acc: number, cur: any) => acc + cur.quantity,
-    0,
-  );
   const [isExpanded, setIsExpanded] = useState(false);
   const [expandHeight] = useState(new Animated.Value(0));
 
+  const cardHeight = useMemo(() => {
+    const baseHeight = 100;
+    const descriptionHeight = item.description ? 25 : 0;
+    const unitHeight = item.unit ? 25 : 0;
+    const priceHeight = item.price ? 25 : 0;
+    return baseHeight + descriptionHeight + unitHeight + priceHeight;
+  }, [item.description, item.unit, item.price]);
+
+  // 扩展状态发生变化时触发动画
   const toggleExpand = () => {
     Animated.timing(expandHeight, {
-      toValue: isExpanded ? 0 : 125, // 动态展开/收起
+      toValue: isExpanded ? 0 : cardHeight,
       duration: 300,
       useNativeDriver: false,
     }).start();
     setIsExpanded(prev => !prev);
   };
+
+  useEffect(() => {
+    if (isExpanded) {
+      Animated.timing(expandHeight, {
+        toValue: cardHeight,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [cardHeight, isExpanded]);
 
   return (
     <View style={styles.card}>
@@ -56,7 +72,8 @@ const CargoCard: React.FC<CargoCardProps> = ({
               type: 'font-awesome-5',
               color: colorStyle.primary,
             }}
-            onPress={toggleExpand}></Button>
+            onPress={toggleExpand}
+          />
         </View>
         <Text style={styles.cardCategory}>{item.category}</Text>
       </View>
@@ -74,9 +91,22 @@ const CargoCard: React.FC<CargoCardProps> = ({
             <Text style={styles.boldText}>规格数目:</Text> {modelsCount} 种
           </Text>
         </View>
-        <Text style={styles.cardText}>
-          <Text style={styles.boldText}>货品描述:</Text> {item.description}
-        </Text>
+
+        {item.price && (
+          <Text style={styles.cardText}>
+            <Text style={styles.boldText}>价格:</Text> {item.price} 元
+          </Text>
+        )}
+        {item.unit && (
+          <Text style={styles.cardText}>
+            <Text style={styles.boldText}>单位:</Text> {item.unit}
+          </Text>
+        )}
+        {item.description && (
+          <Text style={styles.cardText}>
+            <Text style={styles.boldText}>备注:</Text> {item.description}
+          </Text>
+        )}
         <Text style={styles.cardText}>
           <Text style={styles.boldText}>创建时间:</Text>{' '}
           {item.ctime ? new Date(item.ctime).toLocaleString() : '错误!'}
