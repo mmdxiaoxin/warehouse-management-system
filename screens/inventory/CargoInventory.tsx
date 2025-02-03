@@ -1,7 +1,6 @@
 import {Divider, SearchBar} from '@rneui/themed';
-import React, {useEffect, useState} from 'react';
-import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
-import {BSON} from 'realm';
+import React, {useState} from 'react';
+import {SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
 import CargoItem from '../../components/CargoItem';
 import {useCargo} from '../../hooks/useCargo';
 import {Cargo} from '../../models/Cargo'; // 导入Cargo模型
@@ -10,12 +9,8 @@ import {colorStyle} from '../../styles';
 
 export default function CargoInventory({navigation}: CargoInventoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [groupedCargo, setGroupedCargo] = useState<
-    {title: string; data: any[]}[]
-  >([]);
 
-  // 使用 Realm 查询所有的货物数据
-  const {cargoList, deleteCargo} = useCargo();
+  const {cargoList} = useCargo();
 
   const groupByCategory = (cargoList: Realm.Results<Cargo>) => {
     const grouped: {title: string; data: any[]}[] = [];
@@ -40,50 +35,6 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
     return grouped;
   };
 
-  useEffect(() => {
-    if (cargoList && cargoList.length > 0) {
-      const grouped = groupByCategory(
-        cargoList.filtered('name CONTAINS $0', searchQuery),
-      );
-      setGroupedCargo(grouped);
-    }
-  }, [cargoList, searchQuery]);
-
-  const handleDeleteCargo = (cargoId: BSON.ObjectId) => {
-    Alert.alert('确认删除', '您确定要删除这个货物吗？', [
-      {
-        text: '取消',
-        style: 'cancel',
-      },
-      {
-        text: '确定',
-        onPress: async () => {
-          try {
-            deleteCargo(cargoId);
-            const updatedCargoList = cargoList.filtered(
-              'name CONTAINS $0',
-              searchQuery,
-            );
-            const grouped = groupByCategory(updatedCargoList);
-            setGroupedCargo(grouped);
-          } catch (error) {
-            console.error('删除货物时出错：', error);
-            Alert.alert('删除失败', '删除货物时发生错误，请稍后再试。');
-          }
-        },
-      },
-    ]);
-  };
-
-  const handleEditCargo = (cargoId: BSON.ObjectId) => {
-    try {
-      navigation.navigate('EditCargo', {cargoId: cargoId.toHexString()});
-    } catch (error) {
-      console.error('导航到编辑页面时出错：', error);
-      Alert.alert('导航错误', '无法导航到编辑页面，请稍后再试。');
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar
@@ -95,15 +46,11 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
       />
 
       <SectionList
-        sections={groupedCargo}
-        keyExtractor={item => String(item._id)}
-        renderItem={({item}) => (
-          <CargoItem
-            item={item}
-            handleEditCargo={handleEditCargo}
-            handleDeleteCargo={handleDeleteCargo}
-          />
+        sections={groupByCategory(
+          cargoList.filtered('name CONTAINS $0', searchQuery),
         )}
+        keyExtractor={item => String(item._id)}
+        renderItem={({item}) => <CargoItem item={item} />}
         renderSectionHeader={({section: {title}}) => (
           <>
             <Text style={styles.sectionHeader}>{title}</Text>

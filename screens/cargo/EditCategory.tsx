@@ -1,7 +1,7 @@
 import {useObject} from '@realm/react';
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import {useCategory} from '../../hooks/useCategory';
@@ -37,11 +37,13 @@ export default function EditCategory({navigation, route}: EditCategoryProps) {
         name: newName,
         description: newDescription,
       });
+
+      ToastAndroid.show('成功修改种类', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (error: any) {
       Alert.alert(`修改失败: ${error.message}!`);
       return;
     }
-    navigation.goBack();
   };
   return (
     <ScrollView style={styles.container}>

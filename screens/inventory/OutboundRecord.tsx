@@ -6,6 +6,7 @@ import {
   FlatList,
   Keyboard,
   StyleSheet,
+  ToastAndroid,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -69,7 +70,7 @@ export default function OutboundRecord({navigation}: OutboundRecordProps) {
               });
             });
 
-            Alert.alert('提交成功', '出库表单已提交成功。');
+            ToastAndroid.show('提交成功', ToastAndroid.SHORT);
           } catch (error: any) {
             console.error('提交出库表单失败：', error);
             Alert.alert('提交失败', '提交表单时发生错误\n: ' + error.message);
@@ -87,7 +88,13 @@ export default function OutboundRecord({navigation}: OutboundRecordProps) {
           text: '删除',
           style: 'destructive',
           onPress: () => {
-            deleteRecord(recordId);
+            try {
+              deleteRecord(recordId);
+              ToastAndroid.show('删除成功', ToastAndroid.SHORT);
+            } catch (error) {
+              console.error('删除记录失败:', error);
+              Alert.alert('删除记录失败', '数据库错误！');
+            }
           },
         },
       ]);

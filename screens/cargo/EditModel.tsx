@@ -1,7 +1,7 @@
 import {useObject} from '@realm/react';
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
@@ -56,12 +56,13 @@ export default function EditModel({navigation, route}: EditModelProps) {
         description,
         quantity: 0,
       });
+
+      ToastAndroid.show('成功修改规格', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (error: any) {
       Alert.alert('修改规格失败:', error.message);
       return;
     }
-
-    navigation.goBack();
   };
 
   return (

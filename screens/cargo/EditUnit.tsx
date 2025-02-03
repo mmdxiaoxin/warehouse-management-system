@@ -1,7 +1,7 @@
 import {useObject} from '@realm/react';
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import {useUnit} from '../../hooks/useUnit';
@@ -34,11 +34,13 @@ export default function EditUnit({navigation, route}: EditUnitProps) {
         name: newName,
         description: newDescription,
       });
+
+      ToastAndroid.show('成功修改单位', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (error: any) {
       Alert.alert(`修改失败: ${error.message}!`);
       return;
     }
-    navigation.goBack();
   };
   return (
     <ScrollView style={styles.container}>

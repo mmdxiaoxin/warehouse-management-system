@@ -1,12 +1,12 @@
+import {Icon, ListItem, Text} from '@rneui/themed';
 import React, {useState} from 'react';
 import {
+  Animated,
   SafeAreaView,
   StyleSheet,
-  View,
-  Animated,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import {Icon, ListItem, Text} from '@rneui/themed';
 import {InventoryScreenProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
 

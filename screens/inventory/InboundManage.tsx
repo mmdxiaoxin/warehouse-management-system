@@ -1,7 +1,13 @@
 import {useRealm} from '@realm/react';
 import {Button, Input, SearchBar, Tab, TabView} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
+import {
+  Alert,
+  SafeAreaView,
+  StyleSheet,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import {BSON} from 'realm';
 import CargoList from '../../components/CargoList';
 import DetailList, {Details} from '../../components/DetailsList';
@@ -232,8 +238,9 @@ export default function InboundManage({navigation}: InboundManageProps) {
                 }
               }
 
-              Alert.alert('提交成功', '入库表单已提交成功。');
               setInboundDetails({}); // 清空入库明细
+
+              ToastAndroid.show('提交成功', ToastAndroid.SHORT);
               navigation.goBack();
             } catch (error) {
               console.error('提交入库表单失败：', error);

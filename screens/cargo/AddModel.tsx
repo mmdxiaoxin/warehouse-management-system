@@ -1,7 +1,13 @@
 import {useObject} from '@realm/react';
 import {Button, Text} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  ToastAndroid,
+} from 'react-native';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
 import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
@@ -35,12 +41,12 @@ export default function AddModel({navigation, route}: AddModelProps) {
       if (!newModel) {
         throw new Error('创建规格失败!');
       }
+      ToastAndroid.show('添加规格成功', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (error: any) {
       Alert.alert('添加规格失败:', error.message);
       return;
     }
-
-    navigation.goBack();
   };
 
   if (!cargo) {

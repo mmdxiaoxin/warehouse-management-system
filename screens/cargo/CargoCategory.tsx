@@ -6,7 +6,7 @@ import {fontStyle} from '../../styles';
 export default function CargoCategory({navigation, route}: AddUnitProps) {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>添加新单位</Text>
+      <Text style={styles.title}>种类管理</Text>
     </ScrollView>
   );
 }

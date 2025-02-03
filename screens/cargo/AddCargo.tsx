@@ -1,14 +1,14 @@
 import {Button, SpeedDial} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, ToastAndroid, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import {BSON} from 'realm';
 import FormItem from '../../components/FormItem'; // 假设Section组件已经在项目中
 import {useCargo} from '../../hooks/useCargo';
 import {useCategory} from '../../hooks/useCategory';
 import {useUnit} from '../../hooks/useUnit';
 import {AddCargoProps} from '../../routes/types';
 import {pickerSelectStyles} from '../../styles';
-import {BSON} from 'realm';
 
 export default function AddCargo({navigation}: AddCargoProps) {
   const [newName, setNewCargoName] = useState('');
@@ -44,11 +44,12 @@ export default function AddCargo({navigation}: AddCargoProps) {
         brand: newBrand,
       });
       if (!newCargoId) {
-        throw new Error('创建货物失败');
+        throw new Error('货物创建失败');
       }
+      ToastAndroid.show('货物添加成功', ToastAndroid.SHORT);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('添加货物失败，请重试！');
+      Alert.alert('货物添加失败，请重试！');
     }
   };
 

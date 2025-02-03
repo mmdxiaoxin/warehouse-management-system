@@ -1,7 +1,7 @@
 import {useObject} from '@realm/react';
 import {Button, SpeedDial, Text} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, ToastAndroid, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import FormItem from '../../components/FormItem';
@@ -56,6 +56,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         price: newPrice ? parseFloat(newPrice) : undefined,
         brand: newBrand,
       });
+
+      ToastAndroid.show('成功修改货物', ToastAndroid.SHORT);
       navigation.goBack();
     } catch (error) {
       console.error('更新货物失败:', error);

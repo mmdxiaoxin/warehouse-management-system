@@ -1,6 +1,6 @@
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import FormItem from '../../components/FormItem';
 import {useUnit} from '../../hooks/useUnit';
 import {AddUnitProps} from '../../routes/types';
@@ -30,11 +30,13 @@ export default function AddUnit({navigation}: AddUnitProps) {
       if (!newId) {
         throw new Error('创建单位失败');
       }
+
+      ToastAndroid.show('添加单位成功', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (error: any) {
       Alert.alert(`添加单位失败: ${error.message}!`);
       return;
     }
-    navigation.goBack();
   };
   return (
     <ScrollView style={styles.container}>

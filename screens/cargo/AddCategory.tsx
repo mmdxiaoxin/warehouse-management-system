@@ -1,6 +1,6 @@
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet} from 'react-native';
+import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import FormItem from '../../components/FormItem';
 import {useCategory} from '../../hooks/useCategory';
 import {AddCategoryProps} from '../../routes/types';
@@ -30,11 +30,13 @@ export default function AddCategory({navigation}: AddCategoryProps) {
       if (!newId) {
         throw new Error('创建类别失败');
       }
+
+      ToastAndroid.show('添加类别成功', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (error: any) {
       Alert.alert(`添加类别失败: ${error.message}!`);
       return;
     }
-    navigation.goBack();
   };
   return (
     <ScrollView style={styles.container}>

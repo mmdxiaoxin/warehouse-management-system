@@ -1,13 +1,13 @@
+import {Icon, ListItem, Text} from '@rneui/themed';
 import React, {useState} from 'react';
 import {
-  ScrollView,
-  StyleSheet,
-  View,
   Alert,
   Animated,
+  ScrollView,
+  StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import {Icon, ListItem, Text} from '@rneui/themed';
 import {CargoScreenProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
 
