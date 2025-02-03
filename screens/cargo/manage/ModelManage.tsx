@@ -1,7 +1,14 @@
 import {Divider} from '@rneui/base';
 import {Button, Icon, SearchBar} from '@rneui/themed';
 import React, {useState} from 'react';
-import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import {BSON} from 'realm';
 import CargoList from '../../../components/CargoList';
 import ModelItem from '../../../components/ModelItem';
@@ -58,7 +65,13 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
         {
           text: '删除',
           onPress: () => {
-            deleteModel(selectedCargo, modelId);
+            try {
+              deleteModel(selectedCargo, modelId);
+              ToastAndroid.show('删除成功', ToastAndroid.SHORT);
+            } catch (error: any) {
+              console.error('删除规格失败:', error);
+              Alert.alert('删除规格失败:', error.message);
+            }
           },
         },
       ]);
