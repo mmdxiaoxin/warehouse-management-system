@@ -29,7 +29,9 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
 
   const cardHeight = useMemo(() => {
     const baseHeight = 120;
-    const modelsHeight = item.models.length * 70;
+    const modelsHeight = item.models.reduce((acc: number, cur: any) => {
+      return acc + (cur.quantity > 0 ? 70 : 0);
+    }, 0);
     return baseHeight + modelsHeight;
   }, [item.models.length]);
 
@@ -92,20 +94,26 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
         {/* 规格以及数量 */}
         <View style={styles.modelsContainer}>
           {item.models.length > 0 ? (
-            item.models.map(model => (
-              <View key={model._id.toHexString()} style={styles.modelItem}>
-                <Text
-                  style={styles.modelTitle}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  规格: {model.name}
-                </Text>
-                <Text style={styles.modelText}>
-                  <Text style={styles.boldText}>数量:</Text> {model.quantity}{' '}
-                  {item.unit?.name}
-                </Text>
-              </View>
-            ))
+            item.models.map(model => {
+              if (model.quantity === 0) {
+                return null;
+              } else {
+                return (
+                  <View key={model._id.toHexString()} style={styles.modelItem}>
+                    <Text
+                      style={styles.modelTitle}
+                      numberOfLines={1}
+                      ellipsizeMode="tail">
+                      规格: {model.name}
+                    </Text>
+                    <Text style={styles.modelText}>
+                      <Text style={styles.boldText}>数量:</Text>{' '}
+                      {model.quantity} {item.unit?.name}
+                    </Text>
+                  </View>
+                );
+              }
+            })
           ) : (
             <Text style={[styles.cardText, {textAlign: 'center'}]}>
               当前货物无规格信息
