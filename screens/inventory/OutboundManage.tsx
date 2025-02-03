@@ -116,6 +116,45 @@ export default function OutboundManage({navigation}: OutboundManageProps) {
     setIndex(2);
   };
 
+  const handleDeleteDetail = (modelId: BSON.ObjectId) => {
+    setOutboundDetails(prevState => {
+      const updatedDetails = {...prevState};
+
+      // 遍历所有货品，查找规格并删除
+      Object.keys(updatedDetails).forEach(cargoId => {
+        const item = updatedDetails[cargoId];
+        item.models = item.models.filter(
+          model => !model.modelId.equals(modelId),
+        );
+
+        // 如果规格数量为 0，则删除该货品
+        if (item.models.length === 0) {
+          delete updatedDetails[cargoId];
+        }
+      });
+
+      return updatedDetails;
+    });
+  };
+
+  const handleUpdateDetail = (modelId: BSON.ObjectId, quantity: string) => {
+    setOutboundDetails(prevState => {
+      const updatedDetails = {...prevState};
+
+      // 遍历所有货品，查找规格并更新数量
+      Object.keys(updatedDetails).forEach(cargoId => {
+        const item = updatedDetails[cargoId];
+        item.models.forEach(model => {
+          if (model.modelId.equals(modelId)) {
+            model.quantity = quantity;
+          }
+        });
+      });
+
+      return updatedDetails;
+    });
+  };
+
   const handleSubmit = (status: boolean) => {
     Alert.alert(
       '确认提交',
@@ -275,7 +314,11 @@ export default function OutboundManage({navigation}: OutboundManageProps) {
           </>
         </TabView.Item>
         <TabView.Item style={styles.tabContainer}>
-          <DetailList details={outboundDetails} />
+          <DetailList
+            details={outboundDetails}
+            onDeleted={handleDeleteDetail}
+            onUpdated={handleUpdateDetail}
+          />
         </TabView.Item>
       </TabView>
 
