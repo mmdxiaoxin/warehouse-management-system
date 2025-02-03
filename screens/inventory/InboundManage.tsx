@@ -22,6 +22,14 @@ import {useCargo} from '../../hooks/useCargo';
 import {InboundManageProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
 
+type InboundDetails = Record<
+  string,
+  {
+    cargoName: string;
+    models: {modelId: BSON.ObjectId; modelName: string; quantity: string}[];
+  }
+>;
+
 export default function InboundManage({navigation}: InboundManageProps) {
   const {cargoList} = useCargo();
 
@@ -34,7 +42,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [index, setIndex] = useState(0);
-  const [inboundDetails, setInboundDetails] = useState<any[]>([]);
+  const [inboundDetails, setInboundDetails] = useState<InboundDetails>({}); // 入库明细
   const [quantity, setQuantity] = useState('1');
   const [unit, setUnit] = useState('');
 
@@ -75,15 +83,34 @@ export default function InboundManage({navigation}: InboundManageProps) {
       return;
     }
 
-    setInboundDetails([
-      ...inboundDetails,
-      {
-        _id: new BSON.ObjectId(),
-        cargoName: cargoName,
-        modelName: modelName,
-        quantity: quantity,
-      },
-    ]);
+    setInboundDetails(prevState => {
+      const updatedDetails = {...prevState};
+
+      // 如果该货品已存在，则添加规格到该货品
+      if (updatedDetails[selectedCargo.toHexString()]) {
+        updatedDetails[selectedCargo.toHexString()].models.push({
+          modelId: selectedModel,
+          modelName,
+          quantity,
+        });
+      } else {
+        // 如果该货品不存在，则创建新的货品节点
+        updatedDetails[selectedCargo.toHexString()] = {
+          cargoName,
+          models: [
+            {
+              modelId: selectedModel,
+              modelName,
+              quantity,
+            },
+          ],
+        };
+      }
+
+      return updatedDetails;
+    });
+
+    // 重置状态
     setSelectedCargo(null);
     setSelectedModel(null);
     setQuantity('1'); // 重置数量
@@ -220,33 +247,26 @@ export default function InboundManage({navigation}: InboundManageProps) {
   // 渲染入库明细部分
   const renderInboundDetails = () => (
     <FlatList
-      data={inboundDetails}
-      keyExtractor={item => item._id.toString()}
+      data={Object.values(inboundDetails)}
+      keyExtractor={item => item.cargoName}
       renderItem={({item}) => (
-        <ListItem bottomDivider>
-          <Icon name="package-variant-closed" type="material-community" />
-          <ListItem.Content>
-            <ListItem.Title>{item.cargoName}</ListItem.Title>
-            <ListItem.Subtitle>
-              {item.modelName} - {item.quantity} {unit}
-            </ListItem.Subtitle>
-          </ListItem.Content>
-          <Button
-            type="clear"
-            icon={
-              <Icon
-                name="delete"
-                type="material-community"
-                color={colorStyle.danger}
-              />
-            }
-            onPress={() =>
-              setInboundDetails(
-                inboundDetails.filter(i => !i._id.equals(item._id)),
-              )
-            }
+        <View>
+          <Text style={styles.cargoTitle}>{item.cargoName}</Text>
+          <FlatList
+            data={item.models}
+            keyExtractor={model => model.modelId.toString()}
+            renderItem={({item}) => (
+              <ListItem bottomDivider>
+                <ListItem.Content>
+                  <ListItem.Title>{item.modelName}</ListItem.Title>
+                  <ListItem.Subtitle>
+                    数量: {item.quantity} {unit}
+                  </ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            )}
           />
-        </ListItem>
+        </View>
       )}
     />
   );
@@ -308,13 +328,13 @@ export default function InboundManage({navigation}: InboundManageProps) {
           title="提交入库单"
           onPress={handleSubmit}
           color={'success'}
-          disabled={inboundDetails.length === 0}
+          disabled={Object.keys(inboundDetails).length === 0}
         />
         <Button
           title="保存草稿"
           onPress={handleSaveDraft}
           color={'error'}
-          disabled={inboundDetails.length === 0}
+          disabled={Object.keys(inboundDetails).length === 0}
         />
       </View>
     </SafeAreaView>
@@ -333,6 +353,11 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     backgroundColor: colorStyle.primary,
     color: colorStyle.white,
+  },
+  cargoTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingLeft: 16,
   },
   mainContent: {
     flex: 7,
