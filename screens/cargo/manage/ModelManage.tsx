@@ -57,24 +57,59 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
 
   const handleDelete = (modelId: BSON.ObjectId) => {
     if (selectedCargo) {
-      Alert.alert('确定删除该规格?', '', [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: '删除',
-          onPress: () => {
-            try {
-              deleteModel(selectedCargo, modelId);
-              ToastAndroid.show('删除成功', ToastAndroid.SHORT);
-            } catch (error: any) {
-              console.error('删除规格失败:', error);
-              Alert.alert('删除规格失败:', error.message);
-            }
+      const model = cargoList
+        .find(item => item._id.toHexString() === selectedCargo.toHexString())
+        ?.models.find(item => item._id.toHexString() === modelId.toHexString());
+
+      if (!model) {
+        Alert.alert('规格不存在!');
+        return;
+      }
+
+      if (model.quantity > 0) {
+        Alert.alert(
+          '确定删除该规格?',
+          `当前库存中余量为${model.quantity}, 删除后将无法恢复。`,
+          [
+            {
+              text: '取消',
+              style: 'cancel',
+            },
+            {
+              text: '删除',
+              onPress: () => {
+                try {
+                  deleteModel(selectedCargo, modelId);
+                  ToastAndroid.show('删除成功', ToastAndroid.SHORT);
+                } catch (error: any) {
+                  console.error('删除规格失败:', error);
+                  Alert.alert('删除规格失败:', error.message);
+                }
+              },
+            },
+          ],
+        );
+        return;
+      } else {
+        Alert.alert('确定删除该规格?', '', [
+          {
+            text: '取消',
+            style: 'cancel',
           },
-        },
-      ]);
+          {
+            text: '删除',
+            onPress: () => {
+              try {
+                deleteModel(selectedCargo, modelId);
+                ToastAndroid.show('删除成功', ToastAndroid.SHORT);
+              } catch (error: any) {
+                console.error('删除规格失败:', error);
+                Alert.alert('删除规格失败:', error.message);
+              }
+            },
+          },
+        ]);
+      }
     } else {
       Alert.alert('请先选择一个货品!');
     }
