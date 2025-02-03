@@ -1,36 +1,15 @@
-import {
-  Button,
-  Icon,
-  Input,
-  ListItem,
-  SearchBar,
-  Tab,
-  TabView,
-  Text,
-} from '@rneui/themed';
+import {Button, SearchBar, Tab, TabView} from '@rneui/themed';
 import React, {useState} from 'react';
-import {
-  Alert,
-  FlatList,
-  SafeAreaView,
-  SectionList,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
 import {BSON} from 'realm';
+import CargoList from '../../components/CargoList';
+import DetailList, {Details} from '../../components/DetailsList';
+import ModelList from '../../components/ModelList';
 import {useCargo} from '../../hooks/useCargo';
 import {useRecord} from '../../hooks/useRecord';
-import {RecordDetail, RecordDetailModel} from '../../models/Record';
+import {RecordDetail} from '../../models/Record';
 import {InboundManageProps} from '../../routes/types';
 import {colorStyle} from '../../styles';
-
-type InboundDetails = Record<
-  string,
-  {
-    cargoName: string;
-    models: {modelId: BSON.ObjectId; modelName: string; quantity: string}[];
-  }
->;
 
 export default function InboundManage({navigation}: InboundManageProps) {
   const {cargoList} = useCargo();
@@ -45,7 +24,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
   );
   const [searchQuery, setSearchQuery] = useState(''); // 搜索框内容
   const [index, setIndex] = useState(0); // Tab 索引
-  const [inboundDetails, setInboundDetails] = useState<InboundDetails>({}); // 入库明细
+  const [inboundDetails, setInboundDetails] = useState<Details>({}); // 入库明细
   const [expandedCargoIds, setExpandedCargoIds] = useState<string[]>([]); // 展开的货品 ID
   const [quantity, setQuantity] = useState('1'); // 入库数量
   const [unit, setUnit] = useState(''); // 货品单位
@@ -185,134 +164,6 @@ export default function InboundManage({navigation}: InboundManageProps) {
     console.log('草稿已保存', inboundDetails);
   };
 
-  // 根据 category 分类货品
-  const categorizedCargoList = () => {
-    const categorized = cargoList.reduce((acc, cargo) => {
-      const category = cargo.category || '未分类'; // 处理没有 category 的情况
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(cargo);
-      return acc;
-    }, {} as Record<string, any[]>);
-
-    // 将分类数据转换为 SectionList 所需的格式
-    return Object.keys(categorized).map(category => ({
-      title: category,
-      data: categorized[category],
-    }));
-  };
-
-  // 渲染货品部分
-  const renderCargoList = () => (
-    <SectionList
-      sections={categorizedCargoList()}
-      keyExtractor={(item, index) => item._id.toString() + index}
-      renderItem={({item}) => (
-        <ListItem bottomDivider onPress={() => handleSelectCargo(item._id)}>
-          <Icon
-            name={
-              selectedCargo?.toHexString() === item._id.toHexString()
-                ? 'label-important'
-                : 'label-important-outline'
-            }
-            type="material"
-            color={
-              selectedCargo?.toHexString() === item._id.toHexString()
-                ? colorStyle.primary
-                : colorStyle.textPrimary
-            }
-          />
-          <ListItem.Content>
-            <ListItem.Title>{item.name}</ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
-      )}
-      renderSectionHeader={({section: {title}}) => (
-        <Text style={styles.sectionHeader}>{title}</Text>
-      )}
-      ListEmptyComponent={
-        <Text
-          style={{
-            fontSize: 16,
-            textAlign: 'center',
-            padding: 16,
-            color: colorStyle.textSecondary,
-          }}>
-          当前暂无货品。
-        </Text>
-      }
-    />
-  );
-
-  // 渲染规格部分
-  const renderModelList = () => (
-    <>
-      {selectedCargo ? (
-        <FlatList
-          data={cargoList.find(item => item._id.equals(selectedCargo))?.models}
-          keyExtractor={item => item._id.toString()}
-          renderItem={({item}) => (
-            <ListItem bottomDivider onPress={() => handleSelectModel(item._id)}>
-              <ListItem.Content>
-                <Icon
-                  name={
-                    selectedModel?.toHexString() === item._id.toHexString()
-                      ? 'label-important'
-                      : 'label-important-outline'
-                  }
-                  type="material"
-                  color={
-                    selectedModel?.toHexString() === item._id.toHexString()
-                      ? colorStyle.primary
-                      : colorStyle.textPrimary
-                  }
-                />
-                <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>
-                  当前库存: {item.quantity} {unit}
-                </ListItem.Subtitle>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-          )}
-          ListEmptyComponent={
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: 'center',
-                padding: 16,
-                color: colorStyle.textSecondary,
-              }}>
-              该货品暂无规格。
-            </Text>
-          }
-        />
-      ) : (
-        <Text
-          style={{
-            fontSize: 16,
-            textAlign: 'center',
-            padding: 16,
-            color: colorStyle.textSecondary,
-          }}>
-          请先选择货品。
-        </Text>
-      )}
-      {selectedModel && (
-        <Input
-          label="入库数量"
-          value={String(quantity)}
-          onChangeText={setQuantity}
-          keyboardType="numeric"
-          placeholder="请输入数量"
-          labelStyle={{marginTop: 16}}
-        />
-      )}
-    </>
-  );
-
   // 切换展开/折叠
   const toggleAccordion = (cargoId: string) => {
     setExpandedCargoIds(prevState =>
@@ -321,43 +172,6 @@ export default function InboundManage({navigation}: InboundManageProps) {
         : [...prevState, cargoId],
     );
   };
-
-  // 渲染入库明细部分
-  const renderInboundDetails = () => (
-    <FlatList
-      data={Object.values(inboundDetails)}
-      keyExtractor={item => item.cargoName}
-      renderItem={({item}) => (
-        <ListItem.Accordion
-          key={item.cargoName}
-          content={
-            <ListItem.Content>
-              <ListItem.Title style={styles.cargoTitle}>
-                {item.cargoName}
-              </ListItem.Title>
-            </ListItem.Content>
-          }
-          isExpanded={expandedCargoIds.includes(item.cargoName)}
-          onPress={() => toggleAccordion(item.cargoName)}>
-          {item.models.map(model => (
-            <ListItem key={model.modelId.toString()} bottomDivider>
-              <Icon
-                name="package-variant-closed"
-                type="material-community"
-                color={'grey'}
-              />
-              <ListItem.Content>
-                <ListItem.Title>{model.modelName}</ListItem.Title>
-                <ListItem.Subtitle>
-                  数量: {model.quantity} {unit}
-                </ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-          ))}
-        </ListItem.Accordion>
-      )}
-    />
-  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -394,13 +208,30 @@ export default function InboundManage({navigation}: InboundManageProps) {
         animationType="spring"
         containerStyle={styles.mainContent}>
         <TabView.Item style={styles.tabContainer}>
-          {renderCargoList()}
+          <CargoList
+            cargoList={cargoList}
+            selectedCargo={selectedCargo}
+            handleSelectCargo={handleSelectCargo}
+          />
         </TabView.Item>
         <TabView.Item style={styles.tabContainer}>
-          {renderModelList()}
+          <ModelList
+            cargoList={cargoList}
+            selectedCargo={selectedCargo}
+            selectedModel={selectedModel}
+            handleSelectModel={handleSelectModel}
+            unit={unit}
+            quantity={quantity}
+            setQuantity={setQuantity}
+          />
         </TabView.Item>
         <TabView.Item style={styles.tabContainer}>
-          {renderInboundDetails()}
+          <DetailList
+            inboundDetails={inboundDetails}
+            expandedCargoIds={expandedCargoIds}
+            toggleAccordion={toggleAccordion}
+            unit={unit}
+          />
         </TabView.Item>
       </TabView>
 
