@@ -1,6 +1,11 @@
 import {Icon, ListItem, Text} from '@rneui/themed';
-import React from 'react';
-import {SectionList, SectionListProps} from 'react-native';
+import React, {useState} from 'react';
+import {
+  SectionList,
+  SectionListProps,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import {BSON} from 'realm';
 import {useCargo} from '../hooks/useCargo';
 import {Cargo} from '../models/Cargo';
@@ -19,6 +24,12 @@ const CargoList: React.FC<CargoListProps> = ({
   ...props
 }) => {
   const {cargoList} = useCargo();
+
+  // 为每个列表项单独创建动画值
+  const [animValues, setAnimValues] = useState<
+    Map<BSON.ObjectId, Animated.Value>
+  >(new Map());
+
   const categorizedCargoList = () => {
     const categorized = cargoList
       .filtered('name CONTAINS $0', searchQuery)
@@ -37,32 +48,72 @@ const CargoList: React.FC<CargoListProps> = ({
     }));
   };
 
+  const handleItemPress = (item: Cargo) => {
+    let animValue = animValues.get(item._id);
+
+    // 如果没有找到该项的动画值，则初始化它
+    if (!animValue) {
+      animValue = new Animated.Value(1);
+      animValues.set(item._id, animValue);
+    }
+
+    // 执行点击动画
+    Animated.sequence([
+      Animated.timing(animValue, {
+        toValue: 0.95, // 点击时稍微缩小
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(animValue, {
+        toValue: 1, // 还原回原来大小
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    onCargoSelect(item._id);
+  };
+
   return (
     <SectionList
       {...props}
       sections={categorizedCargoList()}
       keyExtractor={(item, index) => item._id.toString() + index}
-      renderItem={({item}) => (
-        <ListItem bottomDivider onPress={() => onCargoSelect(item._id)}>
-          <Icon
-            name={
-              selectedCargo?.toHexString() === item._id.toHexString()
-                ? 'label-important'
-                : 'label-important-outline'
-            }
-            type="material"
-            color={
-              selectedCargo?.toHexString() === item._id.toHexString()
-                ? colorStyle.primary
-                : colorStyle.textPrimary
-            }
-          />
-          <ListItem.Content>
-            <ListItem.Title>{item.name}</ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
-      )}
+      renderItem={({item}) => {
+        // 获取每个列表项的动画值
+        let animValue = animValues.get(item._id) || new Animated.Value(1);
+
+        return (
+          <TouchableOpacity onPress={() => handleItemPress(item)}>
+            <Animated.View
+              style={[
+                {
+                  transform: [{scale: animValue}],
+                },
+              ]}>
+              <ListItem bottomDivider>
+                <Icon
+                  name={
+                    selectedCargo?.toHexString() === item._id.toHexString()
+                      ? 'label-important'
+                      : 'label-important-outline'
+                  }
+                  type="material"
+                  color={
+                    selectedCargo?.toHexString() === item._id.toHexString()
+                      ? colorStyle.primary
+                      : colorStyle.textPrimary
+                  }
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{item.name}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+            </Animated.View>
+          </TouchableOpacity>
+        );
+      }}
       renderSectionHeader={({section: {title}}) => (
         <Text
           style={{
@@ -72,6 +123,11 @@ const CargoList: React.FC<CargoListProps> = ({
             backgroundColor: colorStyle.primary,
             color: colorStyle.white,
             paddingVertical: 4,
+            textTransform: 'uppercase', // 分组标题改为大写
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
           }}>
           {title}
         </Text>
