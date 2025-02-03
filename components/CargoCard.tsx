@@ -124,13 +124,15 @@ const CargoCard: React.FC<CargoCardProps> = ({
             styles.cardText,
             {display: isExpanded ? 'none' : 'flex', flex: 1},
           ]}>
-          <Icon
-            name="boxes"
-            size={15}
-            color={colorStyle.primary}
-            style={styles.icon}
-            type="font-awesome-5"
-          />
+          {isExpanded ? null : (
+            <Icon
+              name="boxes"
+              size={15}
+              color={colorStyle.primary}
+              style={styles.icon}
+              type="font-awesome-5"
+            />
+          )}
           <Text style={styles.boldText}>规格数目:</Text> {modelsCount} 种
         </Text>
 

@@ -94,26 +94,22 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
         {/* 规格以及数量 */}
         <View style={styles.modelsContainer}>
           {item.models.length > 0 ? (
-            item.models.map(model => {
-              if (model.quantity === 0) {
-                return null;
-              } else {
-                return (
-                  <View key={model._id.toHexString()} style={styles.modelItem}>
-                    <Text
-                      style={styles.modelTitle}
-                      numberOfLines={1}
-                      ellipsizeMode="tail">
-                      规格: {model.name}
-                    </Text>
-                    <Text style={styles.modelText}>
-                      <Text style={styles.boldText}>数量:</Text>{' '}
-                      {model.quantity} {item.unit?.name}
-                    </Text>
-                  </View>
-                );
-              }
-            })
+            item.models
+              .filter(model => model.quantity > 0)
+              .map(model => (
+                <View key={model._id.toHexString()} style={styles.modelItem}>
+                  <Text
+                    style={styles.modelTitle}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    规格: {model.name}
+                  </Text>
+                  <Text style={styles.modelText}>
+                    <Text style={styles.boldText}>数量:</Text> {model.quantity}{' '}
+                    {item.unit?.name}
+                  </Text>
+                </View>
+              ))
           ) : (
             <Text style={[styles.cardText, {textAlign: 'center'}]}>
               当前货物无规格信息
@@ -136,13 +132,15 @@ const CargoItem: React.FC<CargoItemProps> = ({item}) => {
       <View style={styles.cardFooter}>
         <Text
           style={[styles.cardText, {display: isExpanded ? 'none' : 'flex'}]}>
-          <Icon
-            name="box"
-            size={15}
-            color={colorStyle.primary}
-            style={styles.icon}
-            type="font-awesome-5"
-          />
+          {isExpanded ? null : (
+            <Icon
+              name="box"
+              size={15}
+              color={colorStyle.primary}
+              style={styles.icon}
+              type="font-awesome-5"
+            />
+          )}
           <Text style={styles.boldText}>剩余库存:</Text> {quantity}{' '}
           {item.unit?.name}
         </Text>
