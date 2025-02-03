@@ -80,6 +80,7 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
         {/* 左侧货品列表 */}
         <View style={styles.leftContainer}>
           <CargoList
+            searchQuery={searchQuery}
             selectedCargo={selectedCargo}
             onCargoSelect={cargoId => handleSelect(cargoId.toHexString())}
             ListHeaderComponent={() => (

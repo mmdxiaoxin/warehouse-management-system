@@ -7,25 +7,29 @@ import {Cargo} from '../models/Cargo';
 import {colorStyle} from '../styles';
 
 interface CargoListProps extends Omit<SectionListProps<Cargo>, 'sections'> {
+  searchQuery?: string;
   selectedCargo: BSON.ObjectId | null;
   onCargoSelect: (cargoId: BSON.ObjectId) => void;
 }
 
 const CargoList: React.FC<CargoListProps> = ({
+  searchQuery,
   selectedCargo,
   onCargoSelect,
   ...props
 }) => {
   const {cargoList} = useCargo();
   const categorizedCargoList = () => {
-    const categorized = cargoList.reduce((acc, cargo) => {
-      const category = cargo.category?.name || '未分类'; // 处理没有 category 的情况
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(cargo);
-      return acc;
-    }, {} as Record<string, any[]>);
+    const categorized = cargoList
+      .filtered('name CONTAINS $0', searchQuery)
+      .reduce((acc, cargo) => {
+        const category = cargo.category?.name || '未分类'; // 处理没有 category 的情况
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(cargo);
+        return acc;
+      }, {} as Record<string, any[]>);
 
     return Object.keys(categorized).map(category => ({
       title: category,

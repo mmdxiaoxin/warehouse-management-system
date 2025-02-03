@@ -289,6 +289,7 @@ export default function OutboundManage({navigation}: OutboundManageProps) {
         containerStyle={styles.mainContent}>
         <TabView.Item style={styles.tabContainer}>
           <CargoList
+            searchQuery={searchQuery}
             selectedCargo={selectedCargo}
             onCargoSelect={handleSelectCargo}
           />

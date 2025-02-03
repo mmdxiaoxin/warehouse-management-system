@@ -281,6 +281,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         containerStyle={styles.mainContent}>
         <TabView.Item style={styles.tabContainer}>
           <CargoList
+            searchQuery={searchQuery}
             selectedCargo={selectedCargo}
             onCargoSelect={handleSelectCargo}
           />

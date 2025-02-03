@@ -122,7 +122,7 @@ export default function InboundRecord({navigation}: InboundRecordProps) {
         )}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text>没有记录</Text>
+            <Text style={{color: colorStyle.textMuted}}>当前没有记录</Text>
           </View>
         }
       />
