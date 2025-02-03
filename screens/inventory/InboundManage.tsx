@@ -249,6 +249,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         <TabView.Item style={styles.tabContainer}>
           <>
             <ModelList
+              type="inbound"
               selectedCargo={selectedCargo}
               selectedModel={selectedModel}
               onModelSelect={handleSelectModel}
@@ -266,7 +267,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
           </>
         </TabView.Item>
         <TabView.Item style={styles.tabContainer}>
-          <DetailList inboundDetails={inboundDetails} />
+          <DetailList details={inboundDetails} />
         </TabView.Item>
       </TabView>
 

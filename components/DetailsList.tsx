@@ -18,10 +18,10 @@ export type Details = Record<
 >;
 
 interface DetailsListProps {
-  inboundDetails: Details;
+  details: Details;
 }
 
-const DetailsList: React.FC<DetailsListProps> = ({inboundDetails}) => {
+const DetailsList: React.FC<DetailsListProps> = ({details}) => {
   const [expandedCargoIds, setExpandedCargoIds] = useState<string[]>([]); // 展开的货品 ID
 
   // 切换展开/折叠
@@ -35,7 +35,7 @@ const DetailsList: React.FC<DetailsListProps> = ({inboundDetails}) => {
 
   return (
     <FlatList
-      data={Object.values(inboundDetails)}
+      data={Object.values(details)}
       keyExtractor={item => item.cargoName}
       renderItem={({item}) => (
         <ListItem.Accordion
@@ -69,6 +69,15 @@ const DetailsList: React.FC<DetailsListProps> = ({inboundDetails}) => {
           ))}
         </ListItem.Accordion>
       )}
+      ListEmptyComponent={
+        <ListItem containerStyle={{backgroundColor: colorStyle.neutral200}}>
+          <ListItem.Content>
+            <ListItem.Title style={{color: colorStyle.textMuted}}>
+              当前暂无记录
+            </ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+      }
     />
   );
 };

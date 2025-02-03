@@ -10,12 +10,14 @@ interface ModelListProps {
   selectedCargo: BSON.ObjectId | null;
   selectedModel: BSON.ObjectId | null;
   onModelSelect: (modelId: BSON.ObjectId) => void;
+  type: 'inbound' | 'outbound' | 'transfer';
 }
 
 const ModelList: React.FC<ModelListProps> = ({
   selectedCargo,
   selectedModel,
   onModelSelect,
+  type,
 }) => {
   const cargo = useObject(Cargo, selectedCargo || new BSON.ObjectId()); // 货品
 
@@ -32,9 +34,13 @@ const ModelList: React.FC<ModelListProps> = ({
       </Text>
     );
   } else {
+    const models =
+      type === 'inbound'
+        ? cargo?.models
+        : cargo?.models.filter(model => model.quantity > 0);
     return (
       <FlatList
-        data={cargo?.models}
+        data={models}
         keyExtractor={item => item._id.toString()}
         renderItem={({item}) => (
           <ListItem bottomDivider onPress={() => onModelSelect(item._id)}>
