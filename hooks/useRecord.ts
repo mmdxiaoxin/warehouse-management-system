@@ -2,27 +2,32 @@ import {useQuery, useRealm} from '@realm/react';
 import {BSON} from 'realm';
 import {Record} from '../models/Record';
 
-export type RecordData = Pick<Record, 'detail' | 'status'>;
+export type RecordData = Pick<Record, 'detail' | 'status' | 'type'>;
 
+// 使用 Realm 数据模型
 export const useRecord = () => {
   const realm = useRealm();
-  // 查询所有的 Record 数据
-  const records = useQuery(Record);
+  const records = useQuery(Record); // 查询所有的 Record 数据
 
   // 创建新的 Record
-  const createRecord = ({detail, status}: RecordData) => {
+  const createRecord = ({detail, status, type}: RecordData) => {
     try {
       const newId = new BSON.ObjectId();
+      const newRecord = {
+        _id: newId,
+        detail,
+        status,
+        type,
+        ctime: new Date(),
+        utime: new Date(),
+      };
+
       realm.write(() => {
-        realm.create(Record.schema.name, {
-          _id: newId,
-          detail,
-          status,
-          ctime: new Date(),
-          utime: new Date(),
-        });
+        realm.create(Record.schema.name, newRecord);
       });
-      return newId;
+
+      // 返回完整的 Record 对象
+      return newRecord;
     } catch (error) {
       console.error('创建失败:', error);
       return null;
@@ -30,13 +35,15 @@ export const useRecord = () => {
   };
 
   // 更新货物中的某个 Record
-  const updateRecord = (id: BSON.ObjectId, record: RecordData) => {
+  const updateRecord = (id: BSON.ObjectId, recordData: RecordData) => {
     try {
       realm.write(() => {
         const recordToUpdate = realm.objectForPrimaryKey(Record, id);
         if (recordToUpdate) {
-          recordToUpdate.detail = record.detail;
-          recordToUpdate.status = record.status;
+          // 更新 record
+          recordToUpdate.type = recordData.type;
+          recordToUpdate.detail = recordData.detail;
+          recordToUpdate.status = recordData.status;
           recordToUpdate.utime = new Date();
         }
       });
@@ -61,10 +68,31 @@ export const useRecord = () => {
     }
   };
 
+  // 获取指定类型的记录（例如：`inbound`、`outbound` 等）
+  const getRecordsByType = (type: 'inbound' | 'outbound' | 'transfer') => {
+    return records.filtered(`type == "${type}"`);
+  };
+
+  // 获取指定状态的记录（例如：已完成或未完成的记录）
+  const getRecordsByStatus = (status: boolean) => {
+    return records.filtered(`status == ${status}`);
+  };
+
+  // 获取指定类型和状态的记录
+  const getRecordsByTypeAndStatus = (
+    type: 'inbound' | 'outbound' | 'transfer',
+    status: boolean,
+  ) => {
+    return records.filtered(`type == "${type}" AND status == ${status}`);
+  };
+
   return {
     records,
     createRecord,
     updateRecord,
     deleteRecord,
+    getRecordsByType,
+    getRecordsByStatus,
+    getRecordsByTypeAndStatus,
   };
 };
