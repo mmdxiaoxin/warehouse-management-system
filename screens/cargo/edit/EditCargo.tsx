@@ -4,13 +4,14 @@ import React, {useState} from 'react';
 import {Alert, StyleSheet, ToastAndroid, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import FormItem from '../../components/FormItem';
-import {useCargo} from '../../hooks/useCargo';
-import {useCategory} from '../../hooks/useCategory';
-import {useUnit} from '../../hooks/useUnit';
-import {Cargo} from '../../models/Cargo';
-import {EditCargoProps} from '../../routes/types';
-import {pickerSelectStyles} from '../../styles';
+import FormItem from '../../../components/FormItem';
+import {useBrand} from '../../../hooks/useBrand';
+import {useCargo} from '../../../hooks/useCargo';
+import {useCategory} from '../../../hooks/useCategory';
+import {useUnit} from '../../../hooks/useUnit';
+import {Cargo} from '../../../models/Cargo';
+import {EditCargoProps} from '../../../routes/types';
+import {pickerSelectStyles} from '../../../styles';
 
 export default function EditCargo({navigation, route}: EditCargoProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);
@@ -18,50 +19,60 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
   const {updateCargo} = useCargo();
   const {categories} = useCategory();
   const {units} = useUnit();
+  const {brands} = useBrand();
 
   const foundCargo = useObject(Cargo, cargoId);
 
-  const [newCargoName, setNewCargoName] = useState(foundCargo?.name || '');
-  const [newCargoCategory, setNewCargoCategory] = useState<
-    BSON.ObjectId | undefined
-  >(foundCargo?.category?._id);
-  const [newCargoUnit, setNewCargoUnit] = useState<BSON.ObjectId | undefined>(
+  const [newName, setNewName] = useState(foundCargo?.name || '');
+  const [newCategory, setNewCategory] = useState<BSON.ObjectId | undefined>(
+    foundCargo?.category?._id,
+  );
+  const [newUnit, setNewUnit] = useState<BSON.ObjectId | undefined>(
     foundCargo?.unit?._id,
   );
-  const [newCargoDescription, setNewCargoDescription] = useState(
+  const [newDescription, setNewDescription] = useState(
     foundCargo?.description || '',
   );
   const [newPrice, setNewPrice] = useState(foundCargo?.price?.toString() || '');
-  const [newBrand, setNewBrand] = useState(foundCargo?.brand || '');
+  const [newBrand, setNewBrand] = useState<BSON.ObjectId | undefined>(
+    foundCargo?.brand?._id,
+  );
 
   const [open, setOpen] = useState(false);
 
-  // 校验输入数据
   const handleSaveCargo = async () => {
-    if (!newCargoName.trim()) {
-      Alert.alert('请输入货物名称');
-      return;
-    }
-
     try {
+      // 校验是否找到货物信息
       if (!foundCargo) {
-        throw new Error('货物数据不存在');
+        throw new Error('未找到货物信息');
+      }
+
+      // 校验输入字段是否为空
+      if (!newName.trim()) {
+        throw new Error('货物名称不能为空!');
+      }
+
+      // 校验价格是否为数字
+      if (
+        newPrice.match(/^(-?[1-9]\d*\.\d+|-?0\.\d*[1-9]\d*|0\.0+)$/) === null
+      ) {
+        throw new Error('价格必须为数字');
       }
 
       updateCargo(foundCargo._id, {
-        name: newCargoName,
-        category: newCargoCategory,
-        unit: newCargoUnit,
-        description: newCargoDescription,
+        name: newName,
+        category: newCategory,
+        unit: newUnit,
+        description: newDescription,
         price: newPrice ? parseFloat(newPrice) : undefined,
         brand: newBrand,
       });
 
       ToastAndroid.show('成功修改货物', ToastAndroid.SHORT);
       navigation.goBack();
-    } catch (error) {
+    } catch (error: any) {
       console.error('更新货物失败:', error);
-      Alert.alert('更新货物失败，请重试！');
+      Alert.alert('更新货物失败:', error.message);
     }
   };
 
@@ -75,17 +86,18 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       <FormItem
         inline
         label="货物名称"
-        value={newCargoName}
-        onChangeText={setNewCargoName}
+        value={newName}
+        onChangeText={setNewName}
         placeholder="请输入货物名称"
       />
 
       {/* 货物类别 */}
       <FormItem inline label="货物类别">
         <RNPickerSelect
+          placeholder={{label: '请选择货物类别', value: ''}}
           useNativeAndroidPickerStyle={false}
-          value={newCargoCategory}
-          onValueChange={setNewCargoCategory}
+          value={newCategory}
+          onValueChange={setNewCategory}
           items={categories.map(category => ({
             label: category.name,
             value: category._id,
@@ -98,8 +110,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       <FormItem inline label="货物单位">
         <RNPickerSelect
           placeholder={{label: '请选择货物单位', value: ''}}
-          value={newCargoUnit}
-          onValueChange={setNewCargoUnit}
+          value={newUnit}
+          onValueChange={setNewUnit}
           useNativeAndroidPickerStyle={false}
           items={units.map(unit => ({
             label: unit.name,
@@ -117,20 +129,25 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         onChangeText={setNewPrice}
       />
 
-      <FormItem
-        inline
-        label="品牌"
-        placeholder="请输入品牌(可选)"
-        value={newBrand}
-        onChangeText={setNewBrand}
-      />
-
+      <FormItem inline label="货物品牌">
+        <RNPickerSelect
+          placeholder={{label: '请选择货物品牌(可选)', value: ''}}
+          value={newBrand}
+          onValueChange={setNewBrand}
+          useNativeAndroidPickerStyle={false}
+          items={brands.map(brand => ({
+            label: brand.name,
+            value: brand._id,
+          }))}
+          style={pickerSelectStyles}
+        />
+      </FormItem>
       <FormItem
         inline
         label="备注"
         placeholder="请输入备注(可选)"
-        value={newCargoDescription}
-        onChangeText={setNewCargoDescription}
+        value={newDescription}
+        onChangeText={setNewDescription}
       />
 
       {/* 保存按钮 */}

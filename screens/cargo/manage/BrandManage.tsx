@@ -1,36 +1,35 @@
 import {ListItem} from '@rneui/base';
 import {Button, Icon, SearchBar, Text} from '@rneui/themed';
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
-import {useCategory} from '../../../hooks/useCategory';
-import {CategoryManageProps} from '../../../routes/types';
-import {colorStyle} from '../../../styles';
+import {Alert, FlatList, StyleSheet, View} from 'react-native';
 import {BSON} from 'realm';
-import {Alert} from 'react-native';
+import {useBrand} from '../../../hooks/useBrand';
+import {BrandManageProps} from '../../../routes/types';
+import {colorStyle} from '../../../styles';
 
-export default function CategoryManage({navigation}: CategoryManageProps) {
+export default function BrandManage({navigation}: BrandManageProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
-  const {categories, deleteCategory} = useCategory();
+  const {brands, deleteBrand} = useBrand();
 
   const handleDelete = (id: BSON.ObjectId) => {
     try {
-      Alert.alert('删除确认', '确定要删除该类别吗？', [
+      Alert.alert('删除确认', '确定要删除该单位吗？', [
         {text: '取消', style: 'cancel'},
         {
           text: '删除',
           style: 'destructive',
           onPress: () => {
-            deleteCategory(id);
+            deleteBrand(id);
           },
         },
       ]);
     } catch (error) {
-      console.error('删除类别失败:', error);
+      console.error('删除单位失败:', error);
     }
   };
 
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredBrands = brands.filter(brand =>
+    brand.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -54,12 +53,12 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
         }}
         buttonStyle={{width: 60, height: 60, borderRadius: 30}}
         onPress={() => {
-          navigation.navigate('AddCategory');
+          navigation.navigate('AddBrand');
         }}
       />
       <FlatList
         style={{marginTop: 10, marginBottom: 80}}
-        data={filteredCategories}
+        data={filteredBrands}
         keyExtractor={item => item._id.toString()}
         renderItem={({item}) => (
           <View style={{marginBottom: 10, backgroundColor: 'white'}}>
@@ -70,8 +69,8 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
                 <Button
                   title="编辑"
                   onPress={() => {
-                    navigation.navigate('EditCategory', {
-                      categoryId: item._id.toHexString(),
+                    navigation.navigate('EditBrand', {
+                      brandId: item._id.toHexString(),
                     });
                   }}
                   icon={{name: 'edit', color: 'white'}}
@@ -89,7 +88,7 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
                   color={'error'}
                 />
               }>
-              <Icon name="category" type="material" />
+              <Icon name="institution" type="font-awesome" />
               <ListItem.Content>
                 <ListItem.Title>{item.name}</ListItem.Title>
               </ListItem.Content>
@@ -98,7 +97,7 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
           </View>
         )}
         ListFooterComponent={
-          filteredCategories.length === 0 ? (
+          filteredBrands.length === 0 ? (
             <Text
               style={{
                 textAlign: 'center',
@@ -114,7 +113,7 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
                 marginTop: 20,
                 color: colorStyle.textSecondary,
               }}>
-              共{filteredCategories.length}条数据
+              共{filteredBrands.length}条数据
             </Text>
           )
         }

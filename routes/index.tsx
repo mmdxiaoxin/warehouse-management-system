@@ -7,14 +7,18 @@ import {
 import {Icon} from '@rneui/themed';
 import HomeScreen from '../screens/HomeScreen';
 import CargoScreen from '../screens/cargo';
-import AddCargo from '../screens/cargo/AddCargo';
-import AddCategory from '../screens/cargo/AddCategory';
-import AddModel from '../screens/cargo/AddModel';
-import AddUnit from '../screens/cargo/AddUnit';
-import EditCargo from '../screens/cargo/EditCargo';
-import EditCategory from '../screens/cargo/EditCategory';
-import EditModel from '../screens/cargo/EditModel';
-import EditUnit from '../screens/cargo/EditUnit';
+import AddBrand from '../screens/cargo/add/AddBrand';
+import AddCargo from '../screens/cargo/add/AddCargo';
+import AddCategory from '../screens/cargo/add/AddCategory';
+import AddModel from '../screens/cargo/add/AddModel';
+import AddUnit from '../screens/cargo/add/AddUnit';
+import EditBrand from '../screens/cargo/edit/EditBrand';
+import EditCargo from '../screens/cargo/edit/EditCargo';
+import EditCategory from '../screens/cargo/edit/EditCategory';
+import EditModel from '../screens/cargo/edit/EditModel';
+import EditUnit from '../screens/cargo/edit/EditUnit';
+import BrandManage from '../screens/cargo/manage/BrandManage';
+import CargoClassify from '../screens/cargo/manage/CargoClassify';
 import CargoManage from '../screens/cargo/manage/CargoManage';
 import CategoryManage from '../screens/cargo/manage/CategoryManage';
 import ModelManage from '../screens/cargo/manage/ModelManage';
@@ -159,6 +163,11 @@ export default function AppNavigator() {
         options={{title: '新增类别'}}
       />
       <Stack.Screen
+        name="AddBrand"
+        component={AddBrand}
+        options={{title: '新增品牌'}}
+      />
+      <Stack.Screen
         name="EditCategory"
         component={EditCategory}
         options={{title: '编辑类别'}}
@@ -179,9 +188,19 @@ export default function AppNavigator() {
         options={{title: '编辑规格'}}
       />
       <Stack.Screen
+        name="EditBrand"
+        component={EditBrand}
+        options={{title: '编辑品牌'}}
+      />
+      <Stack.Screen
         name="CargoManage"
         component={CargoManage}
         options={{title: '货品管理'}}
+      />
+      <Stack.Screen
+        name="CargoClassify"
+        component={CargoClassify}
+        options={{title: '货品分类'}}
       />
       <Stack.Screen
         name="CategoryManage"
@@ -197,6 +216,11 @@ export default function AppNavigator() {
         name="ModelManage"
         component={ModelManage}
         options={{title: '规格管理'}}
+      />
+      <Stack.Screen
+        name="BrandManage"
+        component={BrandManage}
+        options={{title: '品牌管理'}}
       />
       <Stack.Screen
         name="CargoInventory"

@@ -1,14 +1,16 @@
 import {useQuery, useRealm} from '@realm/react';
 import {BSON} from 'realm';
+import {Brand} from '../models';
 import {Cargo} from '../models/Cargo';
 import {Category} from '../models/Category';
 import {Unit} from '../models/Unit';
 
 export type CargoData = Partial<
-  Pick<Cargo, 'name' | 'price' | 'brand' | 'description'>
+  Pick<Cargo, 'name' | 'price' | 'description'>
 > & {
   category?: BSON.ObjectId;
   unit?: BSON.ObjectId;
+  brand?: BSON.ObjectId;
 };
 
 export const useCargo = () => {
@@ -26,6 +28,10 @@ export const useCargo = () => {
         if (cargoData.category) {
           category = realm.objectForPrimaryKey(Category, cargoData.category);
         }
+        let brand = undefined;
+        if (cargoData.brand) {
+          brand = realm.objectForPrimaryKey(Brand, cargoData.brand);
+        }
         let unit = undefined;
         if (cargoData.unit) {
           unit = realm.objectForPrimaryKey(Unit, cargoData.unit);
@@ -35,6 +41,7 @@ export const useCargo = () => {
           ...cargoData,
           category,
           unit,
+          brand,
           ctime: new Date(),
           utime: new Date(),
         };
@@ -56,7 +63,6 @@ export const useCargo = () => {
       if (cargo) {
         if (updatedData.name !== undefined) cargo.name = updatedData.name;
         if (updatedData.price !== undefined) cargo.price = updatedData.price;
-        if (updatedData.brand !== undefined) cargo.brand = updatedData.brand;
         if (updatedData.description !== undefined)
           cargo.description = updatedData.description;
         if (updatedData.category !== undefined) {
@@ -66,6 +72,12 @@ export const useCargo = () => {
           );
           if (category) {
             cargo.category = category;
+          }
+        }
+        if (updatedData.brand !== undefined) {
+          const brand = realm.objectForPrimaryKey(Brand, updatedData.brand);
+          if (brand) {
+            cargo.brand = brand;
           }
         }
         if (updatedData.unit !== undefined) {

@@ -105,8 +105,8 @@ export default function InboundRecord({navigation}: InboundRecordProps) {
           placeholder="筛选记录(按入库单号)"
           value={searchQuery}
           onChangeText={setSearchQuery}
-          lightTheme
-          round
+          platform="android"
+          containerStyle={{borderRadius: 15}}
         />
       </View>
 

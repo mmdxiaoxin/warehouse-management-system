@@ -3,12 +3,13 @@ import React, {useState} from 'react';
 import {Alert, StyleSheet, ToastAndroid, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import FormItem from '../../components/FormItem'; // 假设Section组件已经在项目中
-import {useCargo} from '../../hooks/useCargo';
-import {useCategory} from '../../hooks/useCategory';
-import {useUnit} from '../../hooks/useUnit';
-import {AddCargoProps} from '../../routes/types';
-import {pickerSelectStyles} from '../../styles';
+import FormItem from '../../../components/FormItem'; // 假设Section组件已经在项目中
+import {useBrand} from '../../../hooks/useBrand';
+import {useCargo} from '../../../hooks/useCargo';
+import {useCategory} from '../../../hooks/useCategory';
+import {useUnit} from '../../../hooks/useUnit';
+import {AddCargoProps} from '../../../routes/types';
+import {pickerSelectStyles} from '../../../styles';
 
 export default function AddCargo({navigation}: AddCargoProps) {
   const [newName, setNewCargoName] = useState('');
@@ -16,8 +17,8 @@ export default function AddCargo({navigation}: AddCargoProps) {
     BSON.ObjectId | undefined
   >();
   const [newUnit, setNewCargoUnit] = useState<BSON.ObjectId | undefined>();
+  const [newBrand, setNewBrand] = useState<BSON.ObjectId | undefined>();
   const [newPrice, setNewPrice] = useState('');
-  const [newBrand, setNewBrand] = useState('');
   const [newDescription, setNewCargoDescription] = useState('');
 
   const [open, setOpen] = useState(false);
@@ -25,16 +26,23 @@ export default function AddCargo({navigation}: AddCargoProps) {
   const {createCargo} = useCargo();
   const {categories} = useCategory();
   const {units} = useUnit();
+  const {brands} = useBrand();
 
   // 处理添加货物
   const handleAdd = async () => {
-    // 校验输入字段是否为空
-    if (!newName.trim()) {
-      Alert.alert('请输入货物名称');
-      return;
-    }
-
     try {
+      // 校验输入字段是否为空
+      if (!newName.trim()) {
+        throw new Error('货物名称不能为空!');
+      }
+
+      // 校验价格是否为数字
+      if (
+        newPrice.match(/^(-?[1-9]\d*\.\d+|-?0\.\d*[1-9]\d*|0\.0+)$/) === null
+      ) {
+        throw new Error('价格必须为数字');
+      }
+
       const newCargoId = createCargo({
         name: newName,
         category: newCategory,
@@ -43,13 +51,14 @@ export default function AddCargo({navigation}: AddCargoProps) {
         price: newPrice ? parseFloat(newPrice) : undefined,
         brand: newBrand,
       });
+
       if (!newCargoId) {
         throw new Error('货物创建失败');
       }
       ToastAndroid.show('货物添加成功', ToastAndroid.SHORT);
-      navigation.goBack();
-    } catch (error) {
-      Alert.alert('货物添加失败，请重试！');
+      navigation.navigate('CargoManage', {cargoName: newName});
+    } catch (error: any) {
+      Alert.alert('货物添加失败:', error.message);
     }
   };
 
@@ -99,13 +108,19 @@ export default function AddCargo({navigation}: AddCargoProps) {
         onChangeText={setNewPrice}
       />
 
-      <FormItem
-        inline
-        label="品牌"
-        placeholder="请输入品牌(可选)"
-        value={newBrand}
-        onChangeText={setNewBrand}
-      />
+      <FormItem inline label="货物品牌">
+        <RNPickerSelect
+          placeholder={{label: '请选择货物品牌(可选)', value: ''}}
+          value={newBrand}
+          onValueChange={setNewBrand}
+          useNativeAndroidPickerStyle={false}
+          items={brands.map(brand => ({
+            label: brand.name,
+            value: brand._id,
+          }))}
+          style={pickerSelectStyles}
+        />
+      </FormItem>
 
       <FormItem
         inline
@@ -157,6 +172,16 @@ export default function AddCargo({navigation}: AddCargoProps) {
           }}
           title="新增单位"
           onPress={() => navigation.navigate('AddUnit')}
+        />
+        <SpeedDial.Action
+          icon={{
+            name: 'institution',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="新增品牌"
+          onPress={() => navigation.navigate('AddBrand')}
         />
       </SpeedDial>
     </View>

@@ -1,5 +1,5 @@
 import {Button, Icon} from '@rneui/themed';
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
@@ -11,6 +11,7 @@ interface CargoCardProps {
     | '_id'
     | 'name'
     | 'category'
+    | 'brand'
     | 'description'
     | 'ctime'
     | 'utime'
@@ -36,7 +37,10 @@ const CargoCard: React.FC<CargoCardProps> = ({
     const descriptionHeight = item.description ? 25 : 0;
     const unitHeight = item.unit ? 25 : 0;
     const priceHeight = item.price ? 25 : 0;
-    return baseHeight + descriptionHeight + unitHeight + priceHeight;
+    const brandHeight = item.brand ? 25 : 0;
+    return (
+      baseHeight + descriptionHeight + unitHeight + priceHeight + brandHeight
+    );
   }, [item.description, item.unit, item.price]);
 
   // 扩展状态发生变化时触发动画
@@ -95,6 +99,11 @@ const CargoCard: React.FC<CargoCardProps> = ({
         {item.price && (
           <Text style={styles.cardText}>
             <Text style={styles.boldText}>价格:</Text> {item.price} 元
+          </Text>
+        )}
+        {item.brand && (
+          <Text style={styles.cardText}>
+            <Text style={styles.boldText}>品牌:</Text> {item.brand.name}
           </Text>
         )}
         {item.unit && (
@@ -170,14 +179,9 @@ const CargoCard: React.FC<CargoCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
-    marginHorizontal: 5,
-    marginBottom: 20,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 12},
-    shadowOpacity: 0.15, // 降低透明度，形成柔和的阴影效果
-    shadowRadius: 10, // 增加模糊半径，使阴影自然
-    elevation: 5, // 适配 Android 设备的阴影
+    borderBottomWidth: 1,
+    borderBottomColor: colorStyle.borderMedium,
     padding: 20,
   },
   cardHeader: {

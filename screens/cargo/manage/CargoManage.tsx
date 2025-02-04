@@ -1,6 +1,13 @@
 import {Divider, SearchBar, SpeedDial} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
+import {
+  Alert,
+  SafeAreaView,
+  SectionList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {BSON} from 'realm';
 import CargoCard from '../../../components/CargoCard';
 import {useCargo} from '../../../hooks/useCargo';
@@ -9,8 +16,9 @@ import {CargoManageProps} from '../../../routes/types';
 import {colorStyle} from '../../../styles';
 import {ToastAndroid} from 'react-native';
 
-export default function CargoManage({navigation}: CargoManageProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+export default function CargoManage({navigation, route}: CargoManageProps) {
+  const cargoName = route.params?.cargoName || '';
+  const [searchQuery, setSearchQuery] = useState(cargoName);
   const [open, setOpen] = useState(false);
 
   // 使用 Realm 查询所有的货物数据
@@ -90,6 +98,12 @@ export default function CargoManage({navigation}: CargoManageProps) {
           setOpen(false);
         }
         break;
+      case 'brand':
+        {
+          navigation.navigate('AddBrand');
+          setOpen(false);
+        }
+        break;
       default:
         break;
     }
@@ -101,8 +115,8 @@ export default function CargoManage({navigation}: CargoManageProps) {
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 15}}
       />
       <SectionList
         sections={groupByCategory(
@@ -119,12 +133,12 @@ export default function CargoManage({navigation}: CargoManageProps) {
         renderSectionHeader={({section: {title}}) => (
           <>
             <Text style={styles.sectionHeader}>{title}</Text>
-            <Divider width={1} style={{marginVertical: 10}} />
           </>
         )}
         ListEmptyComponent={
           <Text style={styles.emptyMessage}>没有货物数据</Text>
         }
+        ListFooterComponent={<View style={{height: 80}}></View>} // 为了让 SpeedDial 不遮挡底部的内容
       />
       <SpeedDial
         isOpen={open}
@@ -160,6 +174,16 @@ export default function CargoManage({navigation}: CargoManageProps) {
         />
         <SpeedDial.Action
           icon={{
+            name: 'institution',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="新增品牌"
+          onPress={() => handleAdd('brand')}
+        />
+        <SpeedDial.Action
+          icon={{
             name: 'cogs',
             color: '#fff',
             type: 'font-awesome',
@@ -189,19 +213,17 @@ const styles = StyleSheet.create({
     backgroundColor: colorStyle.info,
     paddingVertical: 12,
     paddingHorizontal: 15,
-    borderRadius: 8,
-    marginVertical: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
+    marginTop: 10,
     textAlign: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
   },
   emptyMessage: {
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'center',
-    color: '#888',
+    color: colorStyle.textMuted,
     marginTop: 20,
   },
 });

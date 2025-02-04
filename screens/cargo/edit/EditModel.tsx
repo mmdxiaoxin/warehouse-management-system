@@ -3,13 +3,13 @@ import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import {BSON} from 'realm';
-import FormItem from '../../components/FormItem';
-import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
-import {useModel} from '../../hooks/useModel';
-import {Cargo} from '../../models/Cargo';
-import {Model} from '../../models/Model';
-import {EditModelProps} from '../../routes/types';
-import {parseWithOrder, stringifyWithOrder} from '../../utils';
+import FormItem from '../../../components/FormItem';
+import ModelValueInput, {ModelValue} from '../../../components/ModelValueInput';
+import {useModel} from '../../../hooks/useModel';
+import {Cargo} from '../../../models/Cargo';
+import {Model} from '../../../models/Model';
+import {EditModelProps} from '../../../routes/types';
+import {parseWithOrder, stringifyWithOrder} from '../../../utils';
 
 export default function EditModel({navigation, route}: EditModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);

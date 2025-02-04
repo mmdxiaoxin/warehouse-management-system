@@ -41,8 +41,8 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 15}}
       />
 
       <SectionList
@@ -54,7 +54,6 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
         renderSectionHeader={({section: {title}}) => (
           <>
             <Text style={styles.sectionHeader}>{title}</Text>
-            <Divider width={1} style={{marginVertical: 10}} />
           </>
         )}
         ListEmptyComponent={
@@ -78,19 +77,17 @@ const styles = StyleSheet.create({
     backgroundColor: colorStyle.info,
     paddingVertical: 12,
     paddingHorizontal: 15,
-    borderRadius: 8,
-    marginVertical: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
+    marginTop: 10,
     textAlign: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
   },
   emptyMessage: {
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'center',
-    color: '#888',
+    color: colorStyle.textMuted,
     marginTop: 20,
   },
 });

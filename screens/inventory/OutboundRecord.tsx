@@ -112,8 +112,8 @@ export default function OutboundRecord({navigation}: OutboundRecordProps) {
           placeholder="筛选记录(按出库单号)"
           value={searchQuery}
           onChangeText={setSearchQuery}
-          lightTheme
-          round
+          platform="android"
+          containerStyle={{borderRadius: 15}}
         />
       </View>
 

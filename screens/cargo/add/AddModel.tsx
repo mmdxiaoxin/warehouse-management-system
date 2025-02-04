@@ -9,13 +9,13 @@ import {
   ToastAndroid,
 } from 'react-native';
 import {BSON} from 'realm';
-import FormItem from '../../components/FormItem';
-import ModelValueInput, {ModelValue} from '../../components/ModelValueInput';
-import {useModel} from '../../hooks/useModel';
-import {Cargo} from '../../models/Cargo';
-import {AddModelProps} from '../../routes/types';
-import {colorStyle} from '../../styles';
-import {stringifyWithOrder} from '../../utils';
+import FormItem from '../../../components/FormItem';
+import ModelValueInput, {ModelValue} from '../../../components/ModelValueInput';
+import {useModel} from '../../../hooks/useModel';
+import {Cargo} from '../../../models/Cargo';
+import {AddModelProps} from '../../../routes/types';
+import {colorStyle} from '../../../styles';
+import {stringifyWithOrder} from '../../../utils';
 
 export default function AddModel({navigation, route}: AddModelProps) {
   const cargoId = new BSON.ObjectId(route.params?.cargoId);

@@ -38,8 +38,8 @@ export default function UnitManage({navigation}: UnitManageProps) {
         placeholder="输入关键词"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 15}}
       />
       <Button
         icon={<Icon name="add" size={30} color={'white'} />}
@@ -88,7 +88,7 @@ export default function UnitManage({navigation}: UnitManageProps) {
                   color={'error'}
                 />
               }>
-              <Icon name="label-important-outline" type="material" />
+              <Icon name="balance-scale" type="font-awesome" />
               <ListItem.Content>
                 <ListItem.Title>{item.name}</ListItem.Title>
               </ListItem.Content>

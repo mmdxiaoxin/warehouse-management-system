@@ -259,8 +259,8 @@ export default function InboundManage({navigation}: InboundManageProps) {
         placeholder="筛选货品"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 15}}
       />
 
       <Tab value={index} onChange={e => setIndex(e)}>

@@ -3,11 +3,11 @@ import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import {BSON} from 'realm';
-import FormItem from '../../components/FormItem';
-import {useCategory} from '../../hooks/useCategory';
-import {Category} from '../../models/Category';
-import {EditCategoryProps} from '../../routes/types';
-import {fontStyle} from '../../styles';
+import FormItem from '../../../components/FormItem';
+import {useCategory} from '../../../hooks/useCategory';
+import {Category} from '../../../models/Category';
+import {EditCategoryProps} from '../../../routes/types';
+import {fontStyle} from '../../../styles';
 
 export default function EditCategory({navigation, route}: EditCategoryProps) {
   const categoryId = new BSON.ObjectId(route.params?.categoryId);

@@ -3,39 +3,41 @@ import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
 import {BSON} from 'realm';
-import FormItem from '../../components/FormItem';
-import {useUnit} from '../../hooks/useUnit';
-import {Unit} from '../../models/Unit';
-import {EditUnitProps} from '../../routes/types';
+import FormItem from '../../../components/FormItem';
+import {useBrand} from '../../../hooks/useBrand';
+import {Brand} from '../../../models/Brand';
+import {EditBrandProps} from '../../../routes/types';
 
-export default function EditUnit({navigation, route}: EditUnitProps) {
-  const unitId = new BSON.ObjectId(route.params?.unitId);
-  const unit = useObject(Unit, unitId);
+export default function EditBrand({navigation, route}: EditBrandProps) {
+  const brandId = new BSON.ObjectId(route.params?.brandId);
+  const brand = useObject(Brand, brandId);
 
-  const [newName, setNewName] = useState(unit?.name || '');
-  const [newDescription, setNewDescription] = useState(unit?.description || '');
+  const [newName, setNewName] = useState(brand?.name || '');
+  const [newDescription, setNewDescription] = useState(
+    brand?.description || '',
+  );
 
-  const {units, updateUnit} = useUnit();
+  const {brands, updateBrand} = useBrand();
 
   const handleSave = () => {
     // 校验输入字段是否为空
     if (!newName.trim()) {
-      Alert.alert('请输入单位名称');
+      Alert.alert('请输入品牌名称');
       return;
     }
 
     try {
-      const found = units.find(c => c.name === newName);
-      if (found && found._id.toString() !== unitId.toString()) {
-        throw new Error('单位名称已存在');
+      const found = brands.find(c => c.name === newName);
+      if (found && found._id.toString() !== brandId.toString()) {
+        throw new Error('品牌名称已存在');
       }
 
-      updateUnit(unitId, {
+      updateBrand(brandId, {
         name: newName,
         description: newDescription,
       });
 
-      ToastAndroid.show('成功修改单位', ToastAndroid.SHORT);
+      ToastAndroid.show('成功修改品牌', ToastAndroid.SHORT);
       navigation.goBack();
     } catch (error: any) {
       Alert.alert(`修改失败: ${error.message}!`);
@@ -46,8 +48,8 @@ export default function EditUnit({navigation, route}: EditUnitProps) {
     <ScrollView style={styles.container}>
       <FormItem
         inline
-        label="单位名称"
-        placeholder="请输入新的单位名称"
+        label="品牌名称"
+        placeholder="请输入新的品牌名称"
         value={newName}
         onChangeText={setNewName}
       />
