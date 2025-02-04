@@ -36,7 +36,7 @@ export default function CargoScreen({navigation}: CargoScreenProps) {
           itemKey="cargoCategory"
           onPress={() => Alert.alert('提示', '功能开发中，敬请期待！')}>
           <ListItem>
-            <Icon name="category" type="material" color="#a640ee" />
+            <Icon name="category" type="category" color="#a640ee" />
             <ListItem.Content>
               <ListItem.Title>货品分类</ListItem.Title>
             </ListItem.Content>

@@ -88,7 +88,7 @@ export default function UnitManage({navigation}: UnitManageProps) {
                   color={'error'}
                 />
               }>
-              <Icon name="label-important-outline" type="material" />
+              <Icon name="balance-scale" type="font-awesome" />
               <ListItem.Content>
                 <ListItem.Title>{item.name}</ListItem.Title>
               </ListItem.Content>

@@ -88,7 +88,7 @@ export default function BrandManage({navigation}: BrandManageProps) {
                   color={'error'}
                 />
               }>
-              <Icon name="label-important-outline" type="material" />
+              <Icon name="institution" type="font-awesome" />
               <ListItem.Content>
                 <ListItem.Title>{item.name}</ListItem.Title>
               </ListItem.Content>

@@ -89,7 +89,7 @@ export default function CategoryManage({navigation}: CategoryManageProps) {
                   color={'error'}
                 />
               }>
-              <Icon name="label-important-outline" type="material" />
+              <Icon name="category" type="material" />
               <ListItem.Content>
                 <ListItem.Title>{item.name}</ListItem.Title>
               </ListItem.Content>
