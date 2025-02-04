@@ -51,9 +51,14 @@ export default function HomeScreen({navigation}: HomeScreenProps) {
         {/* 右边：入库记录与出库记录 */}
         <View style={styles.rightSection}>
           {/* 入库记录 */}
-          <Card containerStyle={styles.recordCard}>
-            <Card.Title style={{color: '#6961ce', fontWeight: 'bold'}}>
-              入库记录
+          <Card containerStyle={{margin: 0, flex: 1, marginBottom: 15}}>
+            <Card.Title>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('InboundRecord')}>
+                <Text style={{color: '#6961ce', fontWeight: 'bold'}}>
+                  入库记录
+                </Text>
+              </TouchableOpacity>
             </Card.Title>
             <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
               {inboundCount} 条
@@ -61,9 +66,14 @@ export default function HomeScreen({navigation}: HomeScreenProps) {
           </Card>
 
           {/* 出库记录 */}
-          <Card containerStyle={styles.recordCard}>
-            <Card.Title style={{color: '#ff8c00', fontWeight: 'bold'}}>
-              出库记录
+          <Card containerStyle={{margin: 0, flex: 1, marginBottom: 15}}>
+            <Card.Title>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('OutboundRecord')}>
+                <Text style={{color: '#ee812a', fontWeight: 'bold'}}>
+                  出库记录
+                </Text>
+              </TouchableOpacity>
             </Card.Title>
             <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
               {outboundCount} 条
@@ -145,14 +155,12 @@ const styles = StyleSheet.create({
   leftSection: {
     flex: 2,
     marginRight: 10,
-    borderRadius: 15,
-  },
-  recordCard: {
-    flex: 1,
-    margin: 0,
-    marginBottom: 15,
   },
   rightSection: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  recordCard: {
     flex: 1,
   },
   buttonsSection: {
