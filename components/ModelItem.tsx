@@ -5,7 +5,7 @@ import {BSON} from 'realm';
 import {Model} from '../models/Model';
 import {colorStyle, fontStyle} from '../styles';
 
-interface CargoItemProps {
+interface ModelItemProps {
   item: Pick<
     Model,
     '_id' | 'name' | 'value' | 'description' | 'ctime' | 'utime'
@@ -14,7 +14,7 @@ interface CargoItemProps {
   handleDelete: (modelId: BSON.ObjectId) => void;
 }
 
-const ModelItem: React.FC<CargoItemProps> = ({
+const ModelItem: React.FC<ModelItemProps> = ({
   item,
   handleEdit,
   handleDelete,

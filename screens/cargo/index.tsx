@@ -34,7 +34,7 @@ export default function CargoScreen({navigation}: CargoScreenProps) {
 
         <AnimatedItem
           itemKey="cargoCategory"
-          onPress={() => Alert.alert('提示', '功能开发中，敬请期待！')}>
+          onPress={() => navigation.navigate('CargoClassify')}>
           <ListItem>
             <Icon name="category" type="category" color="#a640ee" />
             <ListItem.Content>

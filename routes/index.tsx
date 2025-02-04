@@ -18,6 +18,7 @@ import EditCategory from '../screens/cargo/edit/EditCategory';
 import EditModel from '../screens/cargo/edit/EditModel';
 import EditUnit from '../screens/cargo/edit/EditUnit';
 import BrandManage from '../screens/cargo/manage/BrandManage';
+import CargoClassify from '../screens/cargo/manage/CargoClassify';
 import CargoManage from '../screens/cargo/manage/CargoManage';
 import CategoryManage from '../screens/cargo/manage/CategoryManage';
 import ModelManage from '../screens/cargo/manage/ModelManage';
@@ -197,6 +198,11 @@ export default function AppNavigator() {
         options={{title: '货品管理'}}
       />
       <Stack.Screen
+        name="CargoClassify"
+        component={CargoClassify}
+        options={{title: '货品分类'}}
+      />
+      <Stack.Screen
         name="CategoryManage"
         component={CategoryManage}
         options={{title: '类别管理'}}
@@ -214,7 +220,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name="BrandManage"
         component={BrandManage}
-        options={{title: '品牌库存'}}
+        options={{title: '品牌管理'}}
       />
       <Stack.Screen
         name="CargoInventory"
