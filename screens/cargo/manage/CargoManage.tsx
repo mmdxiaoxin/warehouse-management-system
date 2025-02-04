@@ -9,8 +9,9 @@ import {CargoManageProps} from '../../../routes/types';
 import {colorStyle} from '../../../styles';
 import {ToastAndroid} from 'react-native';
 
-export default function CargoManage({navigation}: CargoManageProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+export default function CargoManage({navigation, route}: CargoManageProps) {
+  const cargoName = route.params?.cargoName || '';
+  const [searchQuery, setSearchQuery] = useState(cargoName);
   const [open, setOpen] = useState(false);
 
   // 使用 Realm 查询所有的货物数据
@@ -90,6 +91,12 @@ export default function CargoManage({navigation}: CargoManageProps) {
           setOpen(false);
         }
         break;
+      case 'brand':
+        {
+          navigation.navigate('AddBrand');
+          setOpen(false);
+        }
+        break;
       default:
         break;
     }
@@ -157,6 +164,16 @@ export default function CargoManage({navigation}: CargoManageProps) {
           }}
           title="新增单位"
           onPress={() => handleAdd('unit')}
+        />
+        <SpeedDial.Action
+          icon={{
+            name: 'institution',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="新增品牌"
+          onPress={() => handleAdd('brand')}
         />
         <SpeedDial.Action
           icon={{

@@ -22,7 +22,7 @@ export type RootStackParamList = {
   EditUnit: {unitId: string};
   EditBrand: {brandId: string};
   EditModel: {cargoId: string; modelId: string};
-  CargoManage: undefined;
+  CargoManage: {cargoName: string} | undefined;
   CategoryManage: undefined;
   UnitManage: undefined;
   ModelManage: {cargoId: string} | undefined;

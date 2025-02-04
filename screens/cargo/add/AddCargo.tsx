@@ -49,7 +49,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
         throw new Error('货物创建失败');
       }
       ToastAndroid.show('货物添加成功', ToastAndroid.SHORT);
-      navigation.goBack();
+      navigation.navigate('CargoManage', {cargoName: newName});
     } catch (error) {
       Alert.alert('货物添加失败，请重试！');
     }
@@ -165,6 +165,16 @@ export default function AddCargo({navigation}: AddCargoProps) {
           }}
           title="新增单位"
           onPress={() => navigation.navigate('AddUnit')}
+        />
+        <SpeedDial.Action
+          icon={{
+            name: 'institution',
+            color: '#fff',
+            type: 'font-awesome',
+            size: 20,
+          }}
+          title="新增品牌"
+          onPress={() => navigation.navigate('AddBrand')}
         />
       </SpeedDial>
     </View>
