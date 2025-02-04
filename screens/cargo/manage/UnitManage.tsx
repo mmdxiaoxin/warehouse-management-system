@@ -38,8 +38,8 @@ export default function UnitManage({navigation}: UnitManageProps) {
         placeholder="输入关键词"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 50}}
       />
       <Button
         icon={<Icon name="add" size={30} color={'white'} />}

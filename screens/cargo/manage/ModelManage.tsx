@@ -121,8 +121,8 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
         placeholder="搜索货品"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 50}}
       />
       <View style={styles.modelContainer}>
         {/* 左侧货品列表 */}

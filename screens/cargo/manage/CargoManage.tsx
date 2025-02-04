@@ -101,8 +101,8 @@ export default function CargoManage({navigation}: CargoManageProps) {
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 50}}
       />
       <SectionList
         sections={groupByCategory(
@@ -199,9 +199,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   emptyMessage: {
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'center',
-    color: '#888',
+    color: colorStyle.textMuted,
     marginTop: 20,
   },
 });

@@ -41,8 +41,8 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
         placeholder="搜索货物名称"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        lightTheme
-        round
+        platform="android"
+        containerStyle={{borderRadius: 50}}
       />
 
       <SectionList
@@ -88,9 +88,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   emptyMessage: {
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'center',
-    color: '#888',
+    color: colorStyle.textMuted,
     marginTop: 20,
   },
 });
