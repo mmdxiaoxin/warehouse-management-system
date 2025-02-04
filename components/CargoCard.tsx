@@ -1,5 +1,5 @@
 import {Button, Icon} from '@rneui/themed';
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {BSON} from 'realm';
 import {Cargo} from '../models/Cargo';
@@ -179,14 +179,9 @@ const CargoCard: React.FC<CargoCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
-    marginHorizontal: 5,
-    marginBottom: 5,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 12},
-    shadowOpacity: 0.15, // 降低透明度，形成柔和的阴影效果
-    shadowRadius: 10, // 增加模糊半径，使阴影自然
-    elevation: 5, // 适配 Android 设备的阴影
+    borderBottomWidth: 1,
+    borderBottomColor: colorStyle.borderMedium,
     padding: 20,
   },
   cardHeader: {

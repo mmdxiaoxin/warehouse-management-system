@@ -147,10 +147,7 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
           style={styles.rightContainer}
           data={
             selectedCargo
-              ? cargoList.find(
-                  item =>
-                    item._id.toHexString() === selectedCargo.toHexString(),
-                )?.models
+              ? cargoList.filtered('_id == $0', selectedCargo)[0]?.models
               : []
           }
           ListHeaderComponent={() => (

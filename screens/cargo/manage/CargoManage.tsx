@@ -1,6 +1,13 @@
 import {Divider, SearchBar, SpeedDial} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {Alert, SafeAreaView, SectionList, StyleSheet, Text} from 'react-native';
+import {
+  Alert,
+  SafeAreaView,
+  SectionList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {BSON} from 'realm';
 import CargoCard from '../../../components/CargoCard';
 import {useCargo} from '../../../hooks/useCargo';
@@ -131,6 +138,7 @@ export default function CargoManage({navigation, route}: CargoManageProps) {
         ListEmptyComponent={
           <Text style={styles.emptyMessage}>没有货物数据</Text>
         }
+        ListFooterComponent={<View style={{height: 80}}></View>} // 为了让 SpeedDial 不遮挡底部的内容
       />
       <SpeedDial
         isOpen={open}
@@ -205,14 +213,12 @@ const styles = StyleSheet.create({
     backgroundColor: colorStyle.info,
     paddingVertical: 12,
     paddingHorizontal: 15,
-    borderRadius: 8,
-    marginVertical: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
+    marginTop: 10,
     textAlign: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
   },
   emptyMessage: {
     fontSize: 14,
