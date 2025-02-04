@@ -23,14 +23,14 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
 
   const foundCargo = useObject(Cargo, cargoId);
 
-  const [newCargoName, setNewCargoName] = useState(foundCargo?.name || '');
-  const [newCargoCategory, setNewCargoCategory] = useState<
-    BSON.ObjectId | undefined
-  >(foundCargo?.category?._id);
-  const [newCargoUnit, setNewCargoUnit] = useState<BSON.ObjectId | undefined>(
+  const [newName, setNewName] = useState(foundCargo?.name || '');
+  const [newCategory, setNewCategory] = useState<BSON.ObjectId | undefined>(
+    foundCargo?.category?._id,
+  );
+  const [newUnit, setNewUnit] = useState<BSON.ObjectId | undefined>(
     foundCargo?.unit?._id,
   );
-  const [newCargoDescription, setNewCargoDescription] = useState(
+  const [newDescription, setNewDescription] = useState(
     foundCargo?.description || '',
   );
   const [newPrice, setNewPrice] = useState(foundCargo?.price?.toString() || '');
@@ -40,23 +40,30 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
 
   const [open, setOpen] = useState(false);
 
-  // 校验输入数据
   const handleSaveCargo = async () => {
-    if (!newCargoName.trim()) {
-      Alert.alert('请输入货物名称');
-      return;
-    }
-
     try {
+      // 校验是否找到货物信息
       if (!foundCargo) {
-        throw new Error('货物数据不存在');
+        throw new Error('未找到货物信息');
+      }
+
+      // 校验输入字段是否为空
+      if (!newName.trim()) {
+        throw new Error('货物名称不能为空!');
+      }
+
+      // 校验价格是否为数字
+      if (
+        newPrice.match(/^(-?[1-9]\d*\.\d+|-?0\.\d*[1-9]\d*|0\.0+)$/) === null
+      ) {
+        throw new Error('价格必须为数字');
       }
 
       updateCargo(foundCargo._id, {
-        name: newCargoName,
-        category: newCargoCategory,
-        unit: newCargoUnit,
-        description: newCargoDescription,
+        name: newName,
+        category: newCategory,
+        unit: newUnit,
+        description: newDescription,
         price: newPrice ? parseFloat(newPrice) : undefined,
         brand: newBrand,
       });
@@ -79,8 +86,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       <FormItem
         inline
         label="货物名称"
-        value={newCargoName}
-        onChangeText={setNewCargoName}
+        value={newName}
+        onChangeText={setNewName}
         placeholder="请输入货物名称"
       />
 
@@ -89,8 +96,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         <RNPickerSelect
           placeholder={{label: '请选择货物类别', value: ''}}
           useNativeAndroidPickerStyle={false}
-          value={newCargoCategory}
-          onValueChange={setNewCargoCategory}
+          value={newCategory}
+          onValueChange={setNewCategory}
           items={categories.map(category => ({
             label: category.name,
             value: category._id,
@@ -103,8 +110,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       <FormItem inline label="货物单位">
         <RNPickerSelect
           placeholder={{label: '请选择货物单位', value: ''}}
-          value={newCargoUnit}
-          onValueChange={setNewCargoUnit}
+          value={newUnit}
+          onValueChange={setNewUnit}
           useNativeAndroidPickerStyle={false}
           items={units.map(unit => ({
             label: unit.name,
@@ -139,8 +146,8 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
         inline
         label="备注"
         placeholder="请输入备注(可选)"
-        value={newCargoDescription}
-        onChangeText={setNewCargoDescription}
+        value={newDescription}
+        onChangeText={setNewDescription}
       />
 
       {/* 保存按钮 */}
