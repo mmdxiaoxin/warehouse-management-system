@@ -53,9 +53,9 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       }
 
       // 校验价格是否为数字
-      if (
-        newPrice.match(/^(-?[1-9]\d*\.\d+|-?0\.\d*[1-9]\d*|0\.0+)$/) === null
-      ) {
+      const isInt = /^(?:0|(?:-?[1-9]\d*))$/;
+      const isFloat = /^(-?[1-9]\d*\.\d+|-?0\.\d*[1-9])$/;
+      if (newPrice && !isInt.test(newPrice) && !isFloat.test(newPrice)) {
         throw new Error('价格必须为数字');
       }
 
