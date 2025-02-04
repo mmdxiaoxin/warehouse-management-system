@@ -1,3 +1,4 @@
+import {Card, PricingCard} from '@rneui/themed';
 import React from 'react';
 import {
   Image,
@@ -15,11 +16,11 @@ import {HomeScreenProps} from '../routes/types';
 export default function HomeScreen({navigation}: HomeScreenProps) {
   const {modelList} = useModel();
   const {getRecordsByType} = useRecord();
+
   const totalStock = modelList.reduce(
     (total, model) => total + model.quantity,
     0,
   );
-
   const inboundCount = getRecordsByType('inbound').length;
   const outboundCount = getRecordsByType('outbound').length;
 
@@ -29,19 +30,45 @@ export default function HomeScreen({navigation}: HomeScreenProps) {
       <View style={styles.header}>
         <Image source={logo} style={styles.logo} />
         <Text style={styles.title}>欢迎使用我的应用</Text>
-        <View style={styles.stats}>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>总库存</Text>
-            <Text style={styles.statValue}>{totalStock} 件</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>入库记录</Text>
-            <Text style={styles.statValue}>{inboundCount} 条</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>出库记录</Text>
-            <Text style={styles.statValue}>{outboundCount} 条</Text>
-          </View>
+      </View>
+
+      {/* 左右分栏 */}
+      <View style={styles.mainContent}>
+        {/* 左边：库存信息 */}
+        <View style={styles.leftSection}>
+          <PricingCard
+            containerStyle={{margin: 0}}
+            title="库存总览"
+            price={`${totalStock} 件`}
+            button={{
+              title: '查看详细',
+              icon: 'add',
+              onPress: () => navigation.navigate('CargoInventory'),
+            }}
+          />
+        </View>
+
+        {/* 右边：入库记录与出库记录 */}
+        <View style={styles.rightSection}>
+          {/* 入库记录 */}
+          <Card containerStyle={styles.recordCard}>
+            <Card.Title style={{color: '#6961ce', fontWeight: 'bold'}}>
+              入库记录
+            </Card.Title>
+            <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
+              {inboundCount} 条
+            </Text>
+          </Card>
+
+          {/* 出库记录 */}
+          <Card containerStyle={styles.recordCard}>
+            <Card.Title style={{color: '#ff8c00', fontWeight: 'bold'}}>
+              出库记录
+            </Card.Title>
+            <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
+              {outboundCount} 条
+            </Text>
+          </Card>
         </View>
       </View>
 
@@ -72,16 +99,11 @@ export default function HomeScreen({navigation}: HomeScreenProps) {
         </View>
 
         {/* 第二排按钮 */}
-        <View style={styles.buttonRow}>
+        <View style={[styles.buttonRow, {marginBottom: 50}]}>
           <TouchableOpacity
             style={styles.button5}
             onPress={() => navigation.navigate('InboundManage')}>
             <Text style={styles.buttonText}>入库管理</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button6}
-            onPress={() => navigation.navigate('CargoInventory')}>
-            <Text style={styles.buttonText}>货品库存</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button7}
@@ -115,27 +137,26 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 10,
   },
-  stats: {
+  mainContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 20,
+    marginBottom: 10,
   },
-  statItem: {
-    alignItems: 'center',
+  leftSection: {
+    flex: 2,
+    marginRight: 10,
+    borderRadius: 15,
   },
-  statLabel: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 5,
+  recordCard: {
+    flex: 1,
+    margin: 0,
+    marginBottom: 15,
   },
-  statValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+  rightSection: {
+    flex: 1,
   },
   buttonsSection: {
-    marginTop: 30,
+    marginTop: 5,
   },
   buttonRow: {
     flexDirection: 'row',
