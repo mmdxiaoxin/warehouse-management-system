@@ -7,42 +7,89 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
 import logo from '../assets/YangziLogo.png';
+import {useModel} from '../hooks/useModel';
+import {useRecord} from '../hooks/useRecord';
 import {HomeScreenProps} from '../routes/types';
 
 export default function HomeScreen({navigation}: HomeScreenProps) {
+  const {modelList} = useModel();
+  const {getRecordsByType} = useRecord();
+  const totalStock = modelList.reduce(
+    (total, model) => total + model.quantity,
+    0,
+  );
+
+  const inboundCount = getRecordsByType('inbound').length;
+  const outboundCount = getRecordsByType('outbound').length;
+
   return (
     <ScrollView style={styles.container}>
-      {/* 应用程序的Logo */}
+      {/* 上部分：Logo和统计信息 */}
       <View style={styles.header}>
         <Image source={logo} style={styles.logo} />
         <Text style={styles.title}>欢迎使用我的应用</Text>
-      </View>
-
-      {/* 应用介绍 */}
-      <View style={styles.introSection}>
-        <Text style={styles.subtitle}>一站式解决您所有需求</Text>
-        <Text style={styles.description}>探索多种功能，轻松管理您的库存。</Text>
-      </View>
-
-      {/* 特色功能 */}
-      <View style={styles.featuresSection}>
-        <Text style={styles.featuresTitle}>主要功能</Text>
-        <View style={styles.featureItem}>
-          <Text style={styles.featureText}>✔ 货品管理</Text>
-        </View>
-        <View style={styles.featureItem}>
-          <Text style={styles.featureText}>✔ 库存管理</Text>
+        <View style={styles.stats}>
+          <View style={styles.statItem}>
+            <Text style={styles.statLabel}>总库存</Text>
+            <Text style={styles.statValue}>{totalStock} 件</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statLabel}>入库记录</Text>
+            <Text style={styles.statValue}>{inboundCount} 条</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statLabel}>出库记录</Text>
+            <Text style={styles.statValue}>{outboundCount} 条</Text>
+          </View>
         </View>
       </View>
 
-      {/* 开始按钮 */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Cargo')}>
-        <Text style={styles.buttonText}>开始使用</Text>
-      </TouchableOpacity>
+      {/* 下部分：功能按钮 */}
+      <View style={styles.buttonsSection}>
+        {/* 第一排按钮 */}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={styles.button1}
+            onPress={() => navigation.navigate('CargoManage')}>
+            <Text style={styles.buttonText}>货品管理</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button2}
+            onPress={() => navigation.navigate('CategoryManage')}>
+            <Text style={styles.buttonText}>类别管理</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button3}
+            onPress={() => navigation.navigate('UnitManage')}>
+            <Text style={styles.buttonText}>单位管理</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button4}
+            onPress={() => navigation.navigate('ModelManage')}>
+            <Text style={styles.buttonText}>规格管理</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 第二排按钮 */}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={styles.button5}
+            onPress={() => navigation.navigate('InboundManage')}>
+            <Text style={styles.buttonText}>入库管理</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button6}
+            onPress={() => navigation.navigate('CargoInventory')}>
+            <Text style={styles.buttonText}>货品库存</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button7}
+            onPress={() => navigation.navigate('OutboundManage')}>
+            <Text style={styles.buttonText}>出库管理</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </ScrollView>
   );
 }
@@ -63,51 +110,101 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#333',
-  },
-  introSection: {
-    marginBottom: 30,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#666',
     marginBottom: 10,
   },
-  description: {
-    fontSize: 16,
-    color: '#777',
-    textAlign: 'center',
-  },
-  featuresSection: {
-    marginBottom: 40,
-  },
-  featuresTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
-  featureItem: {
+  stats: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 20,
   },
-  featureText: {
+  statItem: {
+    alignItems: 'center',
+  },
+  statLabel: {
     fontSize: 16,
     color: '#555',
+    marginBottom: 5,
   },
-  button: {
+  statValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  buttonsSection: {
+    marginTop: 30,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  button1: {
+    backgroundColor: '#FF8C00',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  button2: {
+    backgroundColor: '#8A2BE2',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  button3: {
+    backgroundColor: '#32CD32',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  button4: {
+    backgroundColor: '#4682B4',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flex: 1,
+    alignItems: 'center',
+  },
+  button5: {
     backgroundColor: '#FF6347',
     paddingVertical: 15,
-    borderRadius: 30,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flex: 1,
+    marginRight: 10,
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  button6: {
+    backgroundColor: '#FFD700',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  button7: {
+    backgroundColor: '#20B2AA',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flex: 1,
+    alignItems: 'center',
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#fff',
     fontWeight: 'bold',
   },
