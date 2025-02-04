@@ -49,6 +49,7 @@ export default function CargoClassify({navigation, route}: CargoClassifyProps) {
         });
       });
 
+      setSelectedCategory(null);
       ToastAndroid.show('分类成功', ToastAndroid.SHORT);
     } catch (error: any) {
       Alert.alert('分类失败', error.message);
