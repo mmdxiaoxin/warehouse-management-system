@@ -84,7 +84,7 @@ export default function CargoScreen({navigation}: CargoScreenProps) {
 
         <AnimatedItem
           itemKey="brandManage"
-          onPress={() => navigation.navigate('ModelManage')}>
+          onPress={() => navigation.navigate('BrandManage')}>
           <ListItem>
             <Icon name="institution" type="font-awesome" color="#6961ce" />
             <ListItem.Content>
