@@ -126,7 +126,6 @@ export default function CargoManage({navigation, route}: CargoManageProps) {
         renderSectionHeader={({section: {title}}) => (
           <>
             <Text style={styles.sectionHeader}>{title}</Text>
-            <Divider width={1} style={{marginVertical: 10}} />
           </>
         )}
         ListEmptyComponent={

@@ -54,7 +54,6 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
         renderSectionHeader={({section: {title}}) => (
           <>
             <Text style={styles.sectionHeader}>{title}</Text>
-            <Divider width={1} style={{marginVertical: 10}} />
           </>
         )}
         ListEmptyComponent={
