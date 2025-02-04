@@ -1,40 +1,40 @@
 import {Button} from '@rneui/themed';
 import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, ToastAndroid} from 'react-native';
-import FormItem from '../../components/FormItem';
-import {useUnit} from '../../hooks/useUnit';
-import {AddUnitProps} from '../../routes/types';
+import FormItem from '../../../components/FormItem';
+import {useCategory} from '../../../hooks/useCategory';
+import {AddCategoryProps} from '../../../routes/types';
 
-export default function AddUnit({navigation}: AddUnitProps) {
+export default function AddCategory({navigation}: AddCategoryProps) {
   const [newName, setNewName] = useState('');
   const [newDescription, setNewDescription] = useState('');
 
-  const {units, createUnit} = useUnit();
+  const {categories, createCategory} = useCategory(); // 使用 useCategory 钩子
 
-  // 处理添加单位
+  // 处理添加类别
   const handleAdd = () => {
     // 校验输入字段是否为空
     if (!newName.trim()) {
-      Alert.alert('请输入单位名称');
+      Alert.alert('请输入类别名称');
       return;
     }
 
     try {
-      units.forEach(unit => {
-        if (unit.name === newName) {
-          throw new Error('单位已存在');
+      categories.forEach(category => {
+        if (category.name === newName) {
+          throw new Error('类别已存在');
         }
       });
 
-      const newId = createUnit(newName, newDescription);
+      const newId = createCategory(newName, newDescription);
       if (!newId) {
-        throw new Error('创建单位失败');
+        throw new Error('创建类别失败');
       }
 
-      ToastAndroid.show('添加单位成功', ToastAndroid.SHORT);
+      ToastAndroid.show('添加类别成功', ToastAndroid.SHORT);
       navigation.goBack();
     } catch (error: any) {
-      Alert.alert(`添加单位失败: ${error.message}!`);
+      Alert.alert(`添加类别失败: ${error.message}!`);
       return;
     }
   };
@@ -42,8 +42,8 @@ export default function AddUnit({navigation}: AddUnitProps) {
     <ScrollView style={styles.container}>
       <FormItem
         inline
-        label="单位名称"
-        placeholder="请输入新的单位名称"
+        label="类别名称"
+        placeholder="请输入新的类别名称"
         value={newName}
         onChangeText={setNewName}
       />

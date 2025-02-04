@@ -3,12 +3,12 @@ import React, {useState} from 'react';
 import {Alert, StyleSheet, ToastAndroid, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
-import FormItem from '../../components/FormItem'; // 假设Section组件已经在项目中
-import {useCargo} from '../../hooks/useCargo';
-import {useCategory} from '../../hooks/useCategory';
-import {useUnit} from '../../hooks/useUnit';
-import {AddCargoProps} from '../../routes/types';
-import {pickerSelectStyles} from '../../styles';
+import FormItem from '../../../components/FormItem'; // 假设Section组件已经在项目中
+import {useCargo} from '../../../hooks/useCargo';
+import {useCategory} from '../../../hooks/useCategory';
+import {useUnit} from '../../../hooks/useUnit';
+import {AddCargoProps} from '../../../routes/types';
+import {pickerSelectStyles} from '../../../styles';
 
 export default function AddCargo({navigation}: AddCargoProps) {
   const [newName, setNewCargoName] = useState('');

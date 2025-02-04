@@ -73,10 +73,22 @@ export default function CargoScreen({navigation}: CargoScreenProps) {
         <AnimatedItem
           itemKey="modelManage"
           onPress={() => navigation.navigate('ModelManage')}>
-          <ListItem>
+          <ListItem bottomDivider>
             <Icon name="cogs" type="font-awesome" color="#fabc00" />
             <ListItem.Content>
               <ListItem.Title>规格管理</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+        </AnimatedItem>
+
+        <AnimatedItem
+          itemKey="brandManage"
+          onPress={() => navigation.navigate('ModelManage')}>
+          <ListItem>
+            <Icon name="institution" type="font-awesome" color="#6961ce" />
+            <ListItem.Content>
+              <ListItem.Title>品牌管理</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>

@@ -1,9 +1,9 @@
 import React from 'react';
 import {ScrollView, StyleSheet, Text} from 'react-native';
-import {AddUnitProps} from '../../routes/types';
-import {fontStyle} from '../../styles';
+import {CargoClassifyProps} from '../../../routes/types';
+import {fontStyle} from '../../../styles';
 
-export default function CargoCategory({navigation, route}: AddUnitProps) {
+export default function CargoClassify({navigation, route}: CargoClassifyProps) {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>种类管理</Text>

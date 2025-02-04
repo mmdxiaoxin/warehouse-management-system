@@ -16,14 +16,18 @@ export type RootStackParamList = {
   AddModel: {cargoId: string} | undefined;
   AddCategory: undefined;
   AddUnit: undefined;
+  AddBrand: undefined;
   EditCargo: {cargoId: string};
   EditCategory: {categoryId: string};
   EditUnit: {unitId: string};
+  EditBrand: {brandId: string};
   EditModel: {cargoId: string; modelId: string};
   CargoManage: undefined;
   CategoryManage: undefined;
   UnitManage: undefined;
   ModelManage: {cargoId: string} | undefined;
+  BrandManage: undefined;
+  CargoClassify: undefined;
   CargoInventory: undefined;
   OutboundManage: undefined;
   OutboundRecord: undefined;
@@ -48,6 +52,10 @@ export type AddUnitProps = NativeStackScreenProps<
   RootStackParamList,
   'AddUnit'
 >;
+export type AddBrandProps = NativeStackScreenProps<
+  RootStackParamList,
+  'AddBrand'
+>;
 export type EditCargoProps = NativeStackScreenProps<
   RootStackParamList,
   'EditCargo'
@@ -59,6 +67,10 @@ export type EditCategoryProps = NativeStackScreenProps<
 export type EditUnitProps = NativeStackScreenProps<
   RootStackParamList,
   'EditUnit'
+>;
+export type EditBrandProps = NativeStackScreenProps<
+  RootStackParamList,
+  'EditBrand'
 >;
 export type EditModelProps = NativeStackScreenProps<
   RootStackParamList,
@@ -79,6 +91,14 @@ export type UnitManageProps = NativeStackScreenProps<
 export type ModelManageProps = NativeStackScreenProps<
   RootStackParamList,
   'ModelManage'
+>;
+export type BrandManageProps = NativeStackScreenProps<
+  RootStackParamList,
+  'BrandManage'
+>;
+export type CargoClassifyProps = NativeStackScreenProps<
+  RootStackParamList,
+  'CargoClassify'
 >;
 export type CargoInventoryProps = NativeStackScreenProps<
   RootStackParamList,

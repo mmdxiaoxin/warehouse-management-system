@@ -19,7 +19,6 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
       </Text>
 
       <View style={styles.listItemContainer}>
-        {/* 使用封装后的 AnimatedItem 组件 */}
         <AnimatedItem
           itemKey="cargoInventory"
           onPress={() => navigation.navigate('CargoInventory')}>
@@ -31,7 +30,9 @@ export default function InventoryScreen({navigation}: InventoryScreenProps) {
             <ListItem.Chevron />
           </ListItem>
         </AnimatedItem>
+      </View>
 
+      <View style={styles.listItemContainer}>
         <AnimatedItem
           itemKey="inboundRecord"
           onPress={() => navigation.navigate('InboundRecord')}>
