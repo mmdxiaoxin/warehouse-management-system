@@ -70,9 +70,9 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
 
       ToastAndroid.show('成功修改货物', ToastAndroid.SHORT);
       navigation.goBack();
-    } catch (error) {
+    } catch (error: any) {
       console.error('更新货物失败:', error);
-      Alert.alert('更新货物失败，请重试！');
+      Alert.alert('更新货物失败:', error.message);
     }
   };
 
