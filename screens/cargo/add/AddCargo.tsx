@@ -4,6 +4,7 @@ import {Alert, StyleSheet, ToastAndroid, View} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {BSON} from 'realm';
 import FormItem from '../../../components/FormItem'; // 假设Section组件已经在项目中
+import {useBrand} from '../../../hooks/useBrand';
 import {useCargo} from '../../../hooks/useCargo';
 import {useCategory} from '../../../hooks/useCategory';
 import {useUnit} from '../../../hooks/useUnit';
@@ -16,8 +17,8 @@ export default function AddCargo({navigation}: AddCargoProps) {
     BSON.ObjectId | undefined
   >();
   const [newUnit, setNewCargoUnit] = useState<BSON.ObjectId | undefined>();
+  const [newBrand, setNewBrand] = useState<BSON.ObjectId | undefined>();
   const [newPrice, setNewPrice] = useState('');
-  const [newBrand, setNewBrand] = useState('');
   const [newDescription, setNewCargoDescription] = useState('');
 
   const [open, setOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function AddCargo({navigation}: AddCargoProps) {
   const {createCargo} = useCargo();
   const {categories} = useCategory();
   const {units} = useUnit();
+  const {brands} = useBrand();
 
   // 处理添加货物
   const handleAdd = async () => {
@@ -99,13 +101,19 @@ export default function AddCargo({navigation}: AddCargoProps) {
         onChangeText={setNewPrice}
       />
 
-      <FormItem
-        inline
-        label="品牌"
-        placeholder="请输入品牌(可选)"
-        value={newBrand}
-        onChangeText={setNewBrand}
-      />
+      <FormItem inline label="货物品牌">
+        <RNPickerSelect
+          placeholder={{label: '请选择货物品牌(可选)', value: ''}}
+          value={newBrand}
+          onValueChange={setNewBrand}
+          useNativeAndroidPickerStyle={false}
+          items={brands.map(brand => ({
+            label: brand.name,
+            value: brand._id,
+          }))}
+          style={pickerSelectStyles}
+        />
+      </FormItem>
 
       <FormItem
         inline
