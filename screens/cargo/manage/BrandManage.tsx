@@ -39,7 +39,7 @@ export default function BrandManage({navigation}: BrandManageProps) {
         value={searchQuery}
         onChangeText={setSearchQuery}
         platform="android"
-        containerStyle={{borderRadius: 50}}
+        containerStyle={{borderRadius: 15}}
       />
       <Button
         icon={<Icon name="add" size={30} color={'white'} />}

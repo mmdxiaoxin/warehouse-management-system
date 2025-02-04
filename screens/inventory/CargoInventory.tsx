@@ -42,7 +42,7 @@ export default function CargoInventory({navigation}: CargoInventoryProps) {
         value={searchQuery}
         onChangeText={setSearchQuery}
         platform="android"
-        containerStyle={{borderRadius: 50}}
+        containerStyle={{borderRadius: 15}}
       />
 
       <SectionList

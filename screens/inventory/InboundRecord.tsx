@@ -106,7 +106,7 @@ export default function InboundRecord({navigation}: InboundRecordProps) {
           value={searchQuery}
           onChangeText={setSearchQuery}
           platform="android"
-          containerStyle={{borderRadius: 50}}
+          containerStyle={{borderRadius: 15}}
         />
       </View>
 

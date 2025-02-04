@@ -102,7 +102,7 @@ export default function CargoManage({navigation}: CargoManageProps) {
         value={searchQuery}
         onChangeText={setSearchQuery}
         platform="android"
-        containerStyle={{borderRadius: 50}}
+        containerStyle={{borderRadius: 15}}
       />
       <SectionList
         sections={groupByCategory(

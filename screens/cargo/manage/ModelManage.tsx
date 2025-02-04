@@ -117,13 +117,15 @@ export default function ModelManage({navigation, route}: ModelManageProps) {
 
   return (
     <View style={{flex: 1}}>
-      <SearchBar
-        placeholder="搜索货品"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        platform="android"
-        containerStyle={{borderRadius: 50}}
-      />
+      <View style={{padding: 10}}>
+        <SearchBar
+          placeholder="搜索货品"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          platform="android"
+          containerStyle={{borderRadius: 15}}
+        />
+      </View>
       <View style={styles.modelContainer}>
         {/* 左侧货品列表 */}
         <View style={styles.leftContainer}>

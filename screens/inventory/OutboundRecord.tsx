@@ -113,7 +113,7 @@ export default function OutboundRecord({navigation}: OutboundRecordProps) {
           value={searchQuery}
           onChangeText={setSearchQuery}
           platform="android"
-          containerStyle={{borderRadius: 50}}
+          containerStyle={{borderRadius: 15}}
         />
       </View>
 

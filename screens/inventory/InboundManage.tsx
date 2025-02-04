@@ -260,7 +260,7 @@ export default function InboundManage({navigation}: InboundManageProps) {
         value={searchQuery}
         onChangeText={setSearchQuery}
         platform="android"
-        containerStyle={{borderRadius: 50}}
+        containerStyle={{borderRadius: 15}}
       />
 
       <Tab value={index} onChange={e => setIndex(e)}>
