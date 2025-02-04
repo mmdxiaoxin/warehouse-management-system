@@ -87,6 +87,7 @@ export default function EditCargo({navigation, route}: EditCargoProps) {
       {/* 货物类别 */}
       <FormItem inline label="货物类别">
         <RNPickerSelect
+          placeholder={{label: '请选择货物类别', value: ''}}
           useNativeAndroidPickerStyle={false}
           value={newCargoCategory}
           onValueChange={setNewCargoCategory}
