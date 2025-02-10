@@ -78,9 +78,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.procuresellmanage"
+    namespace "com.mmdxiaoxin.warehouseManagementSystem"
     defaultConfig {
-        applicationId "com.procuresellmanage"
+        applicationId "com.mmdxiaoxin.warehouseManagementSystem"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
