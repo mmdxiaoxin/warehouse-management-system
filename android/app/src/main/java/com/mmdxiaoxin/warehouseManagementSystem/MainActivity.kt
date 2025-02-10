@@ -1,4 +1,4 @@
-package com.procuresellmanage
+package com.mmdxiaoxin.warehouseManagementSystem
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
