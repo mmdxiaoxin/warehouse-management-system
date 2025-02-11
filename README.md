@@ -1,4 +1,4 @@
-# ProcureSellManage
+# warehouse-management-system
 
 [**React Native**](https://reactnative.dev) 项目，使用 [`@react-native-community/cli`](https://github.com/react-native-community/cli) 启动。，用于管理货物信息和处理相关任务。
 
